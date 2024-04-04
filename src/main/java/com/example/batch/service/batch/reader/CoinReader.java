@@ -1,0 +1,56 @@
+package com.example.batch.service.batch.reader;
+
+import com.example.batch.service.batch.common.DelJpaPagingItemReader;
+import com.example.batch.service.batch.step.CoinStep;
+import com.example.batch.service.coin.database.rep.jpa.coin.CoinEntity;
+import com.example.batch.service.coin.database.rep.jpa.coin.CoinREP;
+import jakarta.persistence.EntityManagerFactory;
+import lombok.RequiredArgsConstructor;
+import org.springframework.batch.core.configuration.annotation.StepScope;
+import org.springframework.batch.item.database.JpaPagingItemReader;
+import org.springframework.batch.item.support.ListItemReader;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+
+import java.time.LocalDateTime;
+import java.util.HashMap;
+
+@RequiredArgsConstructor
+@Configuration
+public class CoinReader {
+    private static final int BEFORE_WEEK_RANGE = 7;
+    public static final String FIND_COIN_ENTITY_BEFORE_CREATE_DATE = "findCoinEntityBeforeCreateDate";
+    public static final String FIND_TOP_10_BY_ORDER_BY_ID_DESC = "findTop10ByOrderByIdDesc";
+    public static final String FIND_TOP_1_BY_ORDER_BY_ID_DESC = "findTop1ByOrderByIdDesc";
+
+    private final CoinREP coinREP;
+
+    @Bean(name = FIND_COIN_ENTITY_BEFORE_CREATE_DATE, destroyMethod = "")
+    @StepScope
+    public JpaPagingItemReader<CoinEntity> jpaPagingItemReader(@Qualifier("coinEntityManagerFactory") EntityManagerFactory entityManagerFactory) {
+        JpaPagingItemReader<CoinEntity> reader = new DelJpaPagingItemReader<>();
+
+        reader.setName("jpaPagingItemReader");
+        reader.setPageSize(CoinStep.PAGE_SIZE);
+        reader.setEntityManagerFactory(entityManagerFactory);
+        reader.setQueryString("SELECT p FROM CoinEntity p WHERE p.createDate <= :date");
+
+        HashMap<String, Object> param = new HashMap<>();
+        param.put("date", LocalDateTime.now().minusMonths(BEFORE_WEEK_RANGE));
+        reader.setParameterValues(param);
+
+        return reader;
+    }
+
+    @Bean(name = FIND_TOP_10_BY_ORDER_BY_ID_DESC, destroyMethod = "")
+    @StepScope
+    public ListItemReader<CoinEntity> findTop10ByOrderByIdDesc(@Qualifier("coinEntityManagerFactory") EntityManagerFactory entityManagerFactory) {
+        return new ListItemReader<>(coinREP.findTop10ByOrderByIdDesc());
+    }
+    @Bean(name = FIND_TOP_1_BY_ORDER_BY_ID_DESC, destroyMethod = "")
+    @StepScope
+    public ListItemReader<CoinEntity> findTop1ByOrderByIdDesc(@Qualifier("coinEntityManagerFactory") EntityManagerFactory entityManagerFactory) {
+        return new ListItemReader<>(coinREP.findTop1ByOrderByIdDesc());
+    }
+}

@@ -1,0 +1,6 @@
+package com.example.batch.service.batch.common;
+
+import org.springframework.batch.item.ItemReader;
+
+public abstract class BasicReader<T> implements ItemReader<T> {
+}

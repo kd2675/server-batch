@@ -1,0 +1,33 @@
+spring:
+  profiles:
+    active: local
+    group:
+      local: local
+      test: test
+      dev: dev
+      prod: prod
+  devtools:
+    livereload:
+      enabled: false
+  jpa:
+#    database: mysql
+#    database-platform: org.hibernate.dialect.MySQLDialect
+    open-in-view: false
+#    properties:
+#      hibernate:
+#        dialect: org.hibernate.dialect.MySQLDialect
+  servlet:
+    multipart:
+      maxFileSize: 100MB
+      maxRequestSize: 100MB
+  jackson:
+    date-format: yyyy-MM-dd HH:mm:ss
+    serialization:
+      FAIL_ON_EMPTY_BEANS: false
+      WRITE_DATES_AS_TIMESTAMPS: false
+  batch:
+    job:
+      enabled: false
+    jdbc:
+
+      initialize-schema: always

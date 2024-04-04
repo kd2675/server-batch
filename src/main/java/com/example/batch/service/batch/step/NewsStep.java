@@ -1,0 +1,99 @@
+package com.example.batch.service.batch.step;
+
+import com.example.batch.service.batch.common.BasicProcessor;
+import com.example.batch.service.batch.processor.NewsProcessor;
+import com.example.batch.service.batch.reader.MattermostReader;
+import com.example.batch.service.batch.reader.NewsReader;
+import com.example.batch.service.batch.writer.NewsComposeWriter;
+import com.example.batch.service.batch.writer.NewsWriter;
+import com.example.batch.service.news.api.vo.NaverNewsApiItemVO;
+import com.example.batch.service.mattermost.database.rep.jpa.mattermost.sent.MattermostSentEntity;
+import com.example.batch.service.news.database.rep.jpa.news.NewsEntity;
+import org.springframework.batch.core.Step;
+import org.springframework.batch.core.configuration.annotation.JobScope;
+import org.springframework.batch.core.repository.JobRepository;
+import org.springframework.batch.core.step.builder.StepBuilder;
+import org.springframework.batch.item.database.JpaItemWriter;
+import org.springframework.batch.item.database.JpaPagingItemReader;
+import org.springframework.batch.item.support.CompositeItemWriter;
+import org.springframework.batch.item.support.ListItemReader;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.transaction.PlatformTransactionManager;
+
+@Configuration
+public class NewsStep {
+    public static final int CHUNK_SIZE = 100;
+    public static final int PAGE_SIZE = 100;
+    public static final String INS_NEWS_STEP = "insNewsStep";
+    public static final String SEND_NEWS_STEP = "sendNewsStep";
+    public static final String SAVE_OLD_NEWS_AND_DEL_ALL_NEWS_STEP = "saveOldNewsAndDelAllNewsStep";
+    public static final String SENT_NEWS_STEP = "sentNewsStep";
+    @Bean(name = INS_NEWS_STEP)
+    @JobScope
+    public Step insNewsStep(
+            JobRepository jobRepository,
+            @Qualifier("newsTransactionManager") PlatformTransactionManager platformTransactionManager,
+            @Qualifier(NewsReader.FIND_NAVER_NEWS_API) ListItemReader<NaverNewsApiItemVO> itemReader,
+            @Qualifier(NewsProcessor.NAVER_NEWS_API_ITEM_VO_TO_NEWS_ENTITY) BasicProcessor<NaverNewsApiItemVO, NewsEntity> itemProcessor,
+            @Qualifier(NewsWriter.JPA_ITEM_WRITER) JpaItemWriter<NewsEntity> itemWriter
+    ) {
+        return new StepBuilder(INS_NEWS_STEP, jobRepository)
+                .<NaverNewsApiItemVO, NewsEntity>chunk(CHUNK_SIZE, platformTransactionManager)
+                .reader(itemReader)
+                .processor(itemProcessor)
+                .writer(itemWriter)
+//                .allowStartIfComplete(true)
+                .build();
+    }
+    @Bean(name = SEND_NEWS_STEP)
+    @JobScope
+    public Step sendNewsStep(
+            JobRepository jobRepository,
+            @Qualifier("newsTransactionManager") PlatformTransactionManager platformTransactionManager,
+            @Qualifier(NewsReader.FIND_TOP_15_BY_SEND_YN_TO_YIS_ORDER_BY_ID_DESC) ListItemReader<NewsEntity> itemReader,
+            @Qualifier(NewsProcessor.NEWS_ENTITY_UPD_SEND_YN_TO_Y) BasicProcessor<NewsEntity, NewsEntity> itemProcessor,
+            @Qualifier(NewsComposeWriter.SEND_NEWS_TO_MATTERMOST_AND_SAVE_MATTERMOST_SENT_AND_UPD_SEND_YN) CompositeItemWriter<NewsEntity> itemWriter
+    ) {
+        return new StepBuilder(SEND_NEWS_STEP, jobRepository)
+                .<NewsEntity, NewsEntity>chunk(20, platformTransactionManager)
+                .reader(itemReader)
+                .processor(itemProcessor)
+                .writer(itemWriter)
+//                .allowStartIfComplete(true)
+                .build();
+    }
+    @Bean(name = SAVE_OLD_NEWS_AND_DEL_ALL_NEWS_STEP)
+    @JobScope
+    public Step saveOldNewsAndDelAllNewsStep(
+            JobRepository jobRepository,
+            @Qualifier("newsTransactionManager") PlatformTransactionManager platformTransactionManager,
+            @Qualifier(NewsReader.FIND_ALL_NEWS_FIX_PAGE_0) JpaPagingItemReader<NewsEntity> itemReader,
+            @Qualifier(NewsComposeWriter.SAVE_OLD_NEWS_AND_DEL_ALL_NEWS) CompositeItemWriter<NewsEntity> itemCompose
+    ) {
+        return new StepBuilder(SAVE_OLD_NEWS_AND_DEL_ALL_NEWS_STEP, jobRepository)
+//                .allowStartIfComplete(true)
+                .<NewsEntity, NewsEntity>chunk(CHUNK_SIZE, platformTransactionManager)
+                .reader(itemReader)
+                .writer(itemCompose)
+                .build();
+    }
+    @Bean(name = SENT_NEWS_STEP)
+    @JobScope
+    public Step sentNewsStep(
+            JobRepository jobRepository,
+            @Qualifier("newsTransactionManager") PlatformTransactionManager platformTransactionManager,
+            @Qualifier(MattermostReader.FIND_BY_CATEGORY_IS_NEWS) JpaPagingItemReader<MattermostSentEntity> itemReader,
+            @Qualifier(NewsComposeWriter.DEL_MATTERMOST_UTIL_BY_ID_AND_DEL_ALL_MATTERMOST_SENT) CompositeItemWriter<MattermostSentEntity> itemCompose
+    ) {
+        return new StepBuilder(SENT_NEWS_STEP, jobRepository)
+                .<MattermostSentEntity, MattermostSentEntity>chunk(CHUNK_SIZE, platformTransactionManager)
+                .reader(itemReader)
+                .writer(itemCompose)
+//                .allowStartIfComplete(true)
+//                .faultTolerant()
+//                .skip(HttpClientErrorException.class).skipLimit(10)
+                .build();
+    }
+}
