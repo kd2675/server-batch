@@ -1,7 +1,6 @@
 package com.example.batch.service.cocoin.database.rep.jpa.order;
 
 import com.example.batch.common.database.rep.jpa.CommonDateEntity;
-import com.example.batch.service.auth.database.rep.jpa.user.UserEntity;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
@@ -9,6 +8,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.example.database.auth.database.rep.jpa.user.UserEntity;
 
 @Getter
 @Builder

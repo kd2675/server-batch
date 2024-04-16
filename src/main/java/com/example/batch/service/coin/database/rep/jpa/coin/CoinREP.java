@@ -11,4 +11,5 @@ public interface CoinREP extends JpaRepository<CoinEntity, Long> {
     public List<CoinEntity> findByCreateDateBefore(LocalDateTime dateTime);
     List<CoinEntity> findTop10ByOrderByIdDesc();
     List<CoinEntity> findTop1ByOrderByIdDesc();
+    CoinEntity findTopByOrderByIdDesc();
 }
