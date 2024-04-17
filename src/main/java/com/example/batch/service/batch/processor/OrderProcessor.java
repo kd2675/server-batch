@@ -12,28 +12,36 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 @RequiredArgsConstructor
 public class OrderProcessor {
-    private static final String ORDER_PROCESSOR = "orderProcessor";
+    public static final String ADJ_ORDER_PROCESSOR = "adjOrderProcessor";
 
     private final CoinREP coinREP;
 
-    @Bean(name = ORDER_PROCESSOR)
+    @Bean(name = ADJ_ORDER_PROCESSOR)
     @StepScope
     public BasicProcessor<OrderEntity, OrderEntity> itemProcessor() {
-
         CoinEntity coinEntity = coinREP.findTop1ByOrderByIdDesc().stream().findFirst().orElseGet(CoinEntity::new);
         int closingPrice = Integer.parseInt(coinEntity.getClosingPrice());
 
         return new BasicProcessor<OrderEntity, OrderEntity>() {
             @Override
             public OrderEntity process(OrderEntity orderEntity) throws Exception {
+                //b, s
+                String orderSlct = orderEntity.getOrderSlct();
+                //l, s
+                String marginSlct = orderEntity.getMarginSlct();
+                Double orderEntityPrice = orderEntity.getPrice();
 
-                orderEntity.getPrice();
-
-                if (orderEntity.getPrice() < closingPrice) {
-                    return null;
+                if ("b".equals(orderSlct) && "l".equals(marginSlct) && orderEntityPrice >= closingPrice) {
+                    return orderEntity;
+                } else if ("s".equals(orderSlct) && "l".equals(marginSlct) && orderEntityPrice <= closingPrice) {
+                    return orderEntity;
+                } else if ("b".equals(orderSlct) && "s".equals(marginSlct) && orderEntityPrice <= closingPrice) {
+                    return orderEntity;
+                } else if ("s".equals(orderSlct) && "s".equals(marginSlct) && orderEntityPrice >= closingPrice) {
+                    return orderEntity;
                 }
 
-                return orderEntity;
+                return null;
             }
         };
 //        return CoinEntity::getId;

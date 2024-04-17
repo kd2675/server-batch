@@ -3,6 +3,7 @@ package com.example.batch.cron;
 import com.example.batch.service.batch.common.CustomJobParametersIncrementer;
 import com.example.batch.service.batch.job.CoinJob;
 import com.example.batch.service.batch.job.NewsJob;
+import com.example.batch.service.batch.job.OrderJob;
 import com.example.batch.service.coin.api.biz.ins.InsCoinService;
 //import com.example.crawling.service.kospi.api.biz.ins.InsKospiSVC;
 //import com.example.crawling.service.kospi.api.biz.send.SendKospiSVC;
@@ -22,22 +23,32 @@ public class Scheduler {
     private final JobLauncher jobLauncher;
     private final JobRegistry jobRegistry;
 
-//    private final InsKospiSVC insKospiSVC;
+    //    private final InsKospiSVC insKospiSVC;
 //    private final SendKospiSVC sendKospiSVC;
     private final InsCoinService insCoinService;
     private final InsNewsSVC insNewsSVC;
+
+    @Scheduled(fixedRate = 2000, initialDelay = 2000)
+//    @Async("asyncTaskExecutor")
+    public void orderJob() throws Exception {
+        // add parameters as needed
+        jobLauncher.run(jobRegistry.getJob(OrderJob.UPD_ORDER_JOB), getJobParameters());
+    }
+
     @Scheduled(cron = "10 * 8,11,13,17 * * *")
     @Async("asyncTaskExecutor")
     public void insNewsJob() throws Exception {
         // add parameters as needed
         jobLauncher.run(jobRegistry.getJob(NewsJob.INS_NEWS_JOB), getJobParameters());
     }
+
     @Scheduled(cron = "20,50 * 8,11,13,17 * * *")
     @Async("asyncTaskExecutor")
     public void sendNewsJob() throws Exception {
         // add parameters as needed
         jobLauncher.run(jobRegistry.getJob(NewsJob.SEND_NEWS_JOB), getJobParameters());
     }
+
     @Scheduled(cron = "0 0/30 * * * *")
     @Async("asyncTaskExecutor")
     public void delNewsJob() throws Exception {
@@ -73,12 +84,14 @@ public class Scheduler {
         // add parameters as needed
         jobLauncher.run(jobRegistry.getJob("delCoinJob"), getJobParameters());
     }
+
     @Scheduled(cron = "20 0/5 8-19 * * *")
     @Async("asyncTaskExecutor")
     public void sendCoinJob() throws Exception {
         // add parameters as needed
         jobLauncher.run(jobRegistry.getJob(CoinJob.SEND_COIN_JOB), getJobParameters());
     }
+
     @Scheduled(cron = "20 0 20-23,0-7 * * *")
     @Async("asyncTaskExecutor")
     public void sendCoinOtherJob() throws Exception {

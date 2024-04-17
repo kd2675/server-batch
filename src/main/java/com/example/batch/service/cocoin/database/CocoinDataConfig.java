@@ -85,7 +85,7 @@ public class CocoinDataConfig {
 
         return builder
                 .dataSource(new LazyConnectionDataSourceProxy(routingDataSource))
-                .packages("com.example.batch.service.cocoin.database.rep.jpa", "com.example.batch.service.auth.database.rep.jpa")
+                .packages("com.example.batch.service.cocoin.database.rep.jpa", "org.example.database.auth.database.rep.jpa")
                 .properties(properties)
                 .persistenceUnit("cocoinEntityManagerFactory")
                 .build();

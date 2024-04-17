@@ -89,7 +89,7 @@ public class PubConfig {
         properties.put("hibernate.use_sql_comments", true);
 
         return builder.dataSource(new LazyConnectionDataSourceProxy(routingDataSource))
-                .packages("com.example.batch.service.auth.database.rep.jpa")
+                .packages("org.example.database.auth.database.rep.jpa")
                 .properties(properties)
                 .persistenceUnit("pubEntityManager")
                 .build();
