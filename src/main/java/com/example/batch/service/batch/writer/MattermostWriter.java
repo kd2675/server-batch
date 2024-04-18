@@ -17,6 +17,7 @@ import org.springframework.context.annotation.Configuration;
 import java.time.format.DateTimeFormatter;
 import java.util.LinkedList;
 import java.util.Queue;
+
 @Slf4j
 @RequiredArgsConstructor
 @Configuration
@@ -28,39 +29,42 @@ public class MattermostWriter {
 
     private final MattermostSentREP mattermostSentREP;
     private final MattermostUtil mattermostUtil;
+
     @Bean(name = SEND_NEWS_AND_SAVE_MATTERMOST_SENT)
     @StepScope
     public BasicWriter<NewsEntity> sendNewsAndSaveMattermostSent() {
         return new BasicWriter<NewsEntity>() {
             @Override
             public void write(Chunk<? extends NewsEntity> chunk) throws Exception {
-                mattermostSentREP
-                        .save(MattermostSentEntity
-                                .builder()
-                                .sentId(mattermostUtil
-                                        .sendNewsChannel(convertNewsMattermostMessage(chunk))
+                mattermostSentREP.save(MattermostSentEntity.builder()
+                        .sentId(
+                                mattermostUtil.sendNewsChannel(convertNewsMattermostMessage(chunk))
                                         .getBody()
-                                        .getId())
-                                .category("news")
-                                .build());
+                                        .getId()
+                        )
+                        .category("news")
+                        .build()
+                );
             }
         };
     }
+
     @Bean(name = SEND_COIN_AND_SAVE_MATTERMOST_SENT)
     @StepScope
     public BasicWriter<CoinEntity> sendCoinAndSaveMattermostSent() {
         return new BasicWriter<CoinEntity>() {
             @Override
             public void write(Chunk<? extends CoinEntity> chunk) throws Exception {
-                mattermostSentREP
-                        .save(MattermostSentEntity
-                                .builder()
-                                .sentId(mattermostUtil
-                                        .sendCoinChannel(convertCoinMattermostMessageCol(chunk))
-                                        .getBody()
-                                        .getId())
+                mattermostSentREP.save(
+                        MattermostSentEntity.builder()
+                                .sentId(
+                                        mattermostUtil.sendCoinChannel(convertCoinMattermostMessageCol(chunk))
+                                                .getBody()
+                                                .getId()
+                                )
                                 .category("coin")
-                                .build());
+                                .build()
+                );
             }
         };
     }
@@ -75,6 +79,7 @@ public class MattermostWriter {
             }
         };
     }
+
     @Bean(name = DEL_ALL_MATTERMOST_SENT)
     @StepScope
     public ItemWriter<MattermostSentEntity> delAllMattermostSent() {

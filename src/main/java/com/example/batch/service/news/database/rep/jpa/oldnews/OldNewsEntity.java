@@ -1,11 +1,11 @@
 package com.example.batch.service.news.database.rep.jpa.oldnews;
 
-import com.example.batch.common.database.rep.jpa.CommonDateEntity;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.example.database.common.rep.jpa.CommonDateEntity;
 import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.DynamicInsert;
 

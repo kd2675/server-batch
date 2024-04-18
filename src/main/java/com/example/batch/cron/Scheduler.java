@@ -28,7 +28,7 @@ public class Scheduler {
     private final InsCoinService insCoinService;
     private final InsNewsSVC insNewsSVC;
 
-    @Scheduled(fixedRate = 2000, initialDelay = 2000)
+    @Scheduled(fixedRate = 2000, initialDelay = 10000)
 //    @Async("asyncTaskExecutor")
     public void orderJob() throws Exception {
         // add parameters as needed
@@ -71,7 +71,7 @@ public class Scheduler {
 //        sendKospiSVC.sendMattermostKospiWeek();
 //    }
 
-    @Scheduled(fixedRate = 500)
+    @Scheduled(fixedRate = 1000)
 //    @Scheduled(cron = "0/1 * 8-17 * * *")
     @Async("asyncTaskExecutor")
     public void runJob() throws Exception {

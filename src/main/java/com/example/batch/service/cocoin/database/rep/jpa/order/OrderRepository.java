@@ -1,6 +1,6 @@
 package com.example.batch.service.cocoin.database.rep.jpa.order;
 
-import com.example.batch.service.auth.database.rep.jpa.user.UserEntity;
+import org.example.database.auth.database.rep.jpa.user.UserEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.lang.NonNull;
 

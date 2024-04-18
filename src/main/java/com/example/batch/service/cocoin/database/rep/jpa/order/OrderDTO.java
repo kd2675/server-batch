@@ -1,9 +1,9 @@
 package com.example.batch.service.cocoin.database.rep.jpa.order;
 
-import com.example.batch.common.database.rep.jpa.CommonDateDTO;
 import lombok.Getter;
 import lombok.ToString;
 import org.example.database.auth.database.rep.jpa.user.UserDTO;
+import org.example.database.common.rep.jpa.CommonDateDTO;
 
 @ToString
 @Getter
