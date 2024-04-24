@@ -13,6 +13,8 @@ import com.example.batch.service.news.database.rep.jpa.news.NewsEntity;
 import lombok.RequiredArgsConstructor;
 import org.example.database.auth.database.rep.jpa.user.UserEntity;
 import org.example.database.auth.database.rep.jpa.wallet.WalletEntity;
+import org.example.log.annotation.Log;
+import org.example.log.annotation.LogOrder;
 import org.springframework.batch.core.configuration.annotation.StepScope;
 import org.springframework.batch.item.Chunk;
 import org.springframework.context.annotation.Bean;

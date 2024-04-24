@@ -12,5 +12,4 @@ public class BatchApplication {
         String getVersion = org.springframework.core.SpringVersion.getVersion();
         System.out.println("SpringVersion =============> " + getVersion);
     }
-
 }

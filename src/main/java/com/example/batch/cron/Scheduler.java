@@ -35,26 +35,72 @@ public class Scheduler {
         jobLauncher.run(jobRegistry.getJob(OrderJob.UPD_ORDER_JOB), getJobParameters());
     }
 
-    @Scheduled(cron = "10 * 8,11,13,17 * * *")
-    @Async("asyncTaskExecutor")
-    public void insNewsJob() throws Exception {
-        // add parameters as needed
-        jobLauncher.run(jobRegistry.getJob(NewsJob.INS_NEWS_JOB), getJobParameters());
+//    @Scheduled(cron = "10 * 8,11,13,17 * * *")
+//    @Async("asyncTaskExecutor")
+//    public void insNewsJob() throws Exception {
+//        // add parameters as needed
+//        jobLauncher.run(jobRegistry.getJob(NewsJob.INS_NEWS_JOB), getJobParameters());
+//    }
+//
+//    @Scheduled(cron = "20,50 * 8,11,13,17 * * *")
+//    @Async("asyncTaskExecutor")
+//    public void sendNewsJob() throws Exception {
+//        // add parameters as needed
+//        jobLauncher.run(jobRegistry.getJob(NewsJob.SEND_NEWS_JOB), getJobParameters());
+//    }
+//
+//    @Scheduled(cron = "0 0/30 * * * *")
+//    @Async("asyncTaskExecutor")
+//    public void delNewsJob() throws Exception {
+//        // add parameters as needed
+//        jobLauncher.run(jobRegistry.getJob(NewsJob.DEL_NEWS_JOB), getJobParameters());
+//    }
+//
+//    @Scheduled(fixedRate = 1000)
+////    @Scheduled(cron = "0/1 * 8-17 * * *")
+//    @Async("asyncTaskExecutor")
+//    public void runJob() throws Exception {
+//        insCoinService.saveCoinDataBTC();
+//    }
+//
+//    @Scheduled(cron = "30 0 4 * * *")
+//    @Async("asyncTaskExecutor")
+//    public void coinDeleteJob() throws Exception {
+//        // add parameters as needed
+//        jobLauncher.run(jobRegistry.getJob("delCoinJob"), getJobParameters());
+//    }
+//
+//    @Scheduled(cron = "20 0/5 8-19 * * *")
+//    @Async("asyncTaskExecutor")
+//    public void sendCoinJob() throws Exception {
+//        // add parameters as needed
+//        jobLauncher.run(jobRegistry.getJob(CoinJob.SEND_COIN_JOB), getJobParameters());
+//    }
+//
+//    @Scheduled(cron = "20 0 20-23,0-7 * * *")
+//    @Async("asyncTaskExecutor")
+//    public void sendCoinOtherJob() throws Exception {
+//        // add parameters as needed
+//        jobLauncher.run(jobRegistry.getJob(CoinJob.SEND_COIN_JOB), getJobParameters());
+//    }
+//
+    public static JobParameters getJobParameters() {
+        return new JobParametersBuilder()
+                .addJobParameters(new CustomJobParametersIncrementer().getNext(new JobParameters()))
+                .toJobParameters();
     }
 
-    @Scheduled(cron = "20,50 * 8,11,13,17 * * *")
-    @Async("asyncTaskExecutor")
-    public void sendNewsJob() throws Exception {
-        // add parameters as needed
-        jobLauncher.run(jobRegistry.getJob(NewsJob.SEND_NEWS_JOB), getJobParameters());
-    }
 
-    @Scheduled(cron = "0 0/30 * * * *")
-    @Async("asyncTaskExecutor")
-    public void delNewsJob() throws Exception {
-        // add parameters as needed
-        jobLauncher.run(jobRegistry.getJob(NewsJob.DEL_NEWS_JOB), getJobParameters());
-    }
+
+
+
+
+
+
+
+
+
+
 
 //    @Scheduled(cron = "10 0/10 9-16 ? * 1-5")
 //    public void saveKospi(){
@@ -71,39 +117,7 @@ public class Scheduler {
 //        sendKospiSVC.sendMattermostKospiWeek();
 //    }
 
-    @Scheduled(fixedRate = 1000)
-//    @Scheduled(cron = "0/1 * 8-17 * * *")
-    @Async("asyncTaskExecutor")
-    public void runJob() throws Exception {
-        insCoinService.saveCoinDataBTC();
-    }
 
-    @Scheduled(cron = "30 0 4 * * *")
-    @Async("asyncTaskExecutor")
-    public void coinDeleteJob() throws Exception {
-        // add parameters as needed
-        jobLauncher.run(jobRegistry.getJob("delCoinJob"), getJobParameters());
-    }
-
-    @Scheduled(cron = "20 0/5 8-19 * * *")
-    @Async("asyncTaskExecutor")
-    public void sendCoinJob() throws Exception {
-        // add parameters as needed
-        jobLauncher.run(jobRegistry.getJob(CoinJob.SEND_COIN_JOB), getJobParameters());
-    }
-
-    @Scheduled(cron = "20 0 20-23,0-7 * * *")
-    @Async("asyncTaskExecutor")
-    public void sendCoinOtherJob() throws Exception {
-        // add parameters as needed
-        jobLauncher.run(jobRegistry.getJob(CoinJob.SEND_COIN_JOB), getJobParameters());
-    }
-
-    public static JobParameters getJobParameters() {
-        return new JobParametersBuilder()
-                .addJobParameters(new CustomJobParametersIncrementer().getNext(new JobParameters()))
-                .toJobParameters();
-    }
 
 //
 //    @Scheduled(fixedRate = 4000)

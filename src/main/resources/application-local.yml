@@ -29,6 +29,23 @@ database:
         maximum-pool-size: 8
         connection-timeout: 30000
         maxLifetime: 1800000
+    log:
+      master:
+        url: jdbc:mysql://210.123.252.85:13306/LOG?zeroDateTimeBehavior=convertToNull&useLegacyDatetimeCode=false&serverTimezone=Asia/Seoul&noAccessToProcedureBodies=true&useSSL=false&allowPublicKeyRetrieval=true
+        username: root
+        password: 1234
+        driver-class-name: com.mysql.cj.jdbc.Driver
+        maximum-pool-size: 8
+        connection-timeout: 30000
+        maxLifetime: 1800000
+      slave1:
+        url: jdbc:mysql://210.123.252.85:13306/LOG?zeroDateTimeBehavior=convertToNull&useLegacyDatetimeCode=false&serverTimezone=Asia/Seoul&noAccessToProcedureBodies=true&useSSL=false&allowPublicKeyRetrieval=true
+        username: root
+        password: 1234
+        driver-class-name: com.mysql.cj.jdbc.Driver
+        maximum-pool-size: 8
+        connection-timeout: 30000
+        maxLifetime: 1800000
     pub:
       master:
         url: jdbc:mysql://210.123.252.85:13306/REP?zeroDateTimeBehavior=convertToNull&useLegacyDatetimeCode=false&serverTimezone=Asia/Seoul&noAccessToProcedureBodies=true&useSSL=false&allowPublicKeyRetrieval=true
