@@ -29,35 +29,26 @@ import java.util.Map;
         transactionManagerRef = "batchTransactionManager"
 )
 public class BatchDataConfig {
-    @Bean
-    @ConfigurationProperties("database.datasource.batch.master")
-    public DataSourceProperties batchMasterDatasourceProperties() {
-        return new DataSourceProperties();
+    private DataSource createHikariDataSource(String propertiesPrefix) {
+        DataSourceProperties dataSourceProperties = new DataSourceProperties();
+        dataSourceProperties.setName(propertiesPrefix);
+        return dataSourceProperties
+                .initializeDataSourceBuilder()
+                .type(HikariDataSource.class)
+                .build();
     }
 
     @Primary
     @Bean
     @ConfigurationProperties("database.datasource.batch.master.configure")
     public DataSource batchMasterDatasource() {
-        return batchMasterDatasourceProperties()
-                .initializeDataSourceBuilder()
-                .type(HikariDataSource.class)
-                .build();
-    }
-
-    @Bean
-    @ConfigurationProperties("database.datasource.batch.slave1")
-    public DataSourceProperties batchSlave1DatasourceProperties() {
-        return new DataSourceProperties();
+        return createHikariDataSource("database.datasource.batch.master");
     }
 
     @Bean
     @ConfigurationProperties("database.datasource.batch.slave1.configure")
     public DataSource batchSlave1Datasource() {
-        return batchSlave1DatasourceProperties()
-                .initializeDataSourceBuilder()
-                .type(HikariDataSource.class)
-                .build();
+        return createHikariDataSource("database.datasource.batch.slave1");
     }
 
     @Primary

@@ -3,6 +3,7 @@ package com.example.batch.service.batch.writer;
 import com.example.batch.service.auth.database.rep.jpa.user.UserRepository;
 import com.example.batch.service.batch.common.BasicWriter;
 import com.example.batch.service.cocoin.api.dto.InsMarketDTO;
+import com.example.batch.service.cocoin.database.rep.jpa.market.MarketDTO;
 import com.example.batch.service.cocoin.database.rep.jpa.market.MarketEntity;
 import com.example.batch.service.cocoin.database.rep.jpa.market.MarketRepository;
 import com.example.batch.service.cocoin.database.rep.jpa.order.OrderEntity;
@@ -11,10 +12,12 @@ import com.example.batch.service.coin.database.rep.jpa.coin.CoinEntity;
 import com.example.batch.service.coin.database.rep.jpa.coin.CoinREP;
 import com.example.batch.service.news.database.rep.jpa.news.NewsEntity;
 import lombok.RequiredArgsConstructor;
+import org.example.database.auth.database.rep.jpa.user.UserDTO;
 import org.example.database.auth.database.rep.jpa.user.UserEntity;
 import org.example.database.auth.database.rep.jpa.wallet.WalletEntity;
 import org.example.log.annotation.Log;
 import org.example.log.annotation.LogOrder;
+import org.example.log.biz.LogService;
 import org.springframework.batch.core.configuration.annotation.StepScope;
 import org.springframework.batch.item.Chunk;
 import org.springframework.context.annotation.Bean;
@@ -28,6 +31,8 @@ import java.util.Collections;
 public class OrderWriter {
     public static final String COMPLETE_ORDER_TO_MARKET = "completeOrderToMarket";
     public static final String DEL_ORDER = "delOrder";
+
+    private final LogService logService;
 
     private final UserRepository userRepository;
     private final OrderRepository orderRepository;
@@ -130,6 +135,7 @@ public class OrderWriter {
         marketEntity.marketAdjust(newPrice, newCnt, newCleanPrice);
 
         marketRepository.save(marketEntity);
+        logService.market(UserDTO.of(userEntity), MarketDTO.of(marketEntity), "buy");
 
         WalletEntity walletEntity = userEntity.getWalletEntity();
         walletEntity.buy(orderFullPrice);
@@ -158,10 +164,12 @@ public class OrderWriter {
             throw new RuntimeException();
         } else if (Double.compare(insMarketDTO.getCnt(), marketEntity.getCnt()) == 0) {
             marketRepository.delete(marketEntity);
+            logService.market(UserDTO.of(userEntity), MarketDTO.of(marketEntity), "sell");
         } else {
             double newCnt = BigDecimal.valueOf(cnt).subtract(BigDecimal.valueOf(insMarketDTO.getCnt())).doubleValue();
             marketEntity.sell(newCnt);
             marketRepository.save(marketEntity);
+            logService.market(UserDTO.of(userEntity), MarketDTO.of(marketEntity), "sell");
         }
 
         Double resultPrice;
@@ -201,6 +209,7 @@ public class OrderWriter {
                 .build();
 
         marketRepository.save(marketEntity);
+        logService.market(UserDTO.of(userEntity), MarketDTO.of(marketEntity), "buy");
 
         WalletEntity walletEntity = userEntity.getWalletEntity();
         walletEntity.buy(coinPrice * insMarketDTO.getCnt());
