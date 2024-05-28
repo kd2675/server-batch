@@ -25,9 +25,8 @@ import java.util.List;
 @EnableWebMvc
 @Configuration
 @RequiredArgsConstructor
-@ComponentScan(basePackages = {"com.example.batch", "org.example.log"})
+@ComponentScan(basePackages = {"org.example.core", "com.example.batch", "org.example.log"})
 public class MvcConfig implements WebMvcConfigurer {
-//    private final PubDataSource pubDataSource;
     @Override
     public void addCorsMappings(CorsRegistry registry) {
         registry.addMapping("/**")
