@@ -13,4 +13,4 @@ RUN apk add curl
 COPY --from=builder /build/build/libs/*.jar ./app.jar
 ENV	USE_PROFILE dev
 
-ENTRYPOINT ["java", "-Dspring.profiles.active=${USE_PROFILE}", "-jar", "/app/app.jar"]
+ENTRYPOINT ["java", "-Dspring.profiles.active=${USE_PROFILE}", "-jar", "/app/service-batch-0.0.1-SNAPSHOT.jar"]
