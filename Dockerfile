@@ -8,7 +8,7 @@ COPY . /build
 RUN gradle build -x test --parallel
 FROM openjdk:17.0.1-jdk-slim
 WORKDIR /app
-RUN wget -y install curl
+RUN apt -y install curl
 #RUN apk add curl
 COPY --from=builder /build/build/libs/*.jar ./app.jar
 ENV	USE_PROFILE dev
