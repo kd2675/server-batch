@@ -10,7 +10,7 @@ FROM openjdk:17-jdk-alpine
 WORKDIR /app
 #RUN apt -y install curl
 RUN apk add curl
-COPY --from=builder /build/build/libs/*.jar ./app.jar
+COPY --from=builder /build/build/libs/service-batch-0.0.1-SNAPSHOT.jar ./app.jar
 ENV	USE_PROFILE dev
 
-ENTRYPOINT ["java", "-Dspring.profiles.active=${USE_PROFILE}", "-jar", "/app/service-batch-0.0.1-SNAPSHOT.jar"]
+ENTRYPOINT ["java", "-Dspring.profiles.active=${USE_PROFILE}", "-jar", "/app/app.jar"]
