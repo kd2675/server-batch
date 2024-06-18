@@ -103,6 +103,7 @@ public class BatchDataConfig {
 
         HashMap<String, Object> properties = new HashMap<>();
         properties.put("hibernate.hbm2ddl.auto", "validate");
+//        properties.put("hibernate.hbm2ddl.auto", "create");
         properties.put("hibernate.default_batch_fetch_size", 1000);
         properties.put("hibernate.show_sql", false);
         properties.put("hibernate.format_sql", true);
