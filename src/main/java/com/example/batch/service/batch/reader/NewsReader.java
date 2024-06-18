@@ -66,7 +66,7 @@ public class NewsReader {
         LocalDateTime LOCAL_DATE_TIME_2 = LocalDateTime.now().minusMinutes(6);
 
 
-        String[] strings = {"속보", "ai", "주식", "축구", "코인", "날씨", "이", "가", "다", "는", "을", "고", "하", "에",};
+        String[] strings = {"속보", "긴급", "ai", "주식", "축구", "코인", "날씨", "이", "가", "다", "는", "을", "고", "하", "에",};
 
         Set<NaverNewsApiItemVO> set = new HashSet<>();
 

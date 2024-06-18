@@ -35,7 +35,7 @@ public class Scheduler {
         jobLauncher.run(jobRegistry.getJob(OrderJob.UPD_ORDER_JOB), getJobParameters());
     }
 
-    @Scheduled(cron = "10 * 8,11,13,17 * * *")
+    @Scheduled(cron = "10 * 8-20 * * *")
     @Async("asyncTaskExecutor")
     public void insNewsJob() throws Exception {
         // add parameters as needed
@@ -52,6 +52,8 @@ public class Scheduler {
             jobLauncher.run(jobRegistry.getJob(NewsJob.SEND_NEWS_JOB), getJobParameters());
         }
     }
+
+    //긴급
 
     @Scheduled(cron = "0 0/30 * * * *")
     @Async("asyncTaskExecutor")
