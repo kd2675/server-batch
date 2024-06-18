@@ -6,10 +6,10 @@ RUN gradle build -x test --parallel --continue > /dev/null 2>&1 || true
 # 빌더 이미지에서 애플리케이션 빌드
 COPY . /build
 RUN gradle build -x test --parallel
-FROM openjdk:17.0.1-jdk-slim
+FROM openjdk:17-jdk-alpine
 WORKDIR /app
-RUN apt -y install curl
-#RUN apk add curl
+#RUN apt -y install curl
+RUN apk add curl
 COPY --from=builder /build/build/libs/*.jar ./app.jar
 ENV	USE_PROFILE dev
 
