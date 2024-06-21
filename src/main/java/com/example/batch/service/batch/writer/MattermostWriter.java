@@ -14,8 +14,10 @@ import org.springframework.batch.item.ItemWriter;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
+import java.text.NumberFormat;
 import java.time.format.DateTimeFormatter;
 import java.util.LinkedList;
+import java.util.Locale;
 import java.util.Queue;
 
 @Slf4j
@@ -164,6 +166,8 @@ public class MattermostWriter {
     }
 
     public String convertCoinMattermostMessageCol(Chunk<? extends CoinEntity> entityList) {
+        NumberFormat numberFormat = NumberFormat.getIntegerInstance(Locale.KOREA);
+
         StringBuilder result = new StringBuilder();
         DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
         DateTimeFormatter dtfD = DateTimeFormatter.ofPattern("yyyy-MM-dd");
@@ -196,19 +200,18 @@ public class MattermostWriter {
                 break;
             }
             CoinEntity remove = q.remove();
-
             line.append(" | ").append(dtfD.format(remove.getCreateDate()));
             line0.append("|:-:");
             line1.append(" | ").append(dtfT.format(remove.getCreateDate()));
-            line2.append(" | ").append(remove.getClosingPrice());
-            line3.append(" | ").append(remove.getMaxPrice());
-            line4.append(" | ").append(remove.getMinPrice());
-            line5.append(" | ").append(remove.getFluctateRate24H());
-            line6.append(" | ").append(remove.getFluctate24H());
-            line7.append(" | ").append(Math.round(Double.parseDouble(remove.getUnitsTraded())));
-            line8.append(" | ").append(Math.round(Double.parseDouble(remove.getUnitsTraded24H())));
-            line9.append(" | ").append(Math.round(Double.parseDouble(remove.getAccTradeValue())));
-            line10.append(" | ").append(Math.round(Double.parseDouble(remove.getAccTradeValue24H())));
+            line2.append(" | ").append(numberFormat.format(Integer.parseInt(remove.getClosingPrice())));
+            line3.append(" | ").append(numberFormat.format(Integer.parseInt(remove.getMaxPrice())));
+            line4.append(" | ").append(numberFormat.format(Integer.parseInt(remove.getMinPrice())));
+            line5.append(" | ").append(remove.getFluctateRate24H()+"%");
+            line6.append(" | ").append(numberFormat.format(Integer.parseInt(remove.getFluctate24H())));
+            line7.append(" | ").append(numberFormat.format(Math.round(Double.parseDouble(remove.getUnitsTraded()))));
+            line8.append(" | ").append(numberFormat.format(Math.round(Double.parseDouble(remove.getUnitsTraded24H()))));
+            line9.append(" | ").append(numberFormat.format(Math.round(Double.parseDouble(remove.getAccTradeValue()))));
+            line10.append(" | ").append(numberFormat.format(Math.round(Double.parseDouble(remove.getAccTradeValue24H()))));
 //
 //            content += "| " + dtf.format(remove.getCreateDate())
 //                    + " | " + "비트코인"
