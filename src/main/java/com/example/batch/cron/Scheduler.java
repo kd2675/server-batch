@@ -82,7 +82,7 @@ public class Scheduler {
         }
     }
 
-    @Scheduled(cron = "20 0/5 8-19 * * *")
+    @Scheduled(cron = "20 0,30 8-19 * * *")
     @Async("asyncTaskExecutor")
     public void sendCoinJob() throws Exception {
         // add parameters as needed
