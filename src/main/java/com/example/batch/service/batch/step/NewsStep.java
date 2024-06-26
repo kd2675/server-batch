@@ -30,6 +30,7 @@ public class NewsStep {
     public static final String SEND_NEWS_STEP = "sendNewsStep";
     public static final String SAVE_OLD_NEWS_AND_DEL_ALL_NEWS_STEP = "saveOldNewsAndDelAllNewsStep";
     public static final String SENT_NEWS_STEP = "sentNewsStep";
+
     @Bean(name = INS_NEWS_STEP)
     @JobScope
     public Step insNewsStep(
@@ -47,6 +48,7 @@ public class NewsStep {
 //                .allowStartIfComplete(true)
                 .build();
     }
+
     @Bean(name = SEND_NEWS_STEP)
     @JobScope
     public Step sendNewsStep(
@@ -64,6 +66,7 @@ public class NewsStep {
 //                .allowStartIfComplete(true)
                 .build();
     }
+
     @Bean(name = SAVE_OLD_NEWS_AND_DEL_ALL_NEWS_STEP)
     @JobScope
     public Step saveOldNewsAndDelAllNewsStep(
@@ -79,6 +82,7 @@ public class NewsStep {
                 .writer(itemCompose)
                 .build();
     }
+
     @Bean(name = SENT_NEWS_STEP)
     @JobScope
     public Step sentNewsStep(

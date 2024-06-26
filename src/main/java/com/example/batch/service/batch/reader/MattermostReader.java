@@ -19,7 +19,7 @@ import java.util.HashMap;
 @RequiredArgsConstructor
 @Configuration
 public class MattermostReader {
-//    public static final String FIND_ALL_MATTERMOST_SENT_FIX_PAGE_0 = "findAllMattermostSentFixPage0";
+    //    public static final String FIND_ALL_MATTERMOST_SENT_FIX_PAGE_0 = "findAllMattermostSentFixPage0";
     public static final String FIND_BY_CATEGORY_IS_NEWS = "findByCategoryIsNews";
     public static final String FIND_BY_CATEGORY_IS_COIN = "findByCategoryIsCoin";
 
@@ -34,10 +34,11 @@ public class MattermostReader {
         reader.setQueryString("SELECT e FROM MattermostSentEntity e WHERE e.createDate < :date and e.category = 'news'");
 
         HashMap<String, Object> param = new HashMap<>();
-        param.put("date", LocalDateTime.now().minusMinutes(5));
+        param.put("date", LocalDateTime.now().minusHours(1));
         reader.setParameterValues(param);
         return reader;
     }
+
     @Bean(name = FIND_BY_CATEGORY_IS_COIN, destroyMethod = "")
     @StepScope
     public JpaPagingItemReader<MattermostSentEntity> findByCategoryIsCoin(@Qualifier("mattermostEntityManagerFactory") EntityManagerFactory entityManagerFactory) {
@@ -49,7 +50,7 @@ public class MattermostReader {
         reader.setQueryString("SELECT e FROM MattermostSentEntity e WHERE e.createDate < :date and e.category = 'coin'");
 
         HashMap<String, Object> param = new HashMap<>();
-        param.put("date", LocalDateTime.now().minusMinutes(5));
+        param.put("date", LocalDateTime.now().minusHours(1));
         reader.setParameterValues(param);
         return reader;
     }

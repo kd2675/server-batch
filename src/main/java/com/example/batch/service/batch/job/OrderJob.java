@@ -12,8 +12,12 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class OrderJob {
     public static final String UPD_ORDER_JOB = "updOrderJob";
+
     @Bean(name = UPD_ORDER_JOB)
-    public Job delCoinJob(JobRepository jobRepository, @Qualifier(OrderStep.UPD_ORDER_STEP) Step step) {
+    public Job delCoinJob(
+            JobRepository jobRepository,
+            @Qualifier(OrderStep.UPD_ORDER_STEP) Step step
+    ) {
         return new JobBuilder(UPD_ORDER_JOB, jobRepository)
                 .start(step)
                 .build();

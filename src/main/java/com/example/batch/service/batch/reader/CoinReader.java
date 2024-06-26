@@ -19,7 +19,7 @@ import java.util.HashMap;
 @RequiredArgsConstructor
 @Configuration
 public class CoinReader {
-    private static final int BEFORE_WEEK_RANGE = 7;
+    private static final int BEFORE_MONTH_RANGE = 1;
     public static final String FIND_COIN_ENTITY_BEFORE_CREATE_DATE = "findCoinEntityBeforeCreateDate";
     public static final String FIND_TOP_10_BY_ORDER_BY_ID_DESC = "findTop10ByOrderByIdDesc";
     public static final String FIND_TOP_1_BY_ORDER_BY_ID_DESC = "findTop1ByOrderByIdDesc";
@@ -37,7 +37,7 @@ public class CoinReader {
         reader.setQueryString("SELECT p FROM CoinEntity p WHERE p.createDate <= :date");
 
         HashMap<String, Object> param = new HashMap<>();
-        param.put("date", LocalDateTime.now().minusMonths(BEFORE_WEEK_RANGE));
+        param.put("date", LocalDateTime.now().minusMonths(BEFORE_MONTH_RANGE));
         reader.setParameterValues(param);
 
         return reader;

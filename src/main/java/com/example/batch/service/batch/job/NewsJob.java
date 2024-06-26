@@ -16,25 +16,30 @@ public class NewsJob {
     public static final String DEL_NEWS_JOB = "delNewsJob";
 
     @Bean(name = INS_NEWS_JOB)
-    public Job insNewsJob(JobRepository jobRepository,
-                          @Qualifier(NewsStep.INS_NEWS_STEP) Step step
+    public Job insNewsJob(
+            JobRepository jobRepository,
+            @Qualifier(NewsStep.INS_NEWS_STEP) Step step
     ) {
         return new JobBuilder(INS_NEWS_JOB, jobRepository)
                 .start(step)
                 .build();
     }
+
     @Bean(name = SEND_NEWS_JOB)
-    public Job sendNewsJob(JobRepository jobRepository,
-                           @Qualifier(NewsStep.SEND_NEWS_STEP) Step step
+    public Job sendNewsJob(
+            JobRepository jobRepository,
+            @Qualifier(NewsStep.SEND_NEWS_STEP) Step step
     ) {
         return new JobBuilder(SEND_NEWS_JOB, jobRepository)
                 .start(step)
                 .build();
     }
+
     @Bean(name = DEL_NEWS_JOB)
-    public Job delNewsJob(JobRepository jobRepository,
-                          @Qualifier(NewsStep.SENT_NEWS_STEP) Step step,
-                          @Qualifier(NewsStep.SAVE_OLD_NEWS_AND_DEL_ALL_NEWS_STEP) Step step1
+    public Job delNewsJob(
+            JobRepository jobRepository,
+            @Qualifier(NewsStep.SENT_NEWS_STEP) Step step,
+            @Qualifier(NewsStep.SAVE_OLD_NEWS_AND_DEL_ALL_NEWS_STEP) Step step1
     ) {
         return new JobBuilder(DEL_NEWS_JOB, jobRepository)
                 .start(step)

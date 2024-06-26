@@ -64,7 +64,7 @@ public class Scheduler {
         }
     }
 
-    @Scheduled(fixedRate = 1000)
+    @Scheduled(fixedRate = 10000)
 //    @Scheduled(cron = "0/1 * 8-17 * * *")
     @Async("asyncTaskExecutor")
     public void coinSaveJob() throws Exception {
@@ -78,7 +78,7 @@ public class Scheduler {
     public void coinDeleteJob() throws Exception {
         // add parameters as needed
         if (ServerTypeUtils.isProd()) {
-            jobLauncher.run(jobRegistry.getJob("delCoinJob"), getJobParameters());
+            jobLauncher.run(jobRegistry.getJob(CoinJob.DEL_COIN_JOB), getJobParameters());
         }
     }
 

@@ -40,11 +40,13 @@ public class NewsReader {
     public ListItemReader<NaverNewsApiItemVO> findNaverNewsApi() {
         return new ListItemReader<NaverNewsApiItemVO>(this.getNaverNewsApiItemVOS());
     }
+
     @Bean(name = FIND_TOP_15_BY_SEND_YN_TO_YIS_ORDER_BY_ID_DESC, destroyMethod = "")
     @StepScope
-    public ListItemReader<NewsEntity> findTop20BySendYnOrderByIdDesc(@Qualifier("newsEntityManagerFactory") EntityManagerFactory entityManagerFactory) {
+    public ListItemReader<NewsEntity> findTop15BySendYnOrderByIdDesc(@Qualifier("newsEntityManagerFactory") EntityManagerFactory entityManagerFactory) {
         return new ListItemReader<>(newsREP.findTop15BySendYnOrderByIdDesc("n"));
     }
+
     @Bean(name = FIND_ALL_NEWS_FIX_PAGE_0, destroyMethod = "")
     @StepScope
     public JpaPagingItemReader<NewsEntity> newsFindAllFixPage0(@Qualifier("newsEntityManagerFactory") EntityManagerFactory entityManagerFactory) {
@@ -56,7 +58,7 @@ public class NewsReader {
         reader.setQueryString("SELECT e FROM NewsEntity e WHERE e.pubDate < :date");
 
         HashMap<String, Object> param = new HashMap<>();
-        param.put("date", LocalDateTime.now().minusMinutes(5));
+        param.put("date", LocalDateTime.now().minusMinutes(30));
         reader.setParameterValues(param);
         return reader;
     }
@@ -68,7 +70,6 @@ public class NewsReader {
 
         String[] strings = {
                 "속보",
-                "긴급",
                 "ai",
                 "주식",
                 "코인",
