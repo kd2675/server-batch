@@ -29,7 +29,7 @@ public class Scheduler {
     private final InsCoinService insCoinService;
     private final InsNewsSVC insNewsSVC;
 
-    @Scheduled(fixedRate = 2000, initialDelay = 10000)
+    @Scheduled(fixedRate = 10000, initialDelay = 10000)
     public void orderJob() throws Exception {
         // add parameters as needed
         jobLauncher.run(jobRegistry.getJob(OrderJob.UPD_ORDER_JOB), getJobParameters());

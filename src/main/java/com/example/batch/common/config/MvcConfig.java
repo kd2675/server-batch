@@ -32,7 +32,8 @@ public class MvcConfig implements WebMvcConfigurer {
         registry.addMapping("/**")
                 .allowedOriginPatterns("*")
                 .allowedMethods("GET", "POST", "OPTIONS")
-                .allowedHeaders("authorization", "Accept", "X-Auth-Token", "X-Requested-With", "Content-Type", "Content-Length", "User-Agent", "Host", "Original")
+//                .allowedHeaders("authorization", "Accept", "X-Auth-Token", "X-Requested-With", "Content-Type", "Content-Length", "User-Agent", "Host", "Original")
+                .allowedHeaders("*")
                 .allowCredentials(true);
     }
 

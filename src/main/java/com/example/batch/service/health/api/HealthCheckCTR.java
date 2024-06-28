@@ -26,22 +26,33 @@ public class HealthCheckCTR {
 
     private final JobLauncher jobLauncher;
     private final JobRegistry jobRegistry;
+
+    @GetMapping("/health")
+    public String health(){
+        return "ok";
+    }
+
     @GetMapping("/news/ins")
     public void test() {
         insNewsSVC.saveNews();
     }
+
     @PostMapping("/coin/send")
     public void coinSend() throws Exception {
         // add parameters as needed
         jobLauncher.run(jobRegistry.getJob(CoinJob.SEND_COIN_JOB), getJobParameters());
     }
-    @DeleteMapping("/mattermost/del")
-    public void test2() {
+
+    @PostMapping("/mattermost/del")
+    public String test2() {
         del();
+
+        return "ok";
     }
+
     @Async("asyncTaskExecutor")
     public void del() {
-        ResponseEntity<MattermostChannelVO> channel = mattermostUtil.selectAllChannel("sph9p8g1uiygindx7qh8tnxmgr");
+        ResponseEntity<MattermostChannelVO> channel = mattermostUtil.selectAllChannel("947q6tnbc3gw9k9uwyxtboqx5h");
         Map<String, MattermostPostVO> posts = channel.getBody().getPosts();
 
         System.out.println(channel.getBody().getHasNext());
