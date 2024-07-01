@@ -44,7 +44,7 @@ public class Scheduler {
         }
     }
 
-    @Scheduled(cron = "20,50 * 8,11,13,17 * * *")
+    @Scheduled(cron = "10,30,50 * 8,11,13,17 * * *")
     @Async("asyncTaskExecutor")
     public void sendNewsJob() throws Exception {
         // add parameters as needed
