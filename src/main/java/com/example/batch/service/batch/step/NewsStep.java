@@ -54,7 +54,7 @@ public class NewsStep {
     public Step sendNewsStep(
             JobRepository jobRepository,
             @Qualifier("newsTransactionManager") PlatformTransactionManager platformTransactionManager,
-            @Qualifier(NewsReader.FIND_TOP_15_BY_SEND_YN_TO_YIS_ORDER_BY_ID_DESC) ListItemReader<NewsEntity> itemReader,
+            @Qualifier(NewsReader.FIND_TOP_15_BY_SEND_YN_ORDER_BY_ID_DESC) ListItemReader<NewsEntity> itemReader,
             @Qualifier(NewsProcessor.NEWS_ENTITY_UPD_SEND_YN_TO_Y) BasicProcessor<NewsEntity, NewsEntity> itemProcessor,
             @Qualifier(NewsComposeWriter.SEND_NEWS_TO_MATTERMOST_AND_SAVE_MATTERMOST_SENT_AND_UPD_SEND_YN) CompositeItemWriter<NewsEntity> itemWriter
     ) {
@@ -64,22 +64,6 @@ public class NewsStep {
                 .processor(itemProcessor)
                 .writer(itemWriter)
 //                .allowStartIfComplete(true)
-                .build();
-    }
-
-    @Bean(name = SAVE_OLD_NEWS_AND_DEL_ALL_NEWS_STEP)
-    @JobScope
-    public Step saveOldNewsAndDelAllNewsStep(
-            JobRepository jobRepository,
-            @Qualifier("newsTransactionManager") PlatformTransactionManager platformTransactionManager,
-            @Qualifier(NewsReader.FIND_ALL_NEWS_FIX_PAGE_0) JpaPagingItemReader<NewsEntity> itemReader,
-            @Qualifier(NewsComposeWriter.SAVE_OLD_NEWS_AND_DEL_ALL_NEWS) CompositeItemWriter<NewsEntity> itemCompose
-    ) {
-        return new StepBuilder(SAVE_OLD_NEWS_AND_DEL_ALL_NEWS_STEP, jobRepository)
-//                .allowStartIfComplete(true)
-                .<NewsEntity, NewsEntity>chunk(CHUNK_SIZE, platformTransactionManager)
-                .reader(itemReader)
-                .writer(itemCompose)
                 .build();
     }
 
@@ -98,6 +82,22 @@ public class NewsStep {
 //                .allowStartIfComplete(true)
 //                .faultTolerant()
 //                .skip(HttpClientErrorException.class).skipLimit(10)
+                .build();
+    }
+
+    @Bean(name = SAVE_OLD_NEWS_AND_DEL_ALL_NEWS_STEP)
+    @JobScope
+    public Step saveOldNewsAndDelAllNewsStep(
+            JobRepository jobRepository,
+            @Qualifier("newsTransactionManager") PlatformTransactionManager platformTransactionManager,
+            @Qualifier(NewsReader.FIND_ALL_NEWS_FIX_PAGE_0) JpaPagingItemReader<NewsEntity> itemReader,
+            @Qualifier(NewsComposeWriter.SAVE_OLD_NEWS_AND_DEL_ALL_NEWS) CompositeItemWriter<NewsEntity> itemCompose
+    ) {
+        return new StepBuilder(SAVE_OLD_NEWS_AND_DEL_ALL_NEWS_STEP, jobRepository)
+//                .allowStartIfComplete(true)
+                .<NewsEntity, NewsEntity>chunk(CHUNK_SIZE, platformTransactionManager)
+                .reader(itemReader)
+                .writer(itemCompose)
                 .build();
     }
 }

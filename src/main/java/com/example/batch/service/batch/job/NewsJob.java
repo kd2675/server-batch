@@ -38,11 +38,11 @@ public class NewsJob {
     @Bean(name = DEL_NEWS_JOB)
     public Job delNewsJob(
             JobRepository jobRepository,
-            @Qualifier(NewsStep.SENT_NEWS_STEP) Step step,
+            @Qualifier(NewsStep.SENT_NEWS_STEP) Step step0,
             @Qualifier(NewsStep.SAVE_OLD_NEWS_AND_DEL_ALL_NEWS_STEP) Step step1
     ) {
         return new JobBuilder(DEL_NEWS_JOB, jobRepository)
-                .start(step)
+                .start(step0)
                 .next(step1)
                 .build();
     }

@@ -9,8 +9,9 @@ public interface MattermostUtil {
 
     ResponseEntity<MattermostPostVO> sendCoinChannel(String message);
     ResponseEntity<MattermostPostVO> sendNewsChannel(String message);
+    ResponseEntity<MattermostPostVO> sendNewsFlashChannel(String message);
+    ResponseEntity<MattermostPostVO> sendNewsMarketingChannel(String message);
 
     ResponseEntity<MattermostChannelVO> selectAllChannel(String channelId);
-
     ResponseEntity delete(String sentId);
 }

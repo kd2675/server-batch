@@ -1,6 +1,7 @@
 package com.example.batch.service.batch.reader;
 
 import com.example.batch.service.batch.common.DelJpaPagingItemReader;
+import com.example.batch.service.batch.enums.NewsKeywordEnum;
 import com.example.batch.service.batch.step.NewsStep;
 import com.example.batch.service.news.api.vo.NaverNewsApiItemVO;
 import com.example.batch.service.news.api.vo.NaverNewsApiVO;
@@ -23,13 +24,14 @@ import org.springframework.http.ResponseEntity;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Slf4j
 @RequiredArgsConstructor
 @Configuration
 public class NewsReader {
     public static final String FIND_NAVER_NEWS_API = "findNaverNewsApi";
-    public static final String FIND_TOP_15_BY_SEND_YN_TO_YIS_ORDER_BY_ID_DESC = "findTop15BySendYnToYIsOrderByIdDesc";
+    public static final String FIND_TOP_15_BY_SEND_YN_ORDER_BY_ID_DESC = "findTop15BySendYnOrderByIdDesc";
     public static final String FIND_ALL_NEWS_FIX_PAGE_0 = "findAllNewsFixPage0";
 
     private final NewsREP newsREP;
@@ -41,10 +43,15 @@ public class NewsReader {
         return new ListItemReader<NaverNewsApiItemVO>(this.getNaverNewsApiItemVOS());
     }
 
-    @Bean(name = FIND_TOP_15_BY_SEND_YN_TO_YIS_ORDER_BY_ID_DESC, destroyMethod = "")
+    @Bean(name = FIND_TOP_15_BY_SEND_YN_ORDER_BY_ID_DESC, destroyMethod = "")
     @StepScope
     public ListItemReader<NewsEntity> findTop15BySendYnOrderByIdDesc(@Qualifier("newsEntityManagerFactory") EntityManagerFactory entityManagerFactory) {
-        return new ListItemReader<>(newsREP.findTop15BySendYnOrderByIdDesc("n"));
+        List<String> newsKeywordValue = NewsKeywordEnum.getNewsKeywordValue();
+        newsREP.findTop15BySendYnOrderByIdDescAndCategoryInOrderByIdDesc("n", newsKeywordValue);
+
+        return new ListItemReader<>(
+                newsREP.findTop15BySendYnOrderByIdDesc("n")
+        );
     }
 
     @Bean(name = FIND_ALL_NEWS_FIX_PAGE_0, destroyMethod = "")
@@ -67,29 +74,11 @@ public class NewsReader {
         LocalDateTime LOCAL_DATE_TIME_1 = LocalDateTime.now().minusMinutes(5);
         LocalDateTime LOCAL_DATE_TIME_2 = LocalDateTime.now().minusMinutes(6);
 
-
-        String[] strings = {
-                "속보",
-                "ai",
-                "주식",
-                "코인",
-                "이",
-                "가",
-                "다",
-                "는",
-                "을",
-                "고",
-                "하",
-                "에",
-                "세일",
-                "특가",
-                "할인"
-        };
-
         Set<NaverNewsApiItemVO> set = new HashSet<>();
 
-        //이 가 다 는 을 고 하 에
-        for (String s : strings) {
+        for (NewsKeywordEnum keyword : NewsKeywordEnum.values()) {
+            String s = keyword.getValue();
+
             int start = 1;
 
             do {

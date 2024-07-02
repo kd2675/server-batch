@@ -1,5 +1,6 @@
 package com.example.batch.utils;
 
+import com.example.batch.utils.enums.ChannelEnum;
 import com.example.batch.utils.vo.MattermostChannelVO;
 import com.example.batch.utils.vo.MattermostPostVO;
 import lombok.RequiredArgsConstructor;
@@ -14,12 +15,14 @@ import org.springframework.web.client.RestTemplate;
 @RequiredArgsConstructor
 @Service
 public class MattermostUtilImpl implements MattermostUtil {
+    private static final String MATTERMOST_SYSTEM_BOT_TOKEN = "urhoyjtmgjytmepm399nb476mr";
+
     private final RestTemplate restTemplate;
     @Override
     public ResponseEntity<MattermostPostVO> send(String message, String channelId) {
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
-        headers.setBearerAuth("urhoyjtmgjytmepm399nb476mr");
+        headers.setBearerAuth(MATTERMOST_SYSTEM_BOT_TOKEN);
 
         // Request Body 설정
         JSONObject requestBody = new JSONObject();
@@ -44,19 +47,33 @@ public class MattermostUtilImpl implements MattermostUtil {
 
     @Override
     public ResponseEntity<MattermostPostVO> sendCoinChannel(String message) {
-        return send(message, "947q6tnbc3gw9k9uwyxtboqx5h");
+        String channelId = ChannelEnum.MATTERMOST_CHANNEL_COIN.getValue();
+        return send(message, channelId);
     }
 
     @Override
     public ResponseEntity<MattermostPostVO> sendNewsChannel(String message) {
-        return send(message, "sph9p8g1uiygindx7qh8tnxmgr");
+        String channelId = ChannelEnum.MATTERMOST_CHANNEL_NEWS.getValue();
+        return send(message, channelId);
+    }
+
+    @Override
+    public ResponseEntity<MattermostPostVO> sendNewsFlashChannel(String message) {
+        String channelId = ChannelEnum.MATTERMOST_CHANNEL_NEWS_FLASH.getValue();
+        return send(message, channelId);
+    }
+
+    @Override
+    public ResponseEntity<MattermostPostVO> sendNewsMarketingChannel(String message) {
+        String channelId = ChannelEnum.MATTERMOST_CHANNEL_NEWS_MARKETING.getValue();
+        return send(message, channelId);
     }
 
     @Override
     public ResponseEntity<MattermostChannelVO> selectAllChannel(String channelId) {
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
-        headers.setBearerAuth("urhoyjtmgjytmepm399nb476mr");
+        headers.setBearerAuth(MATTERMOST_SYSTEM_BOT_TOKEN);
 
         // Request Body 설정
         JSONObject requestBody = new JSONObject();
@@ -80,7 +97,7 @@ public class MattermostUtilImpl implements MattermostUtil {
     public ResponseEntity delete(String sentId) {
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
-        headers.setBearerAuth("urhoyjtmgjytmepm399nb476mr");
+        headers.setBearerAuth(MATTERMOST_SYSTEM_BOT_TOKEN);
 
         // Request Body 설정
         JSONObject requestBody = new JSONObject();
