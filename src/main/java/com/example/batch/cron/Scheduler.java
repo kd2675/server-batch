@@ -47,7 +47,23 @@ public class Scheduler {
         }
     }
 
-    //긴급
+    @Scheduled(cron = "20 * * * * *")
+    @Async("asyncTaskExecutor")
+    public void sendNewsFlashJob() throws Exception {
+        // add parameters as needed
+        if (ServerTypeUtils.isProd()) {
+            jobLauncher.run(jobRegistry.getJob(NewsJob.SEND_NEWS_FLASH_JOB), getJobParameters());
+        }
+    }
+
+    @Scheduled(cron = "40 * 8,11,13,17 * * *")
+    @Async("asyncTaskExecutor")
+    public void sendNewsMarketingJob() throws Exception {
+        // add parameters as needed
+        if (ServerTypeUtils.isProd()) {
+            jobLauncher.run(jobRegistry.getJob(NewsJob.SEND_NEWS_MARKETING_JOB), getJobParameters());
+        }
+    }
 
     @Scheduled(cron = "0 0/30 * * * *")
     @Async("asyncTaskExecutor")

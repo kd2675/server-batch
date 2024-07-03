@@ -28,6 +28,8 @@ public class NewsStep {
     public static final int PAGE_SIZE = 100;
     public static final String INS_NEWS_STEP = "insNewsStep";
     public static final String SEND_NEWS_STEP = "sendNewsStep";
+    public static final String SEND_NEWS_FLASH_STEP = "sendNewsFlashStep";
+    public static final String SEND_NEWS_MARKETING_STEP = "sendNewsMarketingStep";
     public static final String SAVE_OLD_NEWS_AND_DEL_ALL_NEWS_STEP = "saveOldNewsAndDelAllNewsStep";
     public static final String SENT_NEWS_STEP = "sentNewsStep";
 
@@ -54,12 +56,48 @@ public class NewsStep {
     public Step sendNewsStep(
             JobRepository jobRepository,
             @Qualifier("newsTransactionManager") PlatformTransactionManager platformTransactionManager,
-            @Qualifier(NewsReader.FIND_TOP_15_BY_SEND_YN_ORDER_BY_ID_DESC) ListItemReader<NewsEntity> itemReader,
-            @Qualifier(NewsProcessor.NEWS_ENTITY_UPD_SEND_YN_TO_Y) BasicProcessor<NewsEntity, NewsEntity> itemProcessor,
+            @Qualifier(NewsReader.FIND_TOP_15_NEWS) ListItemReader<NewsEntity> itemReader,
+            @Qualifier(NewsProcessor.NEWS_ENTITY_UPD_SEND_YN_Y) BasicProcessor<NewsEntity, NewsEntity> itemProcessor,
             @Qualifier(NewsComposeWriter.SEND_NEWS_TO_MATTERMOST_AND_SAVE_MATTERMOST_SENT_AND_UPD_SEND_YN) CompositeItemWriter<NewsEntity> itemWriter
     ) {
         return new StepBuilder(SEND_NEWS_STEP, jobRepository)
-                .<NewsEntity, NewsEntity>chunk(20, platformTransactionManager)
+                .<NewsEntity, NewsEntity>chunk(15, platformTransactionManager)
+                .reader(itemReader)
+                .processor(itemProcessor)
+                .writer(itemWriter)
+//                .allowStartIfComplete(true)
+                .build();
+    }
+
+    @Bean(name = SEND_NEWS_FLASH_STEP)
+    @JobScope
+    public Step sendNewsFlashStep(
+            JobRepository jobRepository,
+            @Qualifier("newsTransactionManager") PlatformTransactionManager platformTransactionManager,
+            @Qualifier(NewsReader.FIND_TOP_15_NEWS_FLASH) ListItemReader<NewsEntity> itemReader,
+            @Qualifier(NewsProcessor.NEWS_ENTITY_UPD_SEND_YN_Y) BasicProcessor<NewsEntity, NewsEntity> itemProcessor,
+            @Qualifier(NewsComposeWriter.SEND_NEWS_FLASH_TO_MATTERMOST_AND_SAVE_MATTERMOST_SENT_AND_UPD_SEND_YN) CompositeItemWriter<NewsEntity> itemWriter
+    ) {
+        return new StepBuilder(SEND_NEWS_FLASH_STEP, jobRepository)
+                .<NewsEntity, NewsEntity>chunk(15, platformTransactionManager)
+                .reader(itemReader)
+                .processor(itemProcessor)
+                .writer(itemWriter)
+//                .allowStartIfComplete(true)
+                .build();
+    }
+
+    @Bean(name = SEND_NEWS_MARKETING_STEP)
+    @JobScope
+    public Step sendNewsMarketingStep(
+            JobRepository jobRepository,
+            @Qualifier("newsTransactionManager") PlatformTransactionManager platformTransactionManager,
+            @Qualifier(NewsReader.FIND_TOP_15_NEWS_MARKETING) ListItemReader<NewsEntity> itemReader,
+            @Qualifier(NewsProcessor.NEWS_ENTITY_UPD_SEND_YN_Y) BasicProcessor<NewsEntity, NewsEntity> itemProcessor,
+            @Qualifier(NewsComposeWriter.SEND_NEWS_MARKETING_TO_MATTERMOST_AND_SAVE_MATTERMOST_SENT_AND_UPD_SEND_YN) CompositeItemWriter<NewsEntity> itemWriter
+    ) {
+        return new StepBuilder(SEND_NEWS_MARKETING_STEP, jobRepository)
+                .<NewsEntity, NewsEntity>chunk(15, platformTransactionManager)
                 .reader(itemReader)
                 .processor(itemProcessor)
                 .writer(itemWriter)

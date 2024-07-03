@@ -24,14 +24,15 @@ import org.springframework.http.ResponseEntity;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
-import java.util.stream.Collectors;
 
 @Slf4j
 @RequiredArgsConstructor
 @Configuration
 public class NewsReader {
     public static final String FIND_NAVER_NEWS_API = "findNaverNewsApi";
-    public static final String FIND_TOP_15_BY_SEND_YN_ORDER_BY_ID_DESC = "findTop15BySendYnOrderByIdDesc";
+    public static final String FIND_TOP_15_NEWS = "findTop15News";
+    public static final String FIND_TOP_15_NEWS_FLASH = "findTop15NewsFlash";
+    public static final String FIND_TOP_15_NEWS_MARKETING = "findTop15NewsMarketing";
     public static final String FIND_ALL_NEWS_FIX_PAGE_0 = "findAllNewsFixPage0";
 
     private final NewsREP newsREP;
@@ -43,14 +44,27 @@ public class NewsReader {
         return new ListItemReader<NaverNewsApiItemVO>(this.getNaverNewsApiItemVOS());
     }
 
-    @Bean(name = FIND_TOP_15_BY_SEND_YN_ORDER_BY_ID_DESC, destroyMethod = "")
+    @Bean(name = FIND_TOP_15_NEWS, destroyMethod = "")
     @StepScope
-    public ListItemReader<NewsEntity> findTop15BySendYnOrderByIdDesc(@Qualifier("newsEntityManagerFactory") EntityManagerFactory entityManagerFactory) {
-        List<String> newsKeywordValue = NewsKeywordEnum.getNewsKeywordValue();
-        newsREP.findTop15BySendYnOrderByIdDescAndCategoryInOrderByIdDesc("n", newsKeywordValue);
-
+    public ListItemReader<NewsEntity> findTop15News(@Qualifier("newsEntityManagerFactory") EntityManagerFactory entityManagerFactory) {
         return new ListItemReader<>(
-                newsREP.findTop15BySendYnOrderByIdDesc("n")
+                newsREP.findTop15BySendYnOrderByIdDescAndCategoryInOrderByIdDesc("n", NewsKeywordEnum.getNewsKeywordValue())
+        );
+    }
+
+    @Bean(name = FIND_TOP_15_NEWS_FLASH, destroyMethod = "")
+    @StepScope
+    public ListItemReader<NewsEntity> findTop15NewsFlash(@Qualifier("newsEntityManagerFactory") EntityManagerFactory entityManagerFactory) {
+        return new ListItemReader<>(
+                newsREP.findTop15BySendYnOrderByIdDescAndCategoryInOrderByIdDesc("n", NewsKeywordEnum.getNewsFlashKeywordValue())
+        );
+    }
+
+    @Bean(name = FIND_TOP_15_NEWS_MARKETING, destroyMethod = "")
+    @StepScope
+    public ListItemReader<NewsEntity> findTop15NewsMarketing(@Qualifier("newsEntityManagerFactory") EntityManagerFactory entityManagerFactory) {
+        return new ListItemReader<>(
+                newsREP.findTop15BySendYnOrderByIdDescAndCategoryInOrderByIdDesc("n", NewsKeywordEnum.getNewsMarketingKeywordValue())
         );
     }
 
@@ -65,7 +79,7 @@ public class NewsReader {
         reader.setQueryString("SELECT e FROM NewsEntity e WHERE e.pubDate < :date");
 
         HashMap<String, Object> param = new HashMap<>();
-        param.put("date", LocalDateTime.now().minusMinutes(30));
+        param.put("date", LocalDateTime.now().minusHours(1));
         reader.setParameterValues(param);
         return reader;
     }

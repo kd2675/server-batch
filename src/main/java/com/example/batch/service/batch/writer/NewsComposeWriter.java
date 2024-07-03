@@ -17,7 +17,10 @@ import java.util.Arrays;
 public class NewsComposeWriter {
     public static final String SAVE_OLD_NEWS_AND_DEL_ALL_NEWS = "saveOldNewsAndDelAllNews";
     public static final String SEND_NEWS_TO_MATTERMOST_AND_SAVE_MATTERMOST_SENT_AND_UPD_SEND_YN = "sendNewsToMattermostAndSaveMattermostSentAndUpdSendYn";
+    public static final String SEND_NEWS_FLASH_TO_MATTERMOST_AND_SAVE_MATTERMOST_SENT_AND_UPD_SEND_YN = "sendNewsFlashToMattermostAndSaveMattermostSentAndUpdSendYn";
+    public static final String SEND_NEWS_MARKETING_TO_MATTERMOST_AND_SAVE_MATTERMOST_SENT_AND_UPD_SEND_YN = "sendNewsMarketingToMattermostAndSaveMattermostSentAndUpdSendYn";
     public static final String DEL_MATTERMOST_UTIL_BY_ID_AND_DEL_ALL_MATTERMOST_SENT = "delMattermostUtilByIdAndDelAllMattermostSent";
+
     @Bean(name = SAVE_OLD_NEWS_AND_DEL_ALL_NEWS)
     @StepScope
     public CompositeItemWriter<NewsEntity> saveOldNewsAndDelAllNews(
@@ -28,10 +31,33 @@ public class NewsComposeWriter {
         compositeItemWriter.setDelegates(Arrays.asList(oldNewsSave, newsDelAll));
         return compositeItemWriter;
     }
+
     @Bean(name = SEND_NEWS_TO_MATTERMOST_AND_SAVE_MATTERMOST_SENT_AND_UPD_SEND_YN)
     @StepScope
     public CompositeItemWriter<NewsEntity> sendNewsToMattermostAndSaveMattermostSentAndUpdSendYn(
             @Qualifier(MattermostWriter.SEND_NEWS_AND_SAVE_MATTERMOST_SENT) BasicWriter<NewsEntity> itemSender,
+            @Qualifier(NewsWriter.JPA_ITEM_WRITER) JpaItemWriter<NewsEntity> itemWriter
+    ) {
+        CompositeItemWriter<NewsEntity> compositeItemWriter = new CompositeItemWriter<>();
+        compositeItemWriter.setDelegates(Arrays.asList(itemSender, itemWriter));
+        return compositeItemWriter;
+    }
+
+    @Bean(name = SEND_NEWS_FLASH_TO_MATTERMOST_AND_SAVE_MATTERMOST_SENT_AND_UPD_SEND_YN)
+    @StepScope
+    public CompositeItemWriter<NewsEntity> sendNewsFlashToMattermostAndSaveMattermostSentAndUpdSendYn(
+            @Qualifier(MattermostWriter.SEND_NEWS_FLASH_AND_SAVE_MATTERMOST_SENT) BasicWriter<NewsEntity> itemSender,
+            @Qualifier(NewsWriter.JPA_ITEM_WRITER) JpaItemWriter<NewsEntity> itemWriter
+    ) {
+        CompositeItemWriter<NewsEntity> compositeItemWriter = new CompositeItemWriter<>();
+        compositeItemWriter.setDelegates(Arrays.asList(itemSender, itemWriter));
+        return compositeItemWriter;
+    }
+
+    @Bean(name = SEND_NEWS_MARKETING_TO_MATTERMOST_AND_SAVE_MATTERMOST_SENT_AND_UPD_SEND_YN)
+    @StepScope
+    public CompositeItemWriter<NewsEntity> sendNewsMarketingToMattermostAndSaveMattermostSentAndUpdSendYn(
+            @Qualifier(MattermostWriter.SEND_NEWS_MARKETING_AND_SAVE_MATTERMOST_SENT) BasicWriter<NewsEntity> itemSender,
             @Qualifier(NewsWriter.JPA_ITEM_WRITER) JpaItemWriter<NewsEntity> itemWriter
     ) {
         CompositeItemWriter<NewsEntity> compositeItemWriter = new CompositeItemWriter<>();

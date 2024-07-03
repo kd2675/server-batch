@@ -25,6 +25,8 @@ import java.util.Queue;
 @Configuration
 public class MattermostWriter {
     public static final String SEND_NEWS_AND_SAVE_MATTERMOST_SENT = "sendNewsAndSaveMattermostSent";
+    public static final String SEND_NEWS_FLASH_AND_SAVE_MATTERMOST_SENT = "sendNewsFlashAndSaveMattermostSent";
+    public static final String SEND_NEWS_MARKETING_AND_SAVE_MATTERMOST_SENT = "sendNewsMarketingAndSaveMattermostSent";
     public static final String SEND_COIN_AND_SAVE_MATTERMOST_SENT = "sendCoinAndSaveMattermostSent";
     public static final String DEL_MATTERMOST_UTIL_BY_ID = "delMattermostUtilById";
     public static final String DEL_ALL_MATTERMOST_SENT = "delAllMattermostSent";
@@ -41,6 +43,44 @@ public class MattermostWriter {
                 mattermostSentREP.save(MattermostSentEntity.builder()
                         .sentId(
                                 mattermostUtil.sendNewsChannel(convertNewsMattermostMessage(chunk))
+                                        .getBody()
+                                        .getId()
+                        )
+                        .category("news")
+                        .build()
+                );
+            }
+        };
+    }
+
+    @Bean(name = SEND_NEWS_FLASH_AND_SAVE_MATTERMOST_SENT)
+    @StepScope
+    public BasicWriter<NewsEntity> sendNewsFlashAndSaveMattermostSent() {
+        return new BasicWriter<NewsEntity>() {
+            @Override
+            public void write(Chunk<? extends NewsEntity> chunk) throws Exception {
+                mattermostSentREP.save(MattermostSentEntity.builder()
+                        .sentId(
+                                mattermostUtil.sendNewsFlashChannel(convertNewsMattermostMessage(chunk))
+                                        .getBody()
+                                        .getId()
+                        )
+                        .category("news")
+                        .build()
+                );
+            }
+        };
+    }
+
+    @Bean(name = SEND_NEWS_MARKETING_AND_SAVE_MATTERMOST_SENT)
+    @StepScope
+    public BasicWriter<NewsEntity> sendNewsMarketingAndSaveMattermostSent() {
+        return new BasicWriter<NewsEntity>() {
+            @Override
+            public void write(Chunk<? extends NewsEntity> chunk) throws Exception {
+                mattermostSentREP.save(MattermostSentEntity.builder()
+                        .sentId(
+                                mattermostUtil.sendNewsMarketingChannel(convertNewsMattermostMessage(chunk))
                                         .getBody()
                                         .getId()
                         )

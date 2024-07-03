@@ -12,7 +12,7 @@ import java.time.format.DateTimeFormatter;
 
 @Configuration
 public class NewsProcessor {
-    public static final String NEWS_ENTITY_UPD_SEND_YN_TO_Y = "newsEntityUpdSendYnToY";
+    public static final String NEWS_ENTITY_UPD_SEND_YN_Y = "newsEntityUpdSendYnToY";
     public static final String NAVER_NEWS_API_ITEM_VO_TO_NEWS_ENTITY = "naverNewsApiItemVoToNewsEntity";
     @Bean(name = NAVER_NEWS_API_ITEM_VO_TO_NEWS_ENTITY)
     @StepScope
@@ -33,7 +33,7 @@ public class NewsProcessor {
             }
         };
     }
-    @Bean(name = NEWS_ENTITY_UPD_SEND_YN_TO_Y)
+    @Bean(name = NEWS_ENTITY_UPD_SEND_YN_Y)
     @StepScope
     public BasicProcessor<NewsEntity, NewsEntity> itemProcessor() {
         return new BasicProcessor<NewsEntity, NewsEntity>() {

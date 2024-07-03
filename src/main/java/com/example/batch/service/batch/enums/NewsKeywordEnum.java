@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 @Getter
@@ -32,11 +33,19 @@ public enum NewsKeywordEnum {
         return Arrays.stream(NewsKeywordEnum.values())
                 .map(NewsKeywordEnum::getValue)
                 .filter(value ->
-                        !value.equals("속보")
-                                && !value.equals("할인")
-                                && !value.equals("특가")
-                                && !value.equals("세일")
+                        !value.equals(NEWS_KEYWORD_0.getValue())
+                                && !value.equals(NEWS_KEYWORD_4.getValue())
+                                && !value.equals(NEWS_KEYWORD_5.getValue())
+                                && !value.equals(NEWS_KEYWORD_6.getValue())
                 )
                 .toList();
+    }
+
+    public static List<String> getNewsFlashKeywordValue() {
+        return Collections.singletonList(NEWS_KEYWORD_0.getValue());
+    }
+
+    public static List<String> getNewsMarketingKeywordValue() {
+        return Arrays.asList(NEWS_KEYWORD_4.getValue(), NEWS_KEYWORD_5.getValue(), NEWS_KEYWORD_6.getValue());
     }
 }
