@@ -55,8 +55,10 @@ public class NewsReader {
     @Bean(name = FIND_TOP_15_NEWS_FLASH, destroyMethod = "")
     @StepScope
     public ListItemReader<NewsEntity> findTop15NewsFlash(@Qualifier("newsEntityManagerFactory") EntityManagerFactory entityManagerFactory) {
+        LocalDateTime localDateTime = LocalDateTime.now().minusHours(1);
+;
         return new ListItemReader<>(
-                newsREP.findTop15BySendYnAndCategoryInOrderByIdDesc("n", NewsKeywordEnum.getNewsFlashKeywordValue())
+                newsREP.findBySendYnAndCategoryInAndCreateDateAfterOrderByIdDesc("n", NewsKeywordEnum.getNewsFlashKeywordValue(), localDateTime)
         );
     }
 

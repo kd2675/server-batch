@@ -16,10 +16,10 @@ public interface NewsREP extends JpaRepository<NewsEntity, Long> {
             @NonNull String sendYn,
             @NonNull Collection<String> categories
     );
-    List<NewsEntity> findBySendYnAndCreateDateAfterAndCategoryInOrderByIdDesc(
+    List<NewsEntity> findBySendYnAndCategoryInAndCreateDateAfterOrderByIdDesc(
             @NonNull String sendYn,
-            @NonNull LocalDateTime createDate,
-            @NonNull Collection<String> categories
+            @NonNull Collection<String> categories,
+            @NonNull LocalDateTime createDate
     );
 
 }
