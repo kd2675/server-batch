@@ -48,7 +48,7 @@ public class NewsReader {
     @StepScope
     public ListItemReader<NewsEntity> findTop15News(@Qualifier("newsEntityManagerFactory") EntityManagerFactory entityManagerFactory) {
         return new ListItemReader<>(
-                newsREP.findTop15BySendYnOrderByIdDescAndCategoryInOrderByIdDesc("n", NewsKeywordEnum.getNewsKeywordValue())
+                newsREP.findTop15BySendYnAndCategoryInOrderByIdDesc("n", NewsKeywordEnum.getNewsKeywordValue())
         );
     }
 
@@ -56,7 +56,7 @@ public class NewsReader {
     @StepScope
     public ListItemReader<NewsEntity> findTop15NewsFlash(@Qualifier("newsEntityManagerFactory") EntityManagerFactory entityManagerFactory) {
         return new ListItemReader<>(
-                newsREP.findTop15BySendYnOrderByIdDescAndCategoryInOrderByIdDesc("n", NewsKeywordEnum.getNewsFlashKeywordValue())
+                newsREP.findTop15BySendYnAndCategoryInOrderByIdDesc("n", NewsKeywordEnum.getNewsFlashKeywordValue())
         );
     }
 
@@ -64,7 +64,7 @@ public class NewsReader {
     @StepScope
     public ListItemReader<NewsEntity> findTop15NewsMarketing(@Qualifier("newsEntityManagerFactory") EntityManagerFactory entityManagerFactory) {
         return new ListItemReader<>(
-                newsREP.findTop15BySendYnOrderByIdDescAndCategoryInOrderByIdDesc("n", NewsKeywordEnum.getNewsMarketingKeywordValue())
+                newsREP.findTop15BySendYnAndCategoryInOrderByIdDesc("n", NewsKeywordEnum.getNewsMarketingKeywordValue())
         );
     }
 

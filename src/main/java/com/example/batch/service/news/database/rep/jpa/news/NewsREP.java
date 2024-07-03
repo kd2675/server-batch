@@ -2,7 +2,6 @@ package com.example.batch.service.news.database.rep.jpa.news;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.lang.NonNull;
-import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Repository;
 
 import java.time.LocalDateTime;
@@ -13,7 +12,7 @@ import java.util.List;
 public interface NewsREP extends JpaRepository<NewsEntity, Long> {
     List<NewsEntity> findTop10By();
     List<NewsEntity> findTop15BySendYnOrderByIdDesc(String sendYn);
-    List<NewsEntity> findTop15BySendYnOrderByIdDescAndCategoryInOrderByIdDesc(
+    List<NewsEntity> findTop15BySendYnAndCategoryInOrderByIdDesc(
             @NonNull String sendYn,
             @NonNull Collection<String> categories
     );
