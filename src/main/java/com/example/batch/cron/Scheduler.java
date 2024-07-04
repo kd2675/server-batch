@@ -65,6 +65,15 @@ public class Scheduler {
         }
     }
 
+    @Scheduled(cron = "40 * 8,11,13,17 * * *")
+    @Async("asyncTaskExecutor")
+    public void sendNewsStockJob() throws Exception {
+        // add parameters as needed
+        if (ServerTypeUtils.isProd()) {
+            jobLauncher.run(jobRegistry.getJob(NewsJob.SEND_NEWS_STOCK_JOB), getJobParameters());
+        }
+    }
+
     @Scheduled(cron = "0 0/30 * * * *")
     @Async("asyncTaskExecutor")
     public void delNewsJob() throws Exception {

@@ -30,6 +30,7 @@ public class NewsStep {
     public static final String SEND_NEWS_STEP = "sendNewsStep";
     public static final String SEND_NEWS_FLASH_STEP = "sendNewsFlashStep";
     public static final String SEND_NEWS_MARKETING_STEP = "sendNewsMarketingStep";
+    public static final String SEND_NEWS_STOCK_STEP = "sendNewsStockStep";
     public static final String SAVE_OLD_NEWS_AND_DEL_ALL_NEWS_STEP = "saveOldNewsAndDelAllNewsStep";
     public static final String SENT_NEWS_STEP = "sentNewsStep";
 
@@ -97,6 +98,24 @@ public class NewsStep {
             @Qualifier(NewsComposeWriter.SEND_NEWS_MARKETING_TO_MATTERMOST_AND_SAVE_MATTERMOST_SENT_AND_UPD_SEND_YN) CompositeItemWriter<NewsEntity> itemWriter
     ) {
         return new StepBuilder(SEND_NEWS_MARKETING_STEP, jobRepository)
+                .<NewsEntity, NewsEntity>chunk(15, platformTransactionManager)
+                .reader(itemReader)
+                .processor(itemProcessor)
+                .writer(itemWriter)
+//                .allowStartIfComplete(true)
+                .build();
+    }
+
+    @Bean(name = SEND_NEWS_STOCK_STEP)
+    @JobScope
+    public Step sendNewsStockStep(
+            JobRepository jobRepository,
+            @Qualifier("newsTransactionManager") PlatformTransactionManager platformTransactionManager,
+            @Qualifier(NewsReader.FIND_TOP_15_NEWS_STOCK) ListItemReader<NewsEntity> itemReader,
+            @Qualifier(NewsProcessor.NEWS_ENTITY_UPD_SEND_YN_Y) BasicProcessor<NewsEntity, NewsEntity> itemProcessor,
+            @Qualifier(NewsComposeWriter.SEND_NEWS_STOCK_TO_MATTERMOST_AND_SAVE_MATTERMOST_SENT_AND_UPD_SEND_YN) CompositeItemWriter<NewsEntity> itemWriter
+    ) {
+        return new StepBuilder(SEND_NEWS_STOCK_STEP, jobRepository)
                 .<NewsEntity, NewsEntity>chunk(15, platformTransactionManager)
                 .reader(itemReader)
                 .processor(itemProcessor)

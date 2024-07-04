@@ -45,7 +45,7 @@ public class HealthCheckCTR {
 
     @Async("asyncTaskExecutor")
     public void del() {
-        ResponseEntity<MattermostChannelVO> channel = mattermostUtil.selectAllChannel("947q6tnbc3gw9k9uwyxtboqx5h");
+        ResponseEntity<MattermostChannelVO> channel = mattermostUtil.selectAllChannel("6w3xkrc3c7go7jp9q44uio9i4c");
         Map<String, MattermostPostVO> posts = channel.getBody().getPosts();
 
         System.out.println(channel.getBody().getHasNext());

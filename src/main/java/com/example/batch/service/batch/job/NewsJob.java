@@ -15,6 +15,7 @@ public class NewsJob {
     public static final String SEND_NEWS_JOB = "sendNewsJob";
     public static final String SEND_NEWS_FLASH_JOB = "sendNewsFlashJob";
     public static final String SEND_NEWS_MARKETING_JOB = "sendNewsMarketingJob";
+    public static final String SEND_NEWS_STOCK_JOB = "sendNewsStockJob";
     public static final String DEL_NEWS_JOB = "delNewsJob";
 
     @Bean(name = INS_NEWS_JOB)
@@ -53,6 +54,16 @@ public class NewsJob {
             @Qualifier(NewsStep.SEND_NEWS_MARKETING_STEP) Step step
     ) {
         return new JobBuilder(SEND_NEWS_MARKETING_JOB, jobRepository)
+                .start(step)
+                .build();
+    }
+
+    @Bean(name = SEND_NEWS_STOCK_JOB)
+    public Job sendNewsStockJob(
+            JobRepository jobRepository,
+            @Qualifier(NewsStep.SEND_NEWS_STOCK_STEP) Step step
+    ) {
+        return new JobBuilder(SEND_NEWS_STOCK_JOB, jobRepository)
                 .start(step)
                 .build();
     }

@@ -33,6 +33,7 @@ public class NewsReader {
     public static final String FIND_TOP_15_NEWS = "findTop15News";
     public static final String FIND_TOP_15_NEWS_FLASH = "findTop15NewsFlash";
     public static final String FIND_TOP_15_NEWS_MARKETING = "findTop15NewsMarketing";
+    public static final String FIND_TOP_15_NEWS_STOCK = "findTop15NewsStock";
     public static final String FIND_ALL_NEWS_FIX_PAGE_0 = "findAllNewsFixPage0";
 
     private final NewsREP newsREP;
@@ -67,6 +68,14 @@ public class NewsReader {
     public ListItemReader<NewsEntity> findTop15NewsMarketing(@Qualifier("newsEntityManagerFactory") EntityManagerFactory entityManagerFactory) {
         return new ListItemReader<>(
                 newsREP.findTop15BySendYnAndCategoryInOrderByIdDesc("n", NewsKeywordEnum.getNewsMarketingKeywordValue())
+        );
+    }
+
+    @Bean(name = FIND_TOP_15_NEWS_STOCK, destroyMethod = "")
+    @StepScope
+    public ListItemReader<NewsEntity> findTop15NewsStock(@Qualifier("newsEntityManagerFactory") EntityManagerFactory entityManagerFactory) {
+        return new ListItemReader<>(
+                newsREP.findTop15BySendYnAndCategoryInOrderByIdDesc("n", NewsKeywordEnum.getNewsStockKeywordValue())
         );
     }
 

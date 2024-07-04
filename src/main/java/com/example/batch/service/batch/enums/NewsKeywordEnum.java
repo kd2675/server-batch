@@ -34,6 +34,8 @@ public enum NewsKeywordEnum {
                 .map(NewsKeywordEnum::getValue)
                 .filter(value ->
                         !value.equals(NEWS_KEYWORD_0.getValue())
+                                && !value.equals(NEWS_KEYWORD_2.getValue())
+                                && !value.equals(NEWS_KEYWORD_3.getValue())
                                 && !value.equals(NEWS_KEYWORD_4.getValue())
                                 && !value.equals(NEWS_KEYWORD_5.getValue())
                                 && !value.equals(NEWS_KEYWORD_6.getValue())
@@ -47,5 +49,9 @@ public enum NewsKeywordEnum {
 
     public static List<String> getNewsMarketingKeywordValue() {
         return Arrays.asList(NEWS_KEYWORD_4.getValue(), NEWS_KEYWORD_5.getValue(), NEWS_KEYWORD_6.getValue());
+    }
+
+    public static List<String> getNewsStockKeywordValue() {
+        return Arrays.asList(NEWS_KEYWORD_2.getValue(), NEWS_KEYWORD_3.getValue());
     }
 }

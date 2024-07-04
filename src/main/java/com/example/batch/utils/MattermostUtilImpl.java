@@ -70,6 +70,12 @@ public class MattermostUtilImpl implements MattermostUtil {
     }
 
     @Override
+    public ResponseEntity<MattermostPostVO> sendNewsStockChannel(String message) {
+        String channelId = ChannelEnum.MATTERMOST_CHANNEL_NEWS_STOCK.getValue();
+        return send(message, channelId);
+    }
+
+    @Override
     public ResponseEntity<MattermostChannelVO> selectAllChannel(String channelId) {
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
