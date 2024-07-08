@@ -19,10 +19,8 @@ public class WebhookCTR {
     private final JobLauncher jobLauncher;
     private final JobRegistry jobRegistry;
 
-    @GetMapping("/time")
+    @PostMapping("/time")
     public String time(){
-
-
         LocalDateTime now = LocalDateTime.now();
         LocalDateTime target = LocalDateTime.of(now.getYear(), now.getMonth(), now.getDayOfMonth(), 18, 0, 0);
 
