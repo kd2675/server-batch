@@ -46,6 +46,12 @@ public class MattermostUtilImpl implements MattermostUtil {
     }
 
     @Override
+    public ResponseEntity<MattermostPostVO> sendBobChannel(String message) {
+        String channelId = ChannelEnum.MATTERMOST_CHANNEL_BOB.getValue();
+        return send(message, channelId);
+    }
+
+    @Override
     public ResponseEntity<MattermostPostVO> sendCoinChannel(String message) {
         String channelId = ChannelEnum.MATTERMOST_CHANNEL_COIN.getValue();
         return send(message, channelId);
