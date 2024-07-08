@@ -1,5 +1,6 @@
 package com.example.batch.service.webhook.api.act;
 
+import com.example.batch.service.webhook.api.vo.WebhookEnum;
 import com.example.batch.utils.MattermostUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.batch.core.configuration.JobRegistry;
@@ -18,6 +19,23 @@ public class WebhookCTR {
 
     private final JobLauncher jobLauncher;
     private final JobRegistry jobRegistry;
+
+    @PostMapping("command")
+    public String command(){
+        StringBuilder str = new StringBuilder();
+
+        for (WebhookEnum webhook : WebhookEnum.values()) {
+            str.append(webhook.getId())
+                    .append(". ")
+                    .append(webhook.getKey())
+                    .append(" : ")
+                    .append(webhook.getValue())
+                    .append("\n");
+        }
+        mattermostUtil.sendBobChannel(str.toString());
+
+        return "OK";
+    }
 
     @PostMapping("/time")
     public String time(){
