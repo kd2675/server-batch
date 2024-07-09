@@ -59,4 +59,27 @@ public class WebhookCTR {
 
         return "ok";
     }
+
+    @PostMapping("/uptime")
+    public String uptime(){
+        LocalDateTime now = LocalDateTime.now();
+        LocalDateTime target = LocalDateTime.of(now.getYear(), now.getMonth(), now.getDayOfMonth(), 8, 30, 0);
+
+        if (now.isAfter(target)){
+            Duration between = Duration.between(target, now);
+            long seconds = between.getSeconds();
+            long minute = seconds / 60;
+            seconds = seconds % 60;
+            long hour = minute / 60;
+            minute = minute % 60;
+
+            String format = LocalDateTime.of(now.getYear(), now.getMonth(), now.getDayOfMonth(), Long.valueOf(hour).intValue(), Long.valueOf(minute).intValue(), Long.valueOf(seconds).intValue()).format(DateTimeFormatter.ofPattern("HH:mm:ss"));
+
+            mattermostUtil.sendBobChannel(format+" 지났습니다.");
+        }else{
+            mattermostUtil.sendBobChannel("출근하세요");
+        }
+
+        return "ok";
+    }
 }
