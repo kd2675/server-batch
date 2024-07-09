@@ -26,7 +26,9 @@ public class Scheduler {
     @Scheduled(fixedRate = 10000, initialDelay = 10000)
     public void orderJob() throws Exception {
         // add parameters as needed
-        jobLauncher.run(jobRegistry.getJob(OrderJob.UPD_ORDER_JOB), getJobParameters());
+        if (ServerTypeUtils.isProd()) {
+            jobLauncher.run(jobRegistry.getJob(OrderJob.UPD_ORDER_JOB), getJobParameters());
+        }
     }
 
     @Scheduled(cron = "10 * 8-20 * * *")
