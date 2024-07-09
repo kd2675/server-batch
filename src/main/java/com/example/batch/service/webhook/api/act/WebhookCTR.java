@@ -25,8 +25,10 @@ public class WebhookCTR {
 
     @PostMapping("test")
     public String test(@RequestBody final WebhookVO webhookVO){
-        log.warn(webhookVO.toString());
-        mattermostUtil.sendBobChannel(webhookVO.toString());
+
+        String text = webhookVO.getText().replace(webhookVO.getTriggerWord() + " ", "");
+
+        mattermostUtil.sendBobChannel(text);
         return "OK";
     }
 
