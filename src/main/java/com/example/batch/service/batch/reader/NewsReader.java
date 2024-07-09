@@ -90,7 +90,7 @@ public class NewsReader {
         reader.setQueryString("SELECT e FROM NewsEntity e WHERE e.pubDate < :date");
 
         HashMap<String, Object> param = new HashMap<>();
-        param.put("date", LocalDateTime.now().minusHours(1));
+        param.put("date", LocalDateTime.now().minusHours(3));
         reader.setParameterValues(param);
         return reader;
     }

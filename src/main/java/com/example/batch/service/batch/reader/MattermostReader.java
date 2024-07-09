@@ -34,7 +34,7 @@ public class MattermostReader {
         reader.setQueryString("SELECT e FROM MattermostSentEntity e WHERE e.createDate < :date and e.category = 'news'");
 
         HashMap<String, Object> param = new HashMap<>();
-        param.put("date", LocalDateTime.now().minusHours(1));
+        param.put("date", LocalDateTime.now().minusHours(3));
         reader.setParameterValues(param);
         return reader;
     }

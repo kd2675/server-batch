@@ -50,7 +50,9 @@ public class WebhookCTR {
             long hour = minute / 60;
             minute = minute % 60;
 
-            mattermostUtil.sendBobChannel(hour+":"+minute+":"+seconds+" 남았습니다.");
+            String format = LocalDateTime.of(now.getYear(), now.getMonth(), now.getDayOfMonth(), Long.valueOf(hour).intValue(), Long.valueOf(minute).intValue(), Long.valueOf(seconds).intValue()).format(DateTimeFormatter.ofPattern("HH:mm:ss"));
+
+            mattermostUtil.sendBobChannel(format+" 남았습니다.");
         }else{
             mattermostUtil.sendBobChannel("퇴근하세요");
         }
