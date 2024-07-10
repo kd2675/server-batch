@@ -6,4 +6,5 @@ public interface WebhookSVC {
     void help();
     void time();
     void uptime();
+    void news(WebhookVO webhookVO);
 }
