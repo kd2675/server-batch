@@ -3,11 +3,13 @@ package com.example.batch.service.webhook.api.biz;
 import com.example.batch.service.news.database.rep.jpa.news.NewsEntity;
 import com.example.batch.service.news.database.rep.jpa.oldnews.OldNewsEntity;
 import com.example.batch.service.news.database.rep.jpa.oldnews.OldNewsREP;
+import com.example.batch.service.news.database.rep.jpa.oldnews.OldNewsSpec;
 import com.example.batch.service.webhook.api.dto.WebhookVO;
 import com.example.batch.service.webhook.api.vo.WebhookEnum;
 import com.example.batch.utils.MattermostUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.batch.item.Chunk;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -16,6 +18,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Queue;
@@ -52,7 +55,7 @@ public class WebhookSVCImpl implements WebhookSVC, WebhookCMD {
             return;
         }
 
-        String searchText = split[1].replace(",", "|");
+        String searchText = split[1].replace(",", "&&");
         int pageNo = Integer.parseInt(split[2]);
         int pagePerCnt = Integer.parseInt(split[3]);
         if (pagePerCnt > 10) {
@@ -60,10 +63,14 @@ public class WebhookSVCImpl implements WebhookSVC, WebhookCMD {
             return;
         }
 
-        Pageable pageable = PageRequest.of(pageNo, pagePerCnt);
-        List<OldNewsEntity> search = oldNewsREP.search(searchText, pageable);
 
-        mattermostUtil.sendBobChannel(convertNewsMattermostMessage(search));
+        Pageable pageable = PageRequest.of(pageNo, pagePerCnt);
+//        List<OldNewsEntity> search = oldNewsREP.search(searchText, pageable);
+        Page<OldNewsEntity> search2 = oldNewsREP.findAll(OldNewsSpec.searchWith(Arrays.asList(split[1].split(","))), pageable);
+
+        List<OldNewsEntity> content = search2.getContent();
+
+        mattermostUtil.sendBobChannel(convertNewsMattermostMessage(content));
     }
 
     private String convertNewsMattermostMessage(List<OldNewsEntity> entityList) {
