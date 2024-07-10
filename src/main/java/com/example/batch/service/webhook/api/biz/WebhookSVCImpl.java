@@ -71,7 +71,9 @@ public class WebhookSVCImpl implements WebhookSVC, WebhookCMD {
 
         List<OldNewsEntity> content = search2.getContent();
 
-        mattermostUtil.sendBobChannel(convertNewsMattermostMessage(content));
+        if (!content.isEmpty()) {
+            mattermostUtil.sendBobChannel(convertNewsMattermostMessage(content));
+        }
     }
 
     private String convertNewsMattermostMessage(List<OldNewsEntity> entityList) {

@@ -10,15 +10,24 @@ import java.util.List;
 public class OldNewsSpec {
     public static Specification<OldNewsEntity> searchWith(final List<String> text) {
         return ((root, query, builder) -> {
-            List<Predicate> predicates = new ArrayList<>();
+            List<Predicate> predicates0 = new ArrayList<>();
+            List<Predicate> predicates1 = new ArrayList<>();
 
             for (String s : text) {
                 if (StringUtils.hasText(s)) {
-                    predicates.add(builder.like(root.get("title"), "%" + s + "%"));
+                    predicates0.add(builder.like(root.get("title"), "%" + s + "%"));
                 }
             }
-            
-            return builder.and(predicates.toArray(new Predicate[0]));
+
+            for (String s : text) {
+                if (StringUtils.hasText(s)) {
+                    predicates1.add(builder.like(root.get("content"), "%" + s + "%"));
+                }
+            }
+
+            query.orderBy(builder.desc(root.get("id")));
+
+            return builder.or(builder.and(predicates0.toArray(new Predicate[0])), builder.and(predicates1.toArray(new Predicate[0])));
         });
     }
 }
