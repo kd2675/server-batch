@@ -63,7 +63,7 @@ public class WebhookSVCImpl implements WebhookSVC, WebhookCMD {
         Pageable pageable = PageRequest.of(pageNo, pagePerCnt);
         List<OldNewsEntity> search = oldNewsREP.search(searchText, pageable);
 
-//        mattermostUtil.sendBobChannel(convertNewsMattermostMessage(search));
+        mattermostUtil.sendBobChannel(convertNewsMattermostMessage(search));
     }
 
     private String convertNewsMattermostMessage(List<OldNewsEntity> entityList) {
