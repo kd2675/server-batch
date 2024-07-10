@@ -17,9 +17,7 @@ public class OldNewsSpec {
                     predicates.add(builder.like(root.get("title"), "%" + s + "%"));
                 }
             }
-
-            builder.desc(root.get("id"));
-
+            
             return builder.and(predicates.toArray(new Predicate[0]));
         });
     }

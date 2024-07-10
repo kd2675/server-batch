@@ -12,6 +12,7 @@ import org.springframework.batch.item.Chunk;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.PostMapping;
 
@@ -64,7 +65,7 @@ public class WebhookSVCImpl implements WebhookSVC, WebhookCMD {
         }
 
 
-        Pageable pageable = PageRequest.of(pageNo, pagePerCnt);
+        Pageable pageable = PageRequest.of(pageNo, pagePerCnt, Sort.Direction.DESC, "id");
 //        List<OldNewsEntity> search = oldNewsREP.search(searchText, pageable);
         Page<OldNewsEntity> search2 = oldNewsREP.findAll(OldNewsSpec.searchWith(Arrays.asList(split[1].split(","))), pageable);
 
