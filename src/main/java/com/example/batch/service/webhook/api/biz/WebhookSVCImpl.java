@@ -158,7 +158,8 @@ public class WebhookSVCImpl implements WebhookSVC, WebhookCMD {
                             Long.valueOf(seconds).intValue()
                     );
 
-            String fullTime = localDateTime.format(DateTimeFormatter.ofPattern("HH:mm:ss"));
+            String fullTime =
+                    localDateTime.format(DateTimeFormatter.ofPattern("HH:mm:ss"));
 
             String partTime =
                     localDateTime.minusHours(1)
@@ -167,10 +168,7 @@ public class WebhookSVCImpl implements WebhookSVC, WebhookCMD {
 
             StringBuilder str = new StringBuilder();
             str.append(fullTime)
-                    .append(" 남았습니다.")
-                    .append("\n")
-                    .append(partTime)
-                    .append("(점심시간 제외) 남았습니다.");
+                    .append(" 남았습니다.");
 
             mattermostUtil.sendBobChannel(str.toString());
         } else {
