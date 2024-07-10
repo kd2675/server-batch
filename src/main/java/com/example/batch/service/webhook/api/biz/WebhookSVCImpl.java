@@ -1,6 +1,8 @@
 package com.example.batch.service.webhook.api.biz;
 
 import com.example.batch.service.news.database.rep.jpa.news.NewsEntity;
+import com.example.batch.service.news.database.rep.jpa.news.NewsREP;
+import com.example.batch.service.news.database.rep.jpa.news.NewsSpec;
 import com.example.batch.service.news.database.rep.jpa.oldnews.OldNewsEntity;
 import com.example.batch.service.news.database.rep.jpa.oldnews.OldNewsREP;
 import com.example.batch.service.news.database.rep.jpa.oldnews.OldNewsSpec;
@@ -29,6 +31,7 @@ import java.util.Queue;
 public class WebhookSVCImpl implements WebhookSVC, WebhookCMD {
     private final MattermostUtil mattermostUtil;
 
+    private final NewsREP newsREP;
     private final OldNewsREP oldNewsREP;
 
     @Override
@@ -43,6 +46,8 @@ public class WebhookSVCImpl implements WebhookSVC, WebhookCMD {
             this.uptime();
         }  else if (cmd.equals(WebhookEnum.COMMAND_2.getKey())) {
             this.news(webhookVO);
+        }  else if (cmd.equals(WebhookEnum.COMMAND_3.getKey())) {
+            this.oldNews(webhookVO);
         } else {
             this.help();
         }
@@ -66,17 +71,79 @@ public class WebhookSVCImpl implements WebhookSVC, WebhookCMD {
 
 
         Pageable pageable = PageRequest.of(pageNo, pagePerCnt, Sort.Direction.DESC, "id");
-//        List<OldNewsEntity> search = oldNewsREP.search(searchText, pageable);
-        Page<OldNewsEntity> search2 = oldNewsREP.findAll(OldNewsSpec.searchWith(Arrays.asList(split[1].split(","))), pageable);
+        Page<NewsEntity> search2 = newsREP.findAll(NewsSpec.searchWith(Arrays.asList(split[1].split(","))), pageable);
 
-        List<OldNewsEntity> content = search2.getContent();
+        List<NewsEntity> content = search2.getContent();
 
         if (!content.isEmpty()) {
             mattermostUtil.sendBobChannel(convertNewsMattermostMessage(content));
         }
     }
 
-    private String convertNewsMattermostMessage(List<OldNewsEntity> entityList) {
+    @Override
+    public void oldNews(WebhookVO webhookVO){
+        String[] split = webhookVO.getText().split(" ");
+        if (split.length != 4) {
+            this.help();
+            return;
+        }
+
+        String searchText = split[1].replace(",", "&&");
+        int pageNo = Integer.parseInt(split[2]);
+        int pagePerCnt = Integer.parseInt(split[3]);
+        if (pagePerCnt > 10) {
+            this.help();
+            return;
+        }
+
+
+        Pageable pageable = PageRequest.of(pageNo, pagePerCnt, Sort.Direction.DESC, "id");
+        Page<OldNewsEntity> search2 = oldNewsREP.findAll(OldNewsSpec.searchWith(Arrays.asList(split[1].split(","))), pageable);
+
+        List<OldNewsEntity> content = search2.getContent();
+
+        if (!content.isEmpty()) {
+            mattermostUtil.sendBobChannel(convertOldNewsMattermostMessage(content));
+        }
+    }
+
+    private String convertNewsMattermostMessage(List<NewsEntity> entityList) {
+        StringBuilder result = new StringBuilder();
+        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+        String regexEmojis = "[\uD83C-\uDBFF\uDC00-\uDFFF]+";
+
+        String header = "| 시각 | 제목 |\n";
+        String line = "| :-:|:--: |\n";
+//        String header = "| 시각 | 제목 | 시각 | 제목 |\n";
+//        String line = "| :-:|:--:|:-:|:--: |\n";
+        result.append(header)
+                .append(line);
+
+
+        Queue<NewsEntity> q = new LinkedList<>(entityList);
+        while (!q.isEmpty()) {
+            String content = "";
+            for (int i = 0; i < 1; i++) {
+                if (q.isEmpty()) {
+                    break;
+                }
+                NewsEntity remove = q.remove();
+
+                content += "| " + dtf.format(remove.getPubDate())
+                        + " | " + "[" + remove.getTitle().replaceAll(regexEmojis, "")
+                        .replace("[", "")
+                        .replace("]", "")
+                        .replace("♥", "")
+                        .replace("|", "") + "]" + "(" + remove.getLink() + ")";
+            }
+            content += " |\n";
+            result.append(content);
+        }
+
+        return result.toString();
+    }
+
+    private String convertOldNewsMattermostMessage(List<OldNewsEntity> entityList) {
         StringBuilder result = new StringBuilder();
         DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
         String regexEmojis = "[\uD83C-\uDBFF\uDC00-\uDFFF]+";

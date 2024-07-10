@@ -1,5 +1,9 @@
 package com.example.batch.service.news.database.rep.jpa.news;
 
+import com.example.batch.service.news.database.rep.jpa.oldnews.OldNewsEntity;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Repository;
@@ -21,5 +25,7 @@ public interface NewsREP extends JpaRepository<NewsEntity, Long> {
             @NonNull Collection<String> categories,
             @NonNull LocalDateTime createDate
     );
+
+    Page<NewsEntity> findAll(Specification<NewsEntity> spec, Pageable pageable);
 
 }
