@@ -23,6 +23,9 @@ public class MusicEntity extends CommonDateEntity {
     @Column(name = "id")
     private Long id;
 
+    @Column(name = "no", nullable = false)
+    private Long no;
+
     @Column(name = "album", nullable = true, length = 255)
     private String album;
 
@@ -32,9 +35,17 @@ public class MusicEntity extends CommonDateEntity {
     @Column(name = "singer", nullable = false, length = 255)
     private String singer;
 
-    @Column(name = "lyrics", nullable = true, length = 255)
+    @Column(name = "lyrics", nullable = true, columnDefinition = "TEXT")
     private String lyrics;
 
     @Column(name = "pubDate", nullable = true)
     private LocalDate pubDate;
+
+    public void updMusic(String album, String title, String singer, String lyrics, LocalDate pubDate) {
+        this.album = album;
+        this.title = title;
+        this.singer = singer;
+        this.lyrics = lyrics;
+        this.pubDate = pubDate;
+    }
 }

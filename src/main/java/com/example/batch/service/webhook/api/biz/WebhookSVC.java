@@ -8,4 +8,5 @@ public interface WebhookSVC {
     void uptime();
     void news(WebhookVO webhookVO);
     void oldNews(WebhookVO webhookVO);
+    void music();
 }

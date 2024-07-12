@@ -1,5 +1,6 @@
 package com.example.batch.service.webhook.api.biz;
 
+import com.example.batch.service.music.database.rep.jpa.music.MusicREP;
 import com.example.batch.service.news.database.rep.jpa.news.NewsEntity;
 import com.example.batch.service.news.database.rep.jpa.news.NewsREP;
 import com.example.batch.service.news.database.rep.jpa.news.NewsSpec;
@@ -33,6 +34,7 @@ public class WebhookSVCImpl implements WebhookSVC, WebhookCMD {
 
     private final NewsREP newsREP;
     private final OldNewsREP oldNewsREP;
+    private final MusicREP musicREP;
 
     @Override
     public void cmdCall(WebhookVO webhookVO) {
@@ -44,17 +46,35 @@ public class WebhookSVCImpl implements WebhookSVC, WebhookCMD {
             this.time();
         } else if (cmd.equals(WebhookEnum.COMMAND_1.getKey())) {
             this.uptime();
-        }  else if (cmd.equals(WebhookEnum.COMMAND_2.getKey())) {
+        } else if (cmd.equals(WebhookEnum.COMMAND_2.getKey())) {
             this.news(webhookVO);
-        }  else if (cmd.equals(WebhookEnum.COMMAND_3.getKey())) {
+        } else if (cmd.equals(WebhookEnum.COMMAND_3.getKey())) {
             this.oldNews(webhookVO);
+        } else if (cmd.equals(WebhookEnum.COMMAND_4.getKey())) {
+            this.music();
         } else {
             this.help();
         }
     }
 
     @Override
-    public void news(WebhookVO webhookVO){
+    public void music() {
+        musicREP.findMusicRand().ifPresentOrElse(
+                (musicEntity) -> {
+                    String title = musicEntity.getTitle();
+                    String singer = musicEntity.getSinger();
+                    String pubDate = musicEntity.getPubDate().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+                    String str = title + " " + singer + " " + pubDate;
+                    mattermostUtil.sendBobChannel(str);
+                },
+                () -> {
+
+                }
+        );
+    }
+
+    @Override
+    public void news(WebhookVO webhookVO) {
         String[] split = webhookVO.getText().split(" ");
         if (split.length != 4) {
             this.help();
@@ -81,7 +101,7 @@ public class WebhookSVCImpl implements WebhookSVC, WebhookCMD {
     }
 
     @Override
-    public void oldNews(WebhookVO webhookVO){
+    public void oldNews(WebhookVO webhookVO) {
         String[] split = webhookVO.getText().split(" ");
         if (split.length != 4) {
             this.help();
