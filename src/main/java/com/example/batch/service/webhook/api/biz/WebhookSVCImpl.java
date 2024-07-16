@@ -90,25 +90,33 @@ public class WebhookSVCImpl implements WebhookSVC, WebhookCMD {
                 return;
             }
 //            String[] split = webhookVO.getText().split(" ");
-            if (split.length != 3) {
+            if (split.length != 2 && split.length != 3) {
                 this.help();
                 return;
             }
 
             String searchText = split[1];
 
-            String[] paging = split[2].trim().split(" ");
 
-            if (paging.length != 2) {
-                this.help();
-                return;
-            }
+            int pageNo = 1;
+            int pagePerCnt = 5;
 
-            int pageNo = Integer.parseInt(paging[0]) + 1;
-            int pagePerCnt = Integer.parseInt(paging[1]);
-            if (pagePerCnt > 10) {
-                this.help();
-                return;
+            if (split.length == 3){
+                String[] paging = split[2].trim().split(" ");
+
+                if (paging.length != 2 && paging.length > 0){
+                    this.help();
+                    return;
+                } else if(paging.length == 0){
+
+                } else {
+                    pageNo = Integer.parseInt(paging[0]) + 1;
+                    pagePerCnt = Integer.parseInt(paging[1]);
+                    if (pagePerCnt > 10) {
+                        this.help();
+                        return;
+                    }
+                }
             }
 
             ResponseEntity conn = bugsApiUtil.conn("track", searchText, pageNo, pagePerCnt);
