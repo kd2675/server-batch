@@ -4,6 +4,8 @@ import com.example.batch.service.music.api.vo.BugsApiListVO;
 import com.example.batch.service.music.api.vo.BugsApiVO;
 import com.example.batch.service.music.database.rep.jpa.music.MusicEntity;
 import com.example.batch.service.music.database.rep.jpa.music.MusicREP;
+import com.example.batch.service.music.database.rep.jpa.music.PlaylistEntity;
+import com.example.batch.service.music.database.rep.jpa.music.PlaylistREP;
 import com.example.batch.service.news.database.rep.jpa.news.NewsEntity;
 import com.example.batch.service.news.database.rep.jpa.news.NewsREP;
 import com.example.batch.service.news.database.rep.jpa.news.NewsSpec;
@@ -17,7 +19,6 @@ import com.example.batch.utils.MattermostUtil;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.batch.item.Chunk;
@@ -27,6 +28,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.PostMapping;
 
 import java.time.Duration;
@@ -46,6 +48,7 @@ public class WebhookSVCImpl implements WebhookSVC, WebhookCMD {
     private final NewsREP newsREP;
     private final OldNewsREP oldNewsREP;
     private final MusicREP musicREP;
+    private final PlaylistREP playlistREP;
 
     @Transactional
     @Override
@@ -66,8 +69,85 @@ public class WebhookSVCImpl implements WebhookSVC, WebhookCMD {
             this.music();
         } else if (cmd.equals(WebhookEnum.COMMAND_5.getKey()) || cmd.equals(WebhookEnum.COMMAND_5.getShortKey())) {
             this.searchMusic(webhookVO);
+        } else if (cmd.equals(WebhookEnum.COMMAND_6.getKey()) || cmd.equals(WebhookEnum.COMMAND_6.getShortKey())) {
+            this.playlist(webhookVO);
+        } else if (cmd.equals(WebhookEnum.COMMAND_7.getKey()) || cmd.equals(WebhookEnum.COMMAND_7.getShortKey())) {
+            this.playlistAdd(webhookVO);
+        } else if (cmd.equals(WebhookEnum.COMMAND_8.getKey()) || cmd.equals(WebhookEnum.COMMAND_8.getShortKey())) {
+            this.playlistRemove(webhookVO);
         } else {
             this.help();
+        }
+    }
+
+    @Transactional(readOnly = true)
+    @Override
+    public void playlist(WebhookVO webhookVO) {
+        Integer pageNo = 0;
+        Integer pagePerCnt = 100;
+        Pageable pageable = PageRequest.of(pageNo, pagePerCnt, Sort.Direction.DESC, "title");
+
+        Page<PlaylistEntity> all = playlistREP.findAll(pageable);
+        List<PlaylistEntity> content = all.getContent();
+
+        if (!content.isEmpty()){
+            mattermostUtil.sendBobChannel(this.convertMattermostStr(content));
+        }
+    }
+
+    private String convertMattermostStr(List<PlaylistEntity> entities){
+        StringBuilder sb = new StringBuilder();
+        String header = "| id | title | singer | pubDate |\n";
+        String line = "| :-:|:-:|:--:|:-: |\n";
+        sb.append(header)
+                .append(line);
+
+        entities.forEach(v->{
+            sb.append("|");
+            sb.append(v.getId());
+            sb.append("|");
+            sb.append(v.getTitle());
+            sb.append("|");
+            sb.append(v.getSinger());
+            sb.append("|");
+            sb.append(v.getPubDate());
+            sb.append("|");
+            sb.append("\n");
+        });
+
+        return sb.toString();
+    }
+
+    @Transactional
+    @Override
+    public void playlistAdd(WebhookVO webhookVO) {
+        try {
+            Long id = Long.valueOf(webhookVO.getText().split(" ")[1]);
+
+            Optional<MusicEntity> musicEntity = musicREP.findById(id);
+            musicEntity.ifPresent((v) -> {
+                PlaylistEntity playlistEntity = v.convertToPlaylistEntity();
+                playlistREP.save(playlistEntity);
+            });
+            mattermostUtil.sendBobChannel("완료");
+        } catch (Exception e) {
+            mattermostUtil.sendBobChannel("에러");
+            log.error("playlistAdd error", e);
+        }
+    }
+
+    @Transactional
+    @Override
+    public void playlistRemove(WebhookVO webhookVO) {
+        try {
+            Long id = Long.valueOf(webhookVO.getText().split(" ")[1]);
+
+            playlistREP.deleteById(id);
+
+            mattermostUtil.sendBobChannel("완료");
+        } catch (Exception e) {
+            mattermostUtil.sendBobChannel("에러");
+            log.error("playlistAdd error", e);
         }
     }
 
@@ -79,7 +159,7 @@ public class WebhookSVCImpl implements WebhookSVC, WebhookCMD {
 
             if (webhookVO.getText().contains("\'")
                     && webhookVO.getText().length() == (webhookVO.getText().replace("\'", "").length() + 2)
-            ){
+            ) {
                 split = webhookVO.getText().split("\'");
             } else if (webhookVO.getText().contains("\"")
                     && webhookVO.getText().length() == (webhookVO.getText().replace("\"", "").length() + 2)
@@ -101,13 +181,13 @@ public class WebhookSVCImpl implements WebhookSVC, WebhookCMD {
             int pageNo = 1;
             int pagePerCnt = 5;
 
-            if (split.length == 3){
+            if (split.length == 3) {
                 String[] paging = split[2].trim().split(" ");
 
-                if (paging.length != 2 && paging.length > 0){
+                if (paging.length != 2 && paging.length > 0) {
                     this.help();
                     return;
-                } else if(paging.length == 0){
+                } else if (paging.length == 0) {
 
                 } else {
                     pageNo = Integer.parseInt(paging[0]) + 1;
@@ -181,7 +261,7 @@ public class WebhookSVCImpl implements WebhookSVC, WebhookCMD {
         return str;
     }
 
-    @Transactional
+    @Transactional(readOnly = true)
     @Override
     public void music() {
         musicREP.findMusicRand().ifPresentOrElse(
@@ -198,7 +278,7 @@ public class WebhookSVCImpl implements WebhookSVC, WebhookCMD {
         );
     }
 
-    @Transactional
+    @Transactional(readOnly = true)
     @Override
     public void news(WebhookVO webhookVO) {
         String[] split = webhookVO.getText().split(" ");
@@ -226,6 +306,7 @@ public class WebhookSVCImpl implements WebhookSVC, WebhookCMD {
         }
     }
 
+    @Transactional(readOnly = true)
     @Override
     public void oldNews(WebhookVO webhookVO) {
         String[] split = webhookVO.getText().split(" ");

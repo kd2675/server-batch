@@ -10,4 +10,7 @@ public interface WebhookSVC {
     void oldNews(WebhookVO webhookVO);
     void music();
     void searchMusic(WebhookVO webhookVO);
+    void playlist(WebhookVO webhookVO);
+    void playlistAdd(WebhookVO webhookVO);
+    void playlistRemove(WebhookVO webhookVO);
 }

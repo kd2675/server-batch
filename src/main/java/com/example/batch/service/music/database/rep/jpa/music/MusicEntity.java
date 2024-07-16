@@ -56,6 +56,11 @@ public class MusicEntity extends CommonDateEntity {
         return PlaylistEntity.builder()
                 .slct(this.slct)
                 .no(this.no)
+                .title(this.title)
+                .singer(this.singer)
+                .album(this.album)
+                .lyrics(this.lyrics)
+                .pubDate(this.pubDate)
                 .build();
     }
 }
