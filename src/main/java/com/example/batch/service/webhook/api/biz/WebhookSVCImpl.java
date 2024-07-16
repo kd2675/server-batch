@@ -1,5 +1,8 @@
 package com.example.batch.service.webhook.api.biz;
 
+import com.example.batch.service.music.api.vo.BugsApiListVO;
+import com.example.batch.service.music.api.vo.BugsApiVO;
+import com.example.batch.service.music.database.rep.jpa.music.MusicEntity;
 import com.example.batch.service.music.database.rep.jpa.music.MusicREP;
 import com.example.batch.service.news.database.rep.jpa.news.NewsEntity;
 import com.example.batch.service.news.database.rep.jpa.news.NewsREP;
@@ -9,33 +12,41 @@ import com.example.batch.service.news.database.rep.jpa.oldnews.OldNewsREP;
 import com.example.batch.service.news.database.rep.jpa.oldnews.OldNewsSpec;
 import com.example.batch.service.webhook.api.dto.WebhookVO;
 import com.example.batch.service.webhook.api.vo.WebhookEnum;
+import com.example.batch.utils.BugsApiUtil;
 import com.example.batch.utils.MattermostUtil;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.batch.item.Chunk;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.PostMapping;
 
 import java.time.Duration;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
-import java.util.Arrays;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Queue;
+import java.util.*;
 
+@Slf4j
 @RequiredArgsConstructor
 @Service
 public class WebhookSVCImpl implements WebhookSVC, WebhookCMD {
     private final MattermostUtil mattermostUtil;
+    private final BugsApiUtil bugsApiUtil;
 
     private final NewsREP newsREP;
     private final OldNewsREP oldNewsREP;
     private final MusicREP musicREP;
 
+    @Transactional
     @Override
     public void cmdCall(WebhookVO webhookVO) {
         String text = webhookVO.getText();
@@ -52,11 +63,91 @@ public class WebhookSVCImpl implements WebhookSVC, WebhookCMD {
             this.oldNews(webhookVO);
         } else if (cmd.equals(WebhookEnum.COMMAND_4.getKey())) {
             this.music();
+        } else if (cmd.equals(WebhookEnum.COMMAND_5.getKey())) {
+            this.searchMusic(webhookVO);
         } else {
             this.help();
         }
     }
 
+    @Transactional
+    @Override
+    public void searchMusic(WebhookVO webhookVO) {
+        try {
+            String[] split = webhookVO.getText().split(" ");
+            if (split.length != 4) {
+                this.help();
+                return;
+            }
+
+            String searchText = split[1].replace(",", "&&");
+            int pageNo = Integer.parseInt(split[2]) + 1;
+            int pagePerCnt = Integer.parseInt(split[3]);
+            if (pagePerCnt > 5) {
+                this.help();
+                return;
+            }
+
+            ResponseEntity conn = bugsApiUtil.conn("track", searchText, pageNo, pagePerCnt);
+
+            String body = (String) conn.getBody();
+            ObjectMapper objectMapper = new ObjectMapper();
+            BugsApiVO bugsApiVO = objectMapper.readValue(body, BugsApiVO.class);
+            List<BugsApiListVO> bugsApiVOS = bugsApiVO.getList();
+
+            List<MusicEntity> list = new ArrayList<>();
+
+            bugsApiVOS.forEach(v -> {
+                musicREP.findBySlctAndNo("b", v.getTrackId()).ifPresentOrElse(
+                        list::add,
+                        () -> {
+                            Date updDt = v.getUpdDt();
+
+                            MusicEntity musicEntity = MusicEntity.builder()
+                                    .slct("b")
+                                    .no(v.getTrackId())
+                                    .title(v.getTrackTitle())
+                                    .singer(v.getArtists().get(0).getArtistNm())
+                                    .album(v.getAlbum().getTitle())
+                                    .pubDate(
+                                            updDt.toInstant()
+                                                    .atZone(ZoneId.systemDefault())
+                                                    .toLocalDate()
+                                    ).build();
+
+                            MusicEntity save = musicREP.save(musicEntity);
+                            list.add(save);
+                        }
+                );
+
+            });
+
+            StringBuilder str = new StringBuilder();
+
+            list.forEach(v ->
+                    str.append(this.mattermostConvertMsg(v)).append("\n")
+            );
+
+            mattermostUtil.sendBobChannel(str.toString());
+
+        } catch (JsonProcessingException e) {
+            this.help();
+            log.error("{}", e);
+        }
+    }
+
+    private String mattermostConvertMsg(MusicEntity musicEntity) {
+        Long no = musicEntity.getId();
+        String title = musicEntity.getTitle();
+        String singer = musicEntity.getSinger();
+        LocalDate pubDate = musicEntity.getPubDate();
+
+        String str = no + " " + title + " " + singer + " " + pubDate;
+
+        return str;
+    }
+
+    @Transactional
     @Override
     public void music() {
         musicREP.findMusicRand().ifPresentOrElse(
@@ -73,6 +164,7 @@ public class WebhookSVCImpl implements WebhookSVC, WebhookCMD {
         );
     }
 
+    @Transactional
     @Override
     public void news(WebhookVO webhookVO) {
         String[] split = webhookVO.getText().split(" ");

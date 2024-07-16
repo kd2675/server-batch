@@ -23,17 +23,20 @@ public class MusicEntity extends CommonDateEntity {
     @Column(name = "id")
     private Long id;
 
+    @Column(name = "slct", nullable = false, length = 1)
+    private String slct;
+
     @Column(name = "no", nullable = false)
     private Long no;
-
-    @Column(name = "album", nullable = true, length = 255)
-    private String album;
 
     @Column(name = "title", nullable = false, length = 255)
     private String title;
 
     @Column(name = "singer", nullable = false, length = 255)
     private String singer;
+
+    @Column(name = "album", nullable = true, length = 255)
+    private String album;
 
     @Column(name = "lyrics", nullable = true, columnDefinition = "TEXT")
     private String lyrics;

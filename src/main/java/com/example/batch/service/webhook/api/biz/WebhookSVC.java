@@ -9,4 +9,5 @@ public interface WebhookSVC {
     void news(WebhookVO webhookVO);
     void oldNews(WebhookVO webhookVO);
     void music();
+    void searchMusic(WebhookVO webhookVO);
 }

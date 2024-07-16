@@ -1,5 +1,5 @@
 package com.example.batch.service.music.api.biz;
 
-public interface InsMusicSVC {
+public interface MusicSVC {
     void insMusic();
 }

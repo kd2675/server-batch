@@ -1,33 +1,49 @@
 package com.example.batch.service.music.api.biz;
 
+import com.example.batch.service.music.api.vo.BugsApiListVO;
+import com.example.batch.service.music.api.vo.BugsApiVO;
 import com.example.batch.service.music.database.rep.jpa.music.MusicEntity;
 import com.example.batch.service.music.database.rep.jpa.music.MusicREP;
+import com.example.batch.service.news.api.vo.NaverNewsApiItemVO;
+import com.example.batch.service.news.api.vo.NaverNewsApiVO;
+import com.example.batch.utils.BugsApiUtil;
+import com.example.batch.utils.BugsApiUtilImpl;
 import com.example.batch.utils.ChromeDriverConnUtil;
+import com.example.batch.utils.MattermostUtil;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.jsoup.nodes.Document;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 @Slf4j
 @Service
 @RequiredArgsConstructor
-public class InsMusicSVCImpl implements InsMusicSVC {
+public class MusicSVCImpl implements MusicSVC {
     private final String URL = "https://vibe.naver.com/track/";
+
     private final ChromeDriverConnUtil chromeDriverConnUtil;
+    private final BugsApiUtil bugsApiUtil;
+    private final MattermostUtil mattermostUtil;
 
     private final MusicREP musicREP;
-
 
     @Transactional
     @Override
     public void insMusic() {
-        Integer i = 100;
+        Integer i = 84500000;
 
-        for (Integer no = i; no < 110; no++) {
+        for (Integer no = i; no > 84499950; no--) {
             try {
                 Document doc = chromeDriverConnUtil.conn(URL + String.valueOf(no));
                 String title = doc.getElementsByTag("main").get(0).getElementsByClass("title").get(0).ownText();
@@ -48,13 +64,13 @@ public class InsMusicSVCImpl implements InsMusicSVC {
                 String[] split = pubDate.split("\\.");
                 LocalDate localDate = LocalDate.of(Integer.parseInt(split[0]), Integer.parseInt(split[1]), Integer.parseInt(split[2]));
 
-                log.info("doc : {}", doc);
-
-                log.info("title : {}", title);
-                log.info("singer : {}", singer);
-                log.info("album : {}", album);
-                log.info("lyrics : {}", lyrics);
-                log.info("pubDate : {}", localDate);
+//                log.info("doc : {}", doc);
+//
+//                log.info("title : {}", title);
+//                log.info("singer : {}", singer);
+//                log.info("album : {}", album);
+//                log.info("lyrics : {}", lyrics);
+//                log.info("pubDate : {}", localDate);
 
                 MusicEntity musicEntity = musicREP.findTop1ByNoOrderByIdDesc(no.longValue());
 
@@ -75,6 +91,7 @@ public class InsMusicSVCImpl implements InsMusicSVC {
                     );
                 }
 
+                log.info("done : {}", no);
 
             } catch (Exception e) {
                 log.error("{} insMusic error", no, e);
