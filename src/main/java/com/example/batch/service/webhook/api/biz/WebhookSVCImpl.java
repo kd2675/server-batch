@@ -80,6 +80,10 @@ public class WebhookSVCImpl implements WebhookSVC, WebhookCMD {
         }
     }
 
+    private void test(){
+
+    }
+
     @Transactional(readOnly = true)
     @Override
     public void playlist(WebhookVO webhookVO) {
@@ -166,11 +170,10 @@ public class WebhookSVCImpl implements WebhookSVC, WebhookCMD {
             ) {
                 split = webhookVO.getText().split("\"");
             } else {
-                this.help();
-                return;
+                split = webhookVO.getText().split(" ");
             }
 //            String[] split = webhookVO.getText().split(" ");
-            if (split.length != 2 && split.length != 3) {
+            if (split.length != 2 && split.length != 3 && split.length != 4) {
                 this.help();
                 return;
             }
