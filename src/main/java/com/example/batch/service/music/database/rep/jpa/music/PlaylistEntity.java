@@ -43,4 +43,7 @@ public class PlaylistEntity extends CommonDateEntity {
 
     @Column(name = "pubDate", nullable = true)
     private LocalDate pubDate;
+
+    @Column(name = "youtubeLink", nullable = true, columnDefinition = "TEXT")
+    private String youtubeLink;
 }
