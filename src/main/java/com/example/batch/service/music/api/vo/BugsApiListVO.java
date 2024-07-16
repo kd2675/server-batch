@@ -48,6 +48,9 @@ public class BugsApiListVO {
 
     @JsonProperty(value = "mvs")
     private Object mvs;
+
+    @JsonProperty(value = "connect")
+    private Object connect;
 }
 
 //{"track_no":1,

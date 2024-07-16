@@ -15,6 +15,7 @@ import com.example.batch.service.webhook.api.vo.WebhookEnum;
 import com.example.batch.utils.BugsApiUtil;
 import com.example.batch.utils.MattermostUtil;
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -53,17 +54,17 @@ public class WebhookSVCImpl implements WebhookSVC, WebhookCMD {
         String[] split = text.split(" ");
         String cmd = split[0];
 
-        if (cmd.equals(WebhookEnum.COMMAND_0.getKey())) {
+        if (cmd.equals(WebhookEnum.COMMAND_0.getKey()) || cmd.equals(WebhookEnum.COMMAND_0.getShortKey())) {
             this.time();
-        } else if (cmd.equals(WebhookEnum.COMMAND_1.getKey())) {
+        } else if (cmd.equals(WebhookEnum.COMMAND_1.getKey()) || cmd.equals(WebhookEnum.COMMAND_1.getShortKey())) {
             this.uptime();
-        } else if (cmd.equals(WebhookEnum.COMMAND_2.getKey())) {
+        } else if (cmd.equals(WebhookEnum.COMMAND_2.getKey()) || cmd.equals(WebhookEnum.COMMAND_2.getShortKey())) {
             this.news(webhookVO);
-        } else if (cmd.equals(WebhookEnum.COMMAND_3.getKey())) {
+        } else if (cmd.equals(WebhookEnum.COMMAND_3.getKey()) || cmd.equals(WebhookEnum.COMMAND_3.getShortKey())) {
             this.oldNews(webhookVO);
-        } else if (cmd.equals(WebhookEnum.COMMAND_4.getKey())) {
+        } else if (cmd.equals(WebhookEnum.COMMAND_4.getKey()) || cmd.equals(WebhookEnum.COMMAND_4.getShortKey())) {
             this.music();
-        } else if (cmd.equals(WebhookEnum.COMMAND_5.getKey())) {
+        } else if (cmd.equals(WebhookEnum.COMMAND_5.getKey()) || cmd.equals(WebhookEnum.COMMAND_5.getShortKey())) {
             this.searchMusic(webhookVO);
         } else {
             this.help();
@@ -74,16 +75,38 @@ public class WebhookSVCImpl implements WebhookSVC, WebhookCMD {
     @Override
     public void searchMusic(WebhookVO webhookVO) {
         try {
-            String[] split = webhookVO.getText().split(" ");
-            if (split.length != 4) {
+            String[] split;
+
+            if (webhookVO.getText().contains("\'")
+                    && webhookVO.getText().length() == (webhookVO.getText().replace("\'", "").length() + 2)
+            ){
+                split = webhookVO.getText().split("\'");
+            } else if (webhookVO.getText().contains("\"")
+                    && webhookVO.getText().length() == (webhookVO.getText().replace("\"", "").length() + 2)
+            ) {
+                split = webhookVO.getText().split("\"");
+            } else {
+                this.help();
+                return;
+            }
+//            String[] split = webhookVO.getText().split(" ");
+            if (split.length != 3) {
                 this.help();
                 return;
             }
 
-            String searchText = split[1].replace(",", "&&");
-            int pageNo = Integer.parseInt(split[2]) + 1;
-            int pagePerCnt = Integer.parseInt(split[3]);
-            if (pagePerCnt > 5) {
+            String searchText = split[1];
+
+            String[] paging = split[2].trim().split(" ");
+
+            if (paging.length != 2) {
+                this.help();
+                return;
+            }
+
+            int pageNo = Integer.parseInt(paging[0]) + 1;
+            int pagePerCnt = Integer.parseInt(paging[1]);
+            if (pagePerCnt > 10) {
                 this.help();
                 return;
             }
@@ -92,6 +115,7 @@ public class WebhookSVCImpl implements WebhookSVC, WebhookCMD {
 
             String body = (String) conn.getBody();
             ObjectMapper objectMapper = new ObjectMapper();
+            objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
             BugsApiVO bugsApiVO = objectMapper.readValue(body, BugsApiVO.class);
             List<BugsApiListVO> bugsApiVOS = bugsApiVO.getList();
 
@@ -128,7 +152,9 @@ public class WebhookSVCImpl implements WebhookSVC, WebhookCMD {
                     str.append(this.mattermostConvertMsg(v)).append("\n")
             );
 
-            mattermostUtil.sendBobChannel(str.toString());
+            if (!str.isEmpty()) {
+                mattermostUtil.sendBobChannel(str.toString());
+            }
 
         } catch (JsonProcessingException e) {
             this.help();
@@ -299,6 +325,8 @@ public class WebhookSVCImpl implements WebhookSVC, WebhookCMD {
             str.append(webhook.getId())
                     .append(". ")
                     .append(webhook.getKey())
+                    .append(", ")
+                    .append(webhook.getShortKey())
                     .append(" : ")
                     .append(webhook.getValue())
                     .append("\n");

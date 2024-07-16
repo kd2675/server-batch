@@ -16,8 +16,8 @@ import java.time.LocalDate;
 @AllArgsConstructor
 @DynamicInsert
 @Entity
-@Table(name = "MUSIC_TB")
-public class MusicEntity extends CommonDateEntity {
+@Table(name = "PLAYLIST_TB")
+public class PlaylistEntity extends CommonDateEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
@@ -43,19 +43,4 @@ public class MusicEntity extends CommonDateEntity {
 
     @Column(name = "pubDate", nullable = true)
     private LocalDate pubDate;
-
-    public void updMusic(String album, String title, String singer, String lyrics, LocalDate pubDate) {
-        this.album = album;
-        this.title = title;
-        this.singer = singer;
-        this.lyrics = lyrics;
-        this.pubDate = pubDate;
-    }
-
-    public PlaylistEntity convertToPlaylistEntity(){
-        return PlaylistEntity.builder()
-                .slct(this.slct)
-                .no(this.no)
-                .build();
-    }
 }
