@@ -47,6 +47,10 @@ public class MusicEntity extends CommonDateEntity {
     @Column(name = "youtubeLink", nullable = true, columnDefinition = "TEXT")
     private String youtubeLink;
 
+    public void updYoutubeLink(String youtubeLink){
+        this.youtubeLink = youtubeLink;
+    }
+
     public void updMusic(String album, String title, String singer, String lyrics, LocalDate pubDate) {
         this.album = album;
         this.title = title;

@@ -22,7 +22,6 @@ import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.batch.item.Chunk;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -30,7 +29,6 @@ import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.bind.annotation.PostMapping;
 
 import java.time.Duration;
 import java.time.LocalDate;
@@ -70,7 +68,7 @@ public class WebhookSVCImpl implements WebhookSVC, WebhookCMD {
         } else if (cmd.equals(WebhookEnum.COMMAND_4.getKey()) || cmd.equals(WebhookEnum.COMMAND_4.getShortKey())) {
             this.music();
         } else if (cmd.equals(WebhookEnum.COMMAND_5.getKey()) || cmd.equals(WebhookEnum.COMMAND_5.getShortKey())) {
-            this.searchMusic(webhookVO);
+            this.musicSearch(webhookVO);
         } else if (cmd.equals(WebhookEnum.COMMAND_6.getKey()) || cmd.equals(WebhookEnum.COMMAND_6.getShortKey())) {
             this.playlist(webhookVO);
         } else if (cmd.equals(WebhookEnum.COMMAND_7.getKey()) || cmd.equals(WebhookEnum.COMMAND_7.getShortKey())) {
@@ -92,7 +90,7 @@ public class WebhookSVCImpl implements WebhookSVC, WebhookCMD {
     public void playlist(WebhookVO webhookVO) {
         Integer pageNo = 0;
         Integer pagePerCnt = 100;
-        Pageable pageable = PageRequest.of(pageNo, pagePerCnt, Sort.Direction.DESC, "title");
+        Pageable pageable = PageRequest.of(pageNo, pagePerCnt, Sort.Direction.ASC, "title");
 
         Page<PlaylistEntity> all = playlistREP.findAll(pageable);
         List<PlaylistEntity> content = all.getContent();
@@ -135,8 +133,17 @@ public class WebhookSVCImpl implements WebhookSVC, WebhookCMD {
 
             Optional<MusicEntity> musicEntity = musicREP.findById(id);
             musicEntity.ifPresent((v) -> {
-                PlaylistEntity playlistEntity = v.convertToPlaylistEntity();
-                playlistREP.save(playlistEntity);
+                Optional<PlaylistEntity> byNo = playlistREP.findByNo(v.getNo());
+
+                byNo.ifPresentOrElse(
+                        (b) -> {
+
+                        },
+                        () -> {
+                            PlaylistEntity playlistEntity = v.convertToPlaylistEntity();
+                            playlistREP.save(playlistEntity);
+                        }
+                );
             });
             mattermostUtil.sendBobChannel("완료");
         } catch (Exception e) {
@@ -162,7 +169,7 @@ public class WebhookSVCImpl implements WebhookSVC, WebhookCMD {
 
     @Transactional
     @Override
-    public void searchMusic(WebhookVO webhookVO) {
+    public void musicSearch(WebhookVO webhookVO) {
         try {
             String[] split;
 
@@ -219,7 +226,22 @@ public class WebhookSVCImpl implements WebhookSVC, WebhookCMD {
 
             bugsApiVOS.forEach(v -> {
                 musicREP.findBySlctAndNo("b", v.getTrackId()).ifPresentOrElse(
-                        list::add,
+                        (b) -> {
+                            if (b.getYoutubeLink().isEmpty()) {
+                                ResponseEntity youtubeConn = youtubeApiUtil.conn(v.getTrackTitle() + " " + v.getArtists().get(0).getArtistNm());
+                                String youtubeBody = (String) youtubeConn.getBody();
+
+                                String subStr = youtubeBody.substring(youtubeBody.indexOf("\"videoId\":\"") + "\"videoId\":\"".length());
+                                String id = subStr.substring(0, subStr.indexOf("\""));
+
+                                String youtubeLink = "https://www.youtube.com/watch?v=" + id;
+
+                                b.updYoutubeLink(youtubeLink);
+                                musicREP.save(b);
+                            }
+
+                            list.add(b);
+                        },
                         () -> {
                             Date updDt = v.getUpdDt();
 
@@ -300,7 +322,9 @@ public class WebhookSVCImpl implements WebhookSVC, WebhookCMD {
                     String title = musicEntity.getTitle();
                     String singer = musicEntity.getSinger();
                     String pubDate = musicEntity.getPubDate().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
-                    String str = title + " " + singer + " " + pubDate;
+                    String youtubeLink = musicEntity.getYoutubeLink() != null ? "[Link]" + "(" + musicEntity.getYoutubeLink() + ")" : "-";
+
+                    String str = title + " " + singer + " " + pubDate + " " + youtubeLink;
                     mattermostUtil.sendBobChannel(str);
                 },
                 () -> {
