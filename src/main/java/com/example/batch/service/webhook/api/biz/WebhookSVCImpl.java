@@ -20,6 +20,7 @@ import com.example.batch.utils.YoutubeApiUtil;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import io.micrometer.common.util.StringUtils;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -227,7 +228,7 @@ public class WebhookSVCImpl implements WebhookSVC, WebhookCMD {
             bugsApiVOS.forEach(v -> {
                 musicREP.findBySlctAndNo("b", v.getTrackId()).ifPresentOrElse(
                         (b) -> {
-                            if (b.getYoutubeLink().isEmpty()) {
+                            if (StringUtils.isEmpty(b.getYoutubeLink())) {
                                 ResponseEntity youtubeConn = youtubeApiUtil.conn(v.getTrackTitle() + " " + v.getArtists().get(0).getArtistNm());
                                 String youtubeBody = (String) youtubeConn.getBody();
 
