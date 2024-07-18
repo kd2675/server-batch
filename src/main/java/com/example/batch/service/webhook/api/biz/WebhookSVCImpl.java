@@ -67,12 +67,13 @@ public class WebhookSVCImpl implements WebhookSVC, WebhookCMD {
         commandMap.put(WebhookEnum.COMMAND_6.getKey(), () -> this.playlist(webhookVO));
         commandMap.put(WebhookEnum.COMMAND_7.getKey(), () -> this.playlistAdd(webhookVO));
         commandMap.put(WebhookEnum.COMMAND_8.getKey(), () -> this.playlistRemove(webhookVO));
+        commandMap.put(WebhookEnum.COMMAND.getKey(), this::help);
 
         for (WebhookEnum webhookEnum : WebhookEnum.values()) {
             commandMap.put(webhookEnum.getShortKey(), commandMap.get(webhookEnum.getKey()));
         }
 
-        commandMap.getOrDefault(cmd, this::help).run();
+        commandMap.getOrDefault(cmd, this::notRun).run();
     }
 
     private void test() {
@@ -437,6 +438,10 @@ public class WebhookSVCImpl implements WebhookSVC, WebhookCMD {
         }
 
         return result.toString();
+    }
+
+    private void notRun(){
+        mattermostUtil.sendBobChannel("잘못된 입력입니다. 설명을 보시려면 [$c]를 입력해주세요");
     }
 
     @Override
