@@ -6,8 +6,6 @@ import lombok.Getter;
 @Getter
 @AllArgsConstructor
 public enum WebhookEnum {
-    COMMAND(9999L, "$command", "$c", "명령어 설명"),
-
     COMMAND_0(0L, "$time", "$t", "퇴근까지 남은 시간 알려드립니다."),
     COMMAND_1(1L, "$uptime", "$ut", "출근 후 지난 시간 알려드립니다."),
 
@@ -26,8 +24,9 @@ public enum WebhookEnum {
     COMMAND_12(12L, "$movieListAdd", "$mvad", "!작업중! 플레이리스트 노래 삭제 ex)playlistRemove 2(playlist id)"),
     COMMAND_13(13L, "$movieListRemove", "$mvrm", "!작업중! 플레이리스트 노래 삭제 ex)playlistRemove 2(playlist id)"),
 
-    COMMAND_14(14L, "$rockScissorsPaper", "rsp", "!작업중! 가위 바위 보");
+    COMMAND_14(14L, "$rockScissorsPaper", "rsp", "!작업중! 가위 바위 보"),
 
+    COMMAND(9999L, "$command", "$c", "명령어 설명");
 
     private Long id;
     private String key;

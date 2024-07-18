@@ -37,6 +37,7 @@ import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -54,31 +55,24 @@ public class WebhookSVCImpl implements WebhookSVC, WebhookCMD {
     @Transactional
     @Override
     public void cmdCall(WebhookVO webhookVO) {
-        String text = webhookVO.getText();
-        String[] split = text.split(" ");
-        String cmd = split[0];
+        String cmd = webhookVO.getText().split(" ")[0];
 
-        if (cmd.equals(WebhookEnum.COMMAND_0.getKey()) || cmd.equals(WebhookEnum.COMMAND_0.getShortKey())) {
-            this.time();
-        } else if (cmd.equals(WebhookEnum.COMMAND_1.getKey()) || cmd.equals(WebhookEnum.COMMAND_1.getShortKey())) {
-            this.uptime();
-        } else if (cmd.equals(WebhookEnum.COMMAND_2.getKey()) || cmd.equals(WebhookEnum.COMMAND_2.getShortKey())) {
-            this.news(webhookVO);
-        } else if (cmd.equals(WebhookEnum.COMMAND_3.getKey()) || cmd.equals(WebhookEnum.COMMAND_3.getShortKey())) {
-            this.oldNews(webhookVO);
-        } else if (cmd.equals(WebhookEnum.COMMAND_4.getKey()) || cmd.equals(WebhookEnum.COMMAND_4.getShortKey())) {
-            this.music();
-        } else if (cmd.equals(WebhookEnum.COMMAND_5.getKey()) || cmd.equals(WebhookEnum.COMMAND_5.getShortKey())) {
-            this.musicSearch(webhookVO);
-        } else if (cmd.equals(WebhookEnum.COMMAND_6.getKey()) || cmd.equals(WebhookEnum.COMMAND_6.getShortKey())) {
-            this.playlist(webhookVO);
-        } else if (cmd.equals(WebhookEnum.COMMAND_7.getKey()) || cmd.equals(WebhookEnum.COMMAND_7.getShortKey())) {
-            this.playlistAdd(webhookVO);
-        } else if (cmd.equals(WebhookEnum.COMMAND_8.getKey()) || cmd.equals(WebhookEnum.COMMAND_8.getShortKey())) {
-            this.playlistRemove(webhookVO);
-        } else {
-            this.help();
+        Map<String, Runnable> commandMap = new HashMap<>();
+        commandMap.put(WebhookEnum.COMMAND_0.getKey(), this::time);
+        commandMap.put(WebhookEnum.COMMAND_1.getKey(), this::uptime);
+        commandMap.put(WebhookEnum.COMMAND_2.getKey(), () -> this.news(webhookVO));
+        commandMap.put(WebhookEnum.COMMAND_3.getKey(), () -> this.oldNews(webhookVO));
+        commandMap.put(WebhookEnum.COMMAND_4.getKey(), this::music);
+        commandMap.put(WebhookEnum.COMMAND_5.getKey(), () -> this.musicSearch(webhookVO));
+        commandMap.put(WebhookEnum.COMMAND_6.getKey(), () -> this.playlist(webhookVO));
+        commandMap.put(WebhookEnum.COMMAND_7.getKey(), () -> this.playlistAdd(webhookVO));
+        commandMap.put(WebhookEnum.COMMAND_8.getKey(), () -> this.playlistRemove(webhookVO));
+
+        for (WebhookEnum webhookEnum : WebhookEnum.values()) {
+            commandMap.put(webhookEnum.getShortKey(), commandMap.get(webhookEnum.getKey()));
         }
+
+        commandMap.getOrDefault(cmd, this::help).run();
     }
 
     private void test() {
@@ -91,7 +85,7 @@ public class WebhookSVCImpl implements WebhookSVC, WebhookCMD {
     public void playlist(WebhookVO webhookVO) {
         Integer pageNo = 0;
         Integer pagePerCnt = 100;
-        Pageable pageable = PageRequest.of(pageNo, pagePerCnt, Sort.Direction.ASC, "title");
+        Pageable pageable = PageRequest.of(pageNo, pagePerCnt, Sort.Direction.DESC, "id");
 
         Page<PlaylistEntity> all = playlistREP.findAll(pageable);
         List<PlaylistEntity> content = all.getContent();
@@ -103,10 +97,10 @@ public class WebhookSVCImpl implements WebhookSVC, WebhookCMD {
 
     private String convertMattermostStr(List<PlaylistEntity> entities) {
         StringBuilder sb = new StringBuilder();
-        String header = "| id | title | singer | pubDate | youtube |\n";
-        String line = "| :-:|:-:|:--:|:-:|:-: |\n";
-        sb.append(header)
-                .append(line);
+//        String header = "| id | title | singer | pubDate | youtube |\n";
+//        String line = "| :-:|:-:|:--:|:-:|:-: |\n";
+//        sb.append(header)
+//                .append(line);
 
         entities.forEach(v -> {
             sb.append("|");
@@ -172,126 +166,109 @@ public class WebhookSVCImpl implements WebhookSVC, WebhookCMD {
     @Override
     public void musicSearch(WebhookVO webhookVO) {
         try {
-            String[] split;
-
-            if (webhookVO.getText().contains("\'")
-                    && webhookVO.getText().length() == (webhookVO.getText().replace("\'", "").length() + 2)
-            ) {
-                split = webhookVO.getText().split("\'");
-            } else if (webhookVO.getText().contains("\"")
-                    && webhookVO.getText().length() == (webhookVO.getText().replace("\"", "").length() + 2)
-            ) {
-                split = webhookVO.getText().split("\"");
-            } else {
-                split = webhookVO.getText().split(" ");
-            }
-//            String[] split = webhookVO.getText().split(" ");
-            if (split.length != 2 && split.length != 3 && split.length != 4) {
+            String[] split = parseSplitText(webhookVO.getText());
+            if (split.length < 2 || split.length > 4) {
                 this.help();
                 return;
             }
 
             String searchText = split[1];
+            int[] pagingInfo = getPagingInfo(split);
 
+            ResponseEntity<String> conn = bugsApiUtil.conn("track", searchText, pagingInfo[0], pagingInfo[1]);
+            BugsApiVO bugsApiVO = parseResponse(conn.getBody());
 
-            int pageNo = 1;
-            int pagePerCnt = 5;
+            List<MusicEntity> musicList = bugsApiVO.getList().stream()
+                    .map(this::processTrack)
+                    .collect(Collectors.toList());
 
-            if (split.length == 3) {
-                String[] paging = split[2].trim().split(" ");
-
-                if (paging.length != 2 && paging.length > 0) {
-                    this.help();
-                    return;
-                } else if (paging.length == 0) {
-
-                } else {
-                    pageNo = Integer.parseInt(paging[0]) + 1;
-                    pagePerCnt = Integer.parseInt(paging[1]);
-                    if (pagePerCnt > 10) {
-                        this.help();
-                        return;
-                    }
-                }
+            if (!musicList.isEmpty()) {
+                mattermostUtil.sendBobChannel(this.mattermostConvertMsg(musicList));
             }
-
-            ResponseEntity conn = bugsApiUtil.conn("track", searchText, pageNo, pagePerCnt);
-
-            String body = (String) conn.getBody();
-            ObjectMapper objectMapper = new ObjectMapper();
-            objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
-            BugsApiVO bugsApiVO = objectMapper.readValue(body, BugsApiVO.class);
-            List<BugsApiListVO> bugsApiVOS = bugsApiVO.getList();
-
-            List<MusicEntity> list = new ArrayList<>();
-
-            bugsApiVOS.forEach(v -> {
-                musicREP.findBySlctAndNo("b", v.getTrackId()).ifPresentOrElse(
-                        (b) -> {
-                            if (StringUtils.isEmpty(b.getYoutubeLink())) {
-                                ResponseEntity youtubeConn = youtubeApiUtil.conn(v.getTrackTitle() + " " + v.getArtists().get(0).getArtistNm());
-                                String youtubeBody = (String) youtubeConn.getBody();
-
-                                String subStr = youtubeBody.substring(youtubeBody.indexOf("\"videoId\":\"") + "\"videoId\":\"".length());
-                                String id = subStr.substring(0, subStr.indexOf("\""));
-
-                                String youtubeLink = "https://www.youtube.com/watch?v=" + id;
-
-                                b.updYoutubeLink(youtubeLink);
-                                musicREP.save(b);
-                            }
-
-                            list.add(b);
-                        },
-                        () -> {
-                            Date updDt = v.getUpdDt();
-
-                            ResponseEntity youtubeConn = youtubeApiUtil.conn(v.getTrackTitle() + " " + v.getArtists().get(0).getArtistNm());
-                            String youtubeBody = (String) youtubeConn.getBody();
-
-                            String subStr = youtubeBody.substring(youtubeBody.indexOf("\"videoId\":\"") + "\"videoId\":\"".length());
-                            String id = subStr.substring(0, subStr.indexOf("\""));
-
-                            String youtubeLink = "https://www.youtube.com/watch?v=" + id;
-
-                            MusicEntity musicEntity = MusicEntity.builder()
-                                    .slct("b")
-                                    .no(v.getTrackId())
-                                    .title(v.getTrackTitle())
-                                    .singer(v.getArtists().get(0).getArtistNm())
-                                    .album(v.getAlbum().getTitle())
-                                    .pubDate(
-                                            updDt.toInstant()
-                                                    .atZone(ZoneId.systemDefault())
-                                                    .toLocalDate()
-                                    )
-                                    .youtubeLink(youtubeLink).build();
-
-                            MusicEntity save = musicREP.save(musicEntity);
-                            list.add(save);
-                        }
-                );
-
-            });
-
-            if (!list.isEmpty()) {
-                mattermostUtil.sendBobChannel(this.mattermostConvertMsg(list));
-            }
-
-        } catch (JsonProcessingException e) {
+        } catch (Exception e) {
             this.help();
-            log.error("{}", e);
+            log.error("Error in musicSearch", e);
         }
+    }
+
+    private String[] parseSplitText(String text) {
+        if (text.contains("'") && text.length() == text.replace("'", "").length() + 2) {
+            return text.split("'");
+        } else if (text.contains("\"") && text.length() == text.replace("\"", "").length() + 2) {
+            return text.split("\"");
+        } else {
+            return text.split(" ");
+        }
+    }
+
+    private int[] getPagingInfo(String[] split) {
+        int pageNo = 1, pagePerCnt = 5;
+        if (split.length >= 3) {
+            String[] paging = split[2].trim().split(" ");
+            if (paging.length == 2) {
+                pageNo = Integer.parseInt(paging[0]) + 1;
+                pagePerCnt = Math.min(Integer.parseInt(paging[1]), 10);
+            }
+        }
+        return new int[]{pageNo, pagePerCnt};
+    }
+
+    private BugsApiVO parseResponse(String body) throws JsonProcessingException {
+        ObjectMapper objectMapper = new ObjectMapper();
+        objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+        return objectMapper.readValue(body, BugsApiVO.class);
+    }
+
+    private MusicEntity processTrack(BugsApiListVO track) {
+        return musicREP.findBySlctAndNo("b", track.getTrackId())
+                .map(entity -> updateExistingTrack(entity, track))
+                .orElseGet(() -> createNewTrack(track));
+    }
+
+    private MusicEntity updateExistingTrack(MusicEntity entity, BugsApiListVO track) {
+        if (StringUtils.isEmpty(entity.getYoutubeLink())) {
+            entity.updYoutubeLink(getYoutubeLink(track.getTrackTitle(), track.getArtists().get(0).getArtistNm()));
+        }
+        if (StringUtils.isEmpty(entity.getAlbumImg())) {
+            entity.updAlbumImg(getAlbumImageUrl(String.valueOf(track.getAlbum().getImage().get("path"))));
+        }
+        return musicREP.save(entity);
+    }
+
+    private MusicEntity createNewTrack(BugsApiListVO track) {
+        return musicREP.save(MusicEntity.builder()
+                .slct("b")
+                .no(track.getTrackId())
+                .title(track.getTrackTitle())
+                .singer(track.getArtists().get(0).getArtistNm())
+                .album(track.getAlbum().getTitle())
+                .albumImg(getAlbumImageUrl(String.valueOf(track.getAlbum().getImage().get("path"))))
+                .pubDate(track.getUpdDt().toInstant().atZone(ZoneId.systemDefault()).toLocalDate())
+                .youtubeLink(getYoutubeLink(track.getTrackTitle(), track.getArtists().get(0).getArtistNm()))
+                .build());
+    }
+
+    private String getYoutubeLink(String title, String artist) {
+        ResponseEntity<String> youtubeConn = youtubeApiUtil.conn(title + " " + artist);
+        String youtubeBody = youtubeConn.getBody();
+        String subStr = youtubeBody.substring(youtubeBody.indexOf("\"videoId\":\"") + "\"videoId\":\"".length());
+        String id = subStr.substring(0, subStr.indexOf("\""));
+        return "https://www.youtube.com/watch?v=" + id;
+    }
+
+    private String getAlbumImageUrl(String imagePath) {
+        return "![](https://image.bugsm.co.kr/album/images/200" + imagePath + "?version=20240419015238.0 =50x50)";
     }
 
     private String mattermostConvertMsg(List<MusicEntity> musicEntity) {
         StringBuilder sb = new StringBuilder();
-        String header = "| id | title | singer | pubDate | youtube |\n";
-        String line = "| :-:|:-:|:--:|:-:|:--: |\n";
+        String header = "| id | albumImg | title | singer | pubDate | youtube |\n";
+        String line = "| :-:|:-:|:-:|:--:|:-:|:--: |\n";
         sb.append(header)
                 .append(line);
 
         musicEntity.forEach(v -> {
+            String albumImg = v.getAlbumImg();
             Long no = v.getId();
             String title = v.getTitle();
             String singer = v.getSinger();
@@ -300,6 +277,8 @@ public class WebhookSVCImpl implements WebhookSVC, WebhookCMD {
 
             sb.append("|");
             sb.append(no);
+            sb.append("|");
+            sb.append(albumImg);
             sb.append("|");
             sb.append(title);
             sb.append("|");
@@ -334,60 +313,58 @@ public class WebhookSVCImpl implements WebhookSVC, WebhookCMD {
         );
     }
 
+    private boolean isValidInput(String[] args) {
+        return args.length == 4 && Integer.parseInt(args[3]) <= 10;
+    }
+
     @Transactional(readOnly = true)
     @Override
     public void news(WebhookVO webhookVO) {
-        String[] split = webhookVO.getText().split(" ");
-        if (split.length != 4) {
+        String[] args = webhookVO.getText().split(" ");
+        if (!isValidInput(args)) {
             this.help();
             return;
         }
 
-        String searchText = split[1].replace(",", "&&");
-        int pageNo = Integer.parseInt(split[2]);
-        int pagePerCnt = Integer.parseInt(split[3]);
-        if (pagePerCnt > 10) {
-            this.help();
-            return;
+        String searchText = args[1];
+        int pageNo = Integer.parseInt(args[2]);
+        int pagePerCnt = Integer.parseInt(args[3]);
+
+        List<NewsEntity> newsEntities = searchNews(searchText, pageNo, pagePerCnt);
+        if (!newsEntities.isEmpty()) {
+            mattermostUtil.sendBobChannel(convertNewsMattermostMessage(newsEntities));
         }
+    }
 
-
+    private List<NewsEntity> searchNews(String searchText, int pageNo, int pagePerCnt) {
         Pageable pageable = PageRequest.of(pageNo, pagePerCnt, Sort.Direction.DESC, "id");
-        Page<NewsEntity> search2 = newsREP.findAll(NewsSpec.searchWith(Arrays.asList(split[1].split(","))), pageable);
-
-        List<NewsEntity> content = search2.getContent();
-
-        if (!content.isEmpty()) {
-            mattermostUtil.sendBobChannel(convertNewsMattermostMessage(content));
-        }
+        List<String> searchTerms = Arrays.asList(searchText.split(","));
+        return newsREP.findAll(NewsSpec.searchWith(searchTerms), pageable).getContent();
     }
 
     @Transactional(readOnly = true)
     @Override
     public void oldNews(WebhookVO webhookVO) {
-        String[] split = webhookVO.getText().split(" ");
-        if (split.length != 4) {
+        String[] args = webhookVO.getText().split(" ");
+        if (!isValidInput(args)) {
             this.help();
             return;
         }
 
-        String searchText = split[1].replace(",", "&&");
-        int pageNo = Integer.parseInt(split[2]);
-        int pagePerCnt = Integer.parseInt(split[3]);
-        if (pagePerCnt > 10) {
-            this.help();
-            return;
+        String searchText = args[1];
+        int pageNo = Integer.parseInt(args[2]);
+        int pagePerCnt = Integer.parseInt(args[3]);
+
+        List<OldNewsEntity> oldNewsEntities = searchOldNews(searchText, pageNo, pagePerCnt);
+        if (!oldNewsEntities.isEmpty()) {
+            mattermostUtil.sendBobChannel(convertOldNewsMattermostMessage(oldNewsEntities));
         }
+    }
 
-
+    private List<OldNewsEntity> searchOldNews(String searchText, int pageNo, int pagePerCnt) {
         Pageable pageable = PageRequest.of(pageNo, pagePerCnt, Sort.Direction.DESC, "id");
-        Page<OldNewsEntity> search2 = oldNewsREP.findAll(OldNewsSpec.searchWith(Arrays.asList(split[1].split(","))), pageable);
-
-        List<OldNewsEntity> content = search2.getContent();
-
-        if (!content.isEmpty()) {
-            mattermostUtil.sendBobChannel(convertOldNewsMattermostMessage(content));
-        }
+        List<String> searchTerms = Arrays.asList(searchText.split(","));
+        return oldNewsREP.findAll(OldNewsSpec.searchWith(searchTerms), pageable).getContent();
     }
 
     private String convertNewsMattermostMessage(List<NewsEntity> entityList) {

@@ -38,6 +38,9 @@ public class PlaylistEntity extends CommonDateEntity {
     @Column(name = "album", nullable = true, length = 255)
     private String album;
 
+    @Column(name = "albumImg", nullable = true, columnDefinition = "TEXT")
+    private String albumImg;
+
     @Column(name = "lyrics", nullable = true, columnDefinition = "TEXT")
     private String lyrics;
 

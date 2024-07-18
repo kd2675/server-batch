@@ -38,6 +38,9 @@ public class MusicEntity extends CommonDateEntity {
     @Column(name = "album", nullable = true, length = 255)
     private String album;
 
+    @Column(name = "albumImg", nullable = true, columnDefinition = "TEXT")
+    private String albumImg;
+
     @Column(name = "lyrics", nullable = true, columnDefinition = "TEXT")
     private String lyrics;
 
@@ -49,6 +52,10 @@ public class MusicEntity extends CommonDateEntity {
 
     public void updYoutubeLink(String youtubeLink){
         this.youtubeLink = youtubeLink;
+    }
+
+    public void updAlbumImg(String albumImg){
+        this.albumImg = albumImg;
     }
 
     public void updMusic(String album, String title, String singer, String lyrics, LocalDate pubDate) {
