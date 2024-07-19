@@ -2,7 +2,6 @@ package com.example.batch.service.health.api;
 
 import com.example.batch.service.batch.job.CoinJob;
 import com.example.batch.service.batch.job.NewsJob;
-import com.example.batch.service.music.api.biz.MusicSVC;
 import com.example.batch.utils.MattermostUtil;
 import com.example.batch.utils.vo.MattermostChannelVO;
 import com.example.batch.utils.vo.MattermostPostVO;
@@ -21,8 +20,6 @@ import static com.example.batch.cron.Scheduler.getJobParameters;
 @RestController
 @RequestMapping("/test")
 public class HealthCheckCTR {
-    private final MusicSVC musicSVC;
-
     private final MattermostUtil mattermostUtil;
 
     private final JobLauncher jobLauncher;
@@ -30,12 +27,6 @@ public class HealthCheckCTR {
 
     @GetMapping("/health")
     public String health(){
-        return "ok";
-    }
-
-    @GetMapping("/music")
-    public String music(){
-        musicSVC.insMusic();
         return "ok";
     }
 

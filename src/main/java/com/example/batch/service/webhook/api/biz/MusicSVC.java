@@ -3,6 +3,8 @@ package com.example.batch.service.webhook.api.biz;
 import com.example.batch.service.webhook.api.dto.WebhookVO;
 
 public interface MusicSVC extends NotRunSVC{
+    void insMusic();
+
     void music();
 
     void musicSearch(WebhookVO webhookVO);

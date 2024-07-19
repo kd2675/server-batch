@@ -8,6 +8,7 @@ import com.example.batch.service.music.database.rep.jpa.music.PlaylistEntity;
 import com.example.batch.service.music.database.rep.jpa.music.PlaylistREP;
 import com.example.batch.service.webhook.api.dto.WebhookVO;
 import com.example.batch.utils.BugsApiUtil;
+import com.example.batch.utils.ChromeDriverConnUtil;
 import com.example.batch.utils.MattermostUtil;
 import com.example.batch.utils.YoutubeApiUtil;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -16,6 +17,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import io.micrometer.common.util.StringUtils;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.jsoup.nodes.Document;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -35,6 +37,9 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 @Service
 public class MusicSVCImpl implements MusicSVC {
+    private final String URL = "https://vibe.naver.com/track/";
+
+    private final ChromeDriverConnUtil chromeDriverConnUtil;
     private final MattermostUtil mattermostUtil;
     private final BugsApiUtil bugsApiUtil;
     private final YoutubeApiUtil youtubeApiUtil;
@@ -283,5 +288,80 @@ public class MusicSVCImpl implements MusicSVC {
 
                 }
         );
+    }
+
+    @jakarta.transaction.Transactional
+    @Override
+    public void insMusic() {
+        Integer i = 84500000;
+
+        for (Integer no = i; no > 84499950; no--) {
+            try {
+                Document doc = chromeDriverConnUtil.conn(URL + String.valueOf(no));
+                String title = doc.getElementsByTag("main").get(0).getElementsByClass("title").get(0).ownText();
+                String singer = doc.getElementsByTag("main").get(0).getElementsByClass("link_sub_title").get(0).getElementsByClass("text").get(0).ownText();
+                String album = doc.getElementsByTag("main")
+                        //                .get(0).getElementsByClass("end_section")
+                        .get(0).getElementsByClass("album_info_area")
+                        .get(0).getElementsByClass("text_area")
+                        .get(0).getElementsByClass("title")
+                        .get(0).ownText();
+                String lyrics = doc.getElementsByTag("main")
+                        .get(0).getElementsByClass("lyrics")
+                        .get(0).children()
+                        .get(0).ownText();
+                String pubDate = doc.getElementsByTag("main")
+                        .get(0).getElementsByClass("album_info_area")
+                        .get(0).getElementsByClass("date").get(0).ownText();
+                String[] split = pubDate.split("\\.");
+                LocalDate localDate = LocalDate.of(Integer.parseInt(split[0]), Integer.parseInt(split[1]), Integer.parseInt(split[2]));
+
+//                log.info("doc : {}", doc);
+//
+//                log.info("title : {}", title);
+//                log.info("singer : {}", singer);
+//                log.info("album : {}", album);
+//                log.info("lyrics : {}", lyrics);
+//                log.info("pubDate : {}", localDate);
+
+                MusicEntity musicEntity = musicREP.findTop1ByNoOrderByIdDesc(no.longValue());
+
+                if (musicEntity != null) {
+                    musicEntity.updMusic(album, title, singer, lyrics, localDate);
+
+                    musicREP.save(musicEntity);
+                } else {
+                    musicREP.save(
+                            MusicEntity.builder()
+                                    .no(no.longValue())
+                                    .title(title)
+                                    .singer(singer)
+                                    .album(album)
+                                    .lyrics(lyrics)
+                                    .pubDate(localDate)
+                                    .build()
+                    );
+                }
+
+                log.info("done : {}", no);
+
+            } catch (Exception e) {
+                log.error("{} insMusic error", no, e);
+
+                MusicEntity musicEntity = musicREP.findTop1ByNoOrderByIdDesc(no.longValue());
+
+                if (musicEntity != null) {
+
+                } else {
+                    musicREP.save(
+                            MusicEntity.builder()
+                                    .no(no.longValue())
+                                    .title("")
+                                    .singer("")
+                                    .build()
+                    );
+                }
+            }
+        }
     }
 }
