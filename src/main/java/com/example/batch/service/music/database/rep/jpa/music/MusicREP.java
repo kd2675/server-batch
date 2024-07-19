@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.Optional;
 
 public interface MusicREP extends JpaRepository<MusicEntity, Long> {
+    Optional<MusicEntity> findTop1ByIdOrderByIdDesc(Long id);
     Optional<MusicEntity> findTop1ByNoOrderByIdDesc(Long no);
 
     @Query(value = "select e from MusicEntity e order by rand() limit 1")

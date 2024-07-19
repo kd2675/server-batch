@@ -275,9 +275,9 @@ public class MusicSVCImpl implements MusicSVC {
     public void musicPlay(WebhookVO webhookVO) {
         Long id = Long.valueOf(webhookVO.getText().split(" ")[1]);
 
-        musicREP.findTop1ByNoOrderByIdDesc(id).ifPresentOrElse(
+        musicREP.findTop1ByIdOrderByIdDesc(id).ifPresentOrElse(
                 (musicEntity) -> {
-                    String youtubeLink = musicEntity.getYoutubeLink() != null ? "[Link]" + "(" + musicEntity.getYoutubeLink() + ")" : "-";
+                    String youtubeLink = musicEntity.getYoutubeLink();
 
                     String str = youtubeLink;
                     mattermostUtil.sendBobChannel(str);
