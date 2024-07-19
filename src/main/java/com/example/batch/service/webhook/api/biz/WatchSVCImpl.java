@@ -2,7 +2,6 @@ package com.example.batch.service.webhook.api.biz;
 
 import com.example.batch.service.music.database.rep.jpa.movie.WatchEntity;
 import com.example.batch.service.music.database.rep.jpa.movie.WatchREP;
-import com.example.batch.service.music.database.rep.jpa.music.PlaylistEntity;
 import com.example.batch.service.webhook.api.dto.WebhookVO;
 import com.example.batch.utils.MattermostUtil;
 import lombok.RequiredArgsConstructor;
@@ -13,7 +12,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
-import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 @Slf4j
@@ -26,7 +24,7 @@ public class WatchSVCImpl implements WatchSVC {
 
     @Override
     public void notRun() {
-        mattermostUtil.sendBobChannel("잘못된 입력입니다. 설명을 보시려면 [$c]를 입력해주세요");
+        mattermostUtil.sendBotChannel("잘못된 입력입니다. 설명을 보시려면 [$c]를 입력해주세요");
     }
 
     @Override
@@ -36,7 +34,7 @@ public class WatchSVCImpl implements WatchSVC {
                     String title = musicEntity.getTitle();
 
                     String str = title;
-                    mattermostUtil.sendBobChannel(str);
+                    mattermostUtil.sendBotChannel(str);
                 },
                 () -> {
 
@@ -54,7 +52,7 @@ public class WatchSVCImpl implements WatchSVC {
         List<WatchEntity> content = all.getContent();
 
         if (!content.isEmpty()) {
-            mattermostUtil.sendBobChannel(this.convertMattermostStr(content));
+            mattermostUtil.sendBotChannel(this.convertMattermostStr(content));
         }
     }
 
@@ -70,6 +68,8 @@ public class WatchSVCImpl implements WatchSVC {
             sb.append(v.getId());
             sb.append("|");
             sb.append(v.getTitle());
+            sb.append("|");
+            sb.append(v.getStar());
             sb.append("|");
             sb.append("\n");
         });
@@ -89,6 +89,11 @@ public class WatchSVCImpl implements WatchSVC {
             String title = split[1];
             int starInfo = Integer.parseInt(split[2].trim());
 
+            if (0 > starInfo || starInfo > 100) {
+                mattermostUtil.sendBotChannel("평점은 0부터 100까지 입니다.");
+                return;
+            }
+
             WatchEntity watchEntity = WatchEntity.builder()
                     .title(title)
                     .star(starInfo)
@@ -96,9 +101,9 @@ public class WatchSVCImpl implements WatchSVC {
 
             watchREP.save(watchEntity);
 
-            mattermostUtil.sendBobChannel("완료");
+            mattermostUtil.sendBotChannel("완료");
         } catch (NumberFormatException e) {
-            mattermostUtil.sendBobChannel("에러");
+            mattermostUtil.sendBotChannel("에러");
             log.error("watchAdd error", e);
         }
     }
@@ -123,9 +128,9 @@ public class WatchSVCImpl implements WatchSVC {
 
             watchREP.deleteById(id);
 
-            mattermostUtil.sendBobChannel("완료");
+            mattermostUtil.sendBotChannel("완료");
         } catch (Exception e) {
-            mattermostUtil.sendBobChannel("에러");
+            mattermostUtil.sendBotChannel("에러");
             log.error("watchRemove error", e);
         }
     }

@@ -40,7 +40,7 @@ public class WebhookSVCImpl implements WebhookCMD, WebhookSVC {
 
     @Override
     public void notRun(){
-        mattermostUtil.sendBobChannel("잘못된 입력입니다. 설명을 보시려면 [$c]를 입력해주세요");
+        mattermostUtil.sendBotChannel("잘못된 입력입니다. 설명을 보시려면 [$c]를 입력해주세요");
     }
 
     @Transactional
@@ -87,7 +87,7 @@ public class WebhookSVCImpl implements WebhookCMD, WebhookSVC {
 
         List<NewsEntity> newsEntities = searchNews(searchText, pageNo, pagePerCnt);
         if (!newsEntities.isEmpty()) {
-            mattermostUtil.sendBobChannel(convertNewsMattermostMessage(newsEntities));
+            mattermostUtil.sendBotChannel(convertNewsMattermostMessage(newsEntities));
         }
     }
 
@@ -116,7 +116,7 @@ public class WebhookSVCImpl implements WebhookCMD, WebhookSVC {
 
         List<OldNewsEntity> oldNewsEntities = searchOldNews(searchText, pageNo, pagePerCnt);
         if (!oldNewsEntities.isEmpty()) {
-            mattermostUtil.sendBobChannel(convertOldNewsMattermostMessage(oldNewsEntities));
+            mattermostUtil.sendBotChannel(convertOldNewsMattermostMessage(oldNewsEntities));
         }
     }
 
@@ -212,7 +212,7 @@ public class WebhookSVCImpl implements WebhookCMD, WebhookSVC {
                     .append(webhook.getValue())
                     .append("\n");
         }
-        mattermostUtil.sendBobChannel(str.toString());
+        mattermostUtil.sendBotChannel(str.toString());
     }
 
     @Override
@@ -258,9 +258,9 @@ public class WebhookSVCImpl implements WebhookCMD, WebhookSVC {
             str.append(fullTime)
                     .append(" 남았습니다.");
 
-            mattermostUtil.sendBobChannel(str.toString());
+            mattermostUtil.sendBotChannel(str.toString());
         } else {
-            mattermostUtil.sendBobChannel("퇴근하세요");
+            mattermostUtil.sendBotChannel("퇴근하세요");
         }
     }
 
@@ -295,9 +295,9 @@ public class WebhookSVCImpl implements WebhookCMD, WebhookSVC {
                             Long.valueOf(seconds).intValue()
                     ).format(DateTimeFormatter.ofPattern("HH:mm:ss"));
 
-            mattermostUtil.sendBobChannel(format + " 지났습니다.");
+            mattermostUtil.sendBotChannel(format + " 지났습니다.");
         } else {
-            mattermostUtil.sendBobChannel("출근하세요");
+            mattermostUtil.sendBotChannel("출근하세요");
         }
     }
 }

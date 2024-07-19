@@ -7,7 +7,7 @@ import org.springframework.http.ResponseEntity;
 public interface MattermostUtil {
     ResponseEntity<MattermostPostVO> send(String message, String channelId);
 
-    ResponseEntity<MattermostPostVO> sendBobChannel(String message);
+    ResponseEntity<MattermostPostVO> sendBotChannel(String message);
 
     ResponseEntity<MattermostPostVO> sendCoinChannel(String message);
     ResponseEntity<MattermostPostVO> sendNewsChannel(String message);

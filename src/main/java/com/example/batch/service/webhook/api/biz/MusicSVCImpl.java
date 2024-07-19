@@ -49,7 +49,7 @@ public class MusicSVCImpl implements MusicSVC {
 
     @Override
     public void notRun(){
-        mattermostUtil.sendBobChannel("잘못된 입력입니다. 설명을 보시려면 [$c]를 입력해주세요");
+        mattermostUtil.sendBotChannel("잘못된 입력입니다. 설명을 보시려면 [$c]를 입력해주세요");
     }
 
     //pageNo 있으면 차례로
@@ -65,7 +65,7 @@ public class MusicSVCImpl implements MusicSVC {
         List<PlaylistEntity> content = all.getContent();
 
         if (!content.isEmpty()) {
-            mattermostUtil.sendBobChannel(this.convertMattermostStr(content));
+            mattermostUtil.sendBotChannel(this.convertMattermostStr(content));
         }
     }
 
@@ -114,9 +114,9 @@ public class MusicSVCImpl implements MusicSVC {
                         }
                 );
             });
-            mattermostUtil.sendBobChannel("완료");
+            mattermostUtil.sendBotChannel("완료");
         } catch (Exception e) {
-            mattermostUtil.sendBobChannel("에러");
+            mattermostUtil.sendBotChannel("에러");
             log.error("playlistAdd error", e);
         }
     }
@@ -129,9 +129,9 @@ public class MusicSVCImpl implements MusicSVC {
 
             playlistREP.deleteById(id);
 
-            mattermostUtil.sendBobChannel("완료");
+            mattermostUtil.sendBotChannel("완료");
         } catch (Exception e) {
-            mattermostUtil.sendBobChannel("에러");
+            mattermostUtil.sendBotChannel("에러");
             log.error("playlistAdd error", e);
         }
     }
@@ -157,7 +157,7 @@ public class MusicSVCImpl implements MusicSVC {
                     .collect(Collectors.toList());
 
             if (!musicList.isEmpty()) {
-                mattermostUtil.sendBobChannel(this.mattermostConvertMsg(musicList));
+                mattermostUtil.sendBotChannel(this.mattermostConvertMsg(musicList));
             }
         } catch (Exception e) {
             this.notRun();
@@ -280,7 +280,7 @@ public class MusicSVCImpl implements MusicSVC {
                     String youtubeLink = musicEntity.getYoutubeLink();
 
                     String str = youtubeLink;
-                    mattermostUtil.sendBobChannel(str);
+                    mattermostUtil.sendBotChannel(str);
                 },
                 () -> {
 
@@ -299,7 +299,7 @@ public class MusicSVCImpl implements MusicSVC {
                     String youtubeLink = musicEntity.getYoutubeLink() != null ? "[Link]" + "(" + musicEntity.getYoutubeLink() + ")" : "-";
 
                     String str = title + " " + singer + " " + pubDate + " " + youtubeLink;
-                    mattermostUtil.sendBobChannel(str);
+                    mattermostUtil.sendBotChannel(str);
                 },
                 () -> {
 
