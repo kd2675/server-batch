@@ -18,13 +18,12 @@ public enum WebhookEnum {
     COMMAND_7(7L, "$playlistAdd", "$pad", "플레이리스트 노래 추가 ex)playlistAdd 321(musicSearch 번호)"),
     COMMAND_8(8L, "$playlistRemove", "$prm", "플레이리스트 노래 삭제 ex)playlistRemove 2(playlist id)"),
 
-    COMMAND_9(9L, "$movie", "$mv", "!작업중! 전체 리스트 에서 랜덤으로 영화 추천."),
-    COMMAND_10(10L, "$movieSearch", "$mvs", "!작업중! 노래검색 ex)$movieSearch '노래' 0(pageNo) 10(pagePerCnt<=10)"),
-    COMMAND_11(11L, "$movieList", "$mvl", "!작업중! 플레이리스트 노래 삭제 ex)playlistRemove 2(playlist id)"),
-    COMMAND_12(12L, "$movieListAdd", "$mvad", "!작업중! 플레이리스트 노래 삭제 ex)playlistRemove 2(playlist id)"),
-    COMMAND_13(13L, "$movieListRemove", "$mvrm", "!작업중! 플레이리스트 노래 삭제 ex)playlistRemove 2(playlist id)"),
+    COMMAND_9(9L, "$watch", "$w", "!작업중! 추천 리스트 에서 랜덤으로 영화&미드&애니 추천."),
+    COMMAND_10(10L, "$watchList", "$wl", "!작업중! 추천 영화&미드&애니 리스트 ex)$watchList"),
+    COMMAND_11(11L, "$watchListAdd", "$wad", "!작업중! 추천 영화&미드&애니 리스트 삭제 ex)$watchListAdd '제목' 10(평점)"),
+    COMMAND_12(12L, "$watchListRemove", "$wrm", "!작업중! 추천 영화&미드&애니 리스트 삭제 ex)$watchListRemove 2(watchList id)"),
 
-    COMMAND_14(14L, "$rockScissorsPaper", "rsp", "!작업중! 가위 바위 보"),
+    COMMAND_13(13L, "$rockScissorsPaper", "rsp", "!작업중! 가위 바위 보"),
 
     COMMAND(9999L, "$command", "$c", "명령어 설명");
 

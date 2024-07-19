@@ -2,15 +2,14 @@ package com.example.batch.service.webhook.api.biz;
 
 import com.example.batch.service.webhook.api.dto.WebhookVO;
 
-public interface WebhookSVC {
+public interface WebhookSVC extends NotRunSVC {
     void help();
+
     void time();
+
     void uptime();
+
     void news(WebhookVO webhookVO);
+
     void oldNews(WebhookVO webhookVO);
-    void music();
-    void musicSearch(WebhookVO webhookVO);
-    void playlist(WebhookVO webhookVO);
-    void playlistAdd(WebhookVO webhookVO);
-    void playlistRemove(WebhookVO webhookVO);
 }
