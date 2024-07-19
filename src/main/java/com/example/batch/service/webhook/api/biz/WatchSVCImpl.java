@@ -1,7 +1,7 @@
 package com.example.batch.service.webhook.api.biz;
 
-import com.example.batch.service.music.database.rep.jpa.movie.WatchEntity;
-import com.example.batch.service.music.database.rep.jpa.movie.WatchREP;
+import com.example.batch.service.webhook.database.rep.jpa.movie.WatchEntity;
+import com.example.batch.service.webhook.database.rep.jpa.movie.WatchREP;
 import com.example.batch.service.webhook.api.dto.WebhookVO;
 import com.example.batch.utils.MattermostUtil;
 import lombok.RequiredArgsConstructor;

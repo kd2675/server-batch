@@ -1,10 +1,9 @@
-package com.example.batch.service.music.database.rep.jpa.music;
+package com.example.batch.service.webhook.database.rep.jpa.music;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.lang.Nullable;
 
-import java.util.List;
 import java.util.Optional;
 
 public interface MusicREP extends JpaRepository<MusicEntity, Long> {

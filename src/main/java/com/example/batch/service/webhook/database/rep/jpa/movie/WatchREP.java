@@ -1,6 +1,5 @@
-package com.example.batch.service.music.database.rep.jpa.movie;
+package com.example.batch.service.webhook.database.rep.jpa.movie;
 
-import com.example.batch.service.music.database.rep.jpa.music.MusicEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 

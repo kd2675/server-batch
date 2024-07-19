@@ -1,4 +1,4 @@
-package com.example.batch.service.music.database;
+package com.example.batch.service.webhook.database;
 
 import com.zaxxer.hikari.HikariDataSource;
 import org.example.database.common.RoutingDataSource;
@@ -22,46 +22,46 @@ import java.util.Map;
 @Configuration
 @EnableTransactionManagement
 @EnableJpaRepositories(
-        basePackages = "com.example.batch.service.music.database.rep.jpa",
-        entityManagerFactoryRef = "musicEntityManagerFactory",
-        transactionManagerRef = "musicTransactionManager"
+        basePackages = "com.example.batch.service.webhook.database.rep.jpa",
+        entityManagerFactoryRef = "webhookEntityManagerFactory",
+        transactionManagerRef = "webhookTransactionManager"
 )
-public class MusicDataConfig {
-    @ConfigurationProperties("database.datasource.music.master")
+public class WebhookDataConfig {
+    @ConfigurationProperties("database.datasource.webhook.master")
     @Bean
-    public DataSourceProperties musicMasterDatasourceProperties() {
+    public DataSourceProperties webhookMasterDatasourceProperties() {
         return new DataSourceProperties();
     }
 
-    @ConfigurationProperties("database.datasource.music.master.configure")
+    @ConfigurationProperties("database.datasource.webhook.master.configure")
     @Bean
-    public DataSource musicMasterDatasource() {
-        return musicMasterDatasourceProperties()
+    public DataSource webhookMasterDatasource() {
+        return webhookMasterDatasourceProperties()
                 .initializeDataSourceBuilder()
                 .type(HikariDataSource.class)
                 .build();
     }
 
-    @ConfigurationProperties("database.datasource.music.slave1")
+    @ConfigurationProperties("database.datasource.webhook.slave1")
     @Bean
-    public DataSourceProperties musicSlave1DatasourceProperties() {
+    public DataSourceProperties webhookSlave1DatasourceProperties() {
         return new DataSourceProperties();
     }
 
-    @ConfigurationProperties("database.datasource.music.slave1.configure")
+    @ConfigurationProperties("database.datasource.webhook.slave1.configure")
     @Bean
-    public DataSource musicSlave1Datasource() {
-        return musicSlave1DatasourceProperties()
+    public DataSource webhookSlave1Datasource() {
+        return webhookSlave1DatasourceProperties()
                 .initializeDataSourceBuilder()
                 .type(HikariDataSource.class)
                 .build();
     }
 
-    @Bean(name = "musicEntityManagerFactory")
-    public LocalContainerEntityManagerFactoryBean musicEntityManagerFactory(
+    @Bean(name = "webhookEntityManagerFactory")
+    public LocalContainerEntityManagerFactoryBean webhookEntityManagerFactory(
             EntityManagerFactoryBuilder builder,
-            @Qualifier("musicMasterDatasource") DataSource masterDatasource,
-            @Qualifier("musicSlave1Datasource") DataSource slaveDatasource
+            @Qualifier("webhookMasterDatasource") DataSource masterDatasource,
+            @Qualifier("webhookSlave1Datasource") DataSource slaveDatasource
     ) {
         RoutingDataSource routingDataSource = new RoutingDataSource();
         Map<Object, Object> datasourceMap = new HashMap<Object, Object>() {
@@ -85,15 +85,15 @@ public class MusicDataConfig {
 
         return builder
                 .dataSource(new LazyConnectionDataSourceProxy(routingDataSource))
-                .packages("com.example.batch.service.music.database.rep.jpa")
+                .packages("com.example.batch.service.webhook.database.rep.jpa")
                 .properties(properties)
-                .persistenceUnit("musicEntityManagerFactory")
+                .persistenceUnit("webhookEntityManagerFactory")
                 .build();
     }
 
-    @Bean(name = "musicTransactionManager")
-    public PlatformTransactionManager musicTransactionManager(
-            final @Qualifier("musicEntityManagerFactory") LocalContainerEntityManagerFactoryBean localContainerEntityManagerFactoryBean
+    @Bean(name = "webhookTransactionManager")
+    public PlatformTransactionManager webhookTransactionManager(
+            final @Qualifier("webhookEntityManagerFactory") LocalContainerEntityManagerFactoryBean localContainerEntityManagerFactoryBean
     ) {
         return new JpaTransactionManager(localContainerEntityManagerFactoryBean.getObject());
     }

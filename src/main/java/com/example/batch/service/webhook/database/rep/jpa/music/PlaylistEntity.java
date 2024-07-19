@@ -1,4 +1,4 @@
-package com.example.batch.service.music.database.rep.jpa.music;
+package com.example.batch.service.webhook.database.rep.jpa.music;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;

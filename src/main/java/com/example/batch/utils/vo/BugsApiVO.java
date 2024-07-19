@@ -1,8 +1,7 @@
-package com.example.batch.service.music.api.vo;
+package com.example.batch.utils.vo;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
-import org.aspectj.apache.bcel.classfile.Code;
 
 import java.util.*;
 

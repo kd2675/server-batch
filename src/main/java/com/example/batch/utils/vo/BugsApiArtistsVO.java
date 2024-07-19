@@ -1,9 +1,8 @@
-package com.example.batch.service.music.api.vo;
+package com.example.batch.utils.vo;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
 
-import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;

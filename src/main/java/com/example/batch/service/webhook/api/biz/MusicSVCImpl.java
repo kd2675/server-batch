@@ -1,11 +1,11 @@
 package com.example.batch.service.webhook.api.biz;
 
-import com.example.batch.service.music.api.vo.BugsApiListVO;
-import com.example.batch.service.music.api.vo.BugsApiVO;
-import com.example.batch.service.music.database.rep.jpa.music.MusicEntity;
-import com.example.batch.service.music.database.rep.jpa.music.MusicREP;
-import com.example.batch.service.music.database.rep.jpa.music.PlaylistEntity;
-import com.example.batch.service.music.database.rep.jpa.music.PlaylistREP;
+import com.example.batch.utils.vo.BugsApiListVO;
+import com.example.batch.utils.vo.BugsApiVO;
+import com.example.batch.service.webhook.database.rep.jpa.music.MusicEntity;
+import com.example.batch.service.webhook.database.rep.jpa.music.MusicREP;
+import com.example.batch.service.webhook.database.rep.jpa.music.PlaylistEntity;
+import com.example.batch.service.webhook.database.rep.jpa.music.PlaylistREP;
 import com.example.batch.service.webhook.api.dto.WebhookVO;
 import com.example.batch.utils.BugsApiUtil;
 import com.example.batch.utils.ChromeDriverConnUtil;
