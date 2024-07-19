@@ -50,19 +50,20 @@ public class WebhookSVCImpl implements WebhookCMD, WebhookSVC {
 
         Map<String, Runnable> commandMap = new HashMap<>();
         commandMap.put(WebhookEnum.COMMAND.getKey(), this::help);
-        commandMap.put(WebhookEnum.COMMAND_0.getKey(), this::time);
-        commandMap.put(WebhookEnum.COMMAND_1.getKey(), this::uptime);
-        commandMap.put(WebhookEnum.COMMAND_2.getKey(), () -> this.news(webhookVO));
-        commandMap.put(WebhookEnum.COMMAND_3.getKey(), () -> this.oldNews(webhookVO));
-        commandMap.put(WebhookEnum.COMMAND_4.getKey(), musicSVC::music);
-        commandMap.put(WebhookEnum.COMMAND_5.getKey(), () -> musicSVC.musicSearch(webhookVO));
-        commandMap.put(WebhookEnum.COMMAND_6.getKey(), () -> musicSVC.playlist(webhookVO));
-        commandMap.put(WebhookEnum.COMMAND_7.getKey(), () -> musicSVC.playlistAdd(webhookVO));
-        commandMap.put(WebhookEnum.COMMAND_8.getKey(), () -> musicSVC.playlistRemove(webhookVO));
-        commandMap.put(WebhookEnum.COMMAND_9.getKey(), watchSVC::watch);
-        commandMap.put(WebhookEnum.COMMAND_10.getKey(), () -> watchSVC.watchList(webhookVO));
-        commandMap.put(WebhookEnum.COMMAND_11.getKey(), () -> watchSVC.watchAdd(webhookVO));
-        commandMap.put(WebhookEnum.COMMAND_12.getKey(), () -> watchSVC.watchRemove(webhookVO));
+        commandMap.put(WebhookEnum.COMMAND_100.getKey(), this::time);
+        commandMap.put(WebhookEnum.COMMAND_101.getKey(), this::uptime);
+        commandMap.put(WebhookEnum.COMMAND_200.getKey(), () -> this.news(webhookVO));
+        commandMap.put(WebhookEnum.COMMAND_201.getKey(), () -> this.oldNews(webhookVO));
+        commandMap.put(WebhookEnum.COMMAND_300.getKey(), musicSVC::music);
+        commandMap.put(WebhookEnum.COMMAND_301.getKey(), () -> musicSVC.musicSearch(webhookVO));
+        commandMap.put(WebhookEnum.COMMAND_302.getKey(), () -> musicSVC.musicPlay(webhookVO));
+        commandMap.put(WebhookEnum.COMMAND_303.getKey(), () -> musicSVC.playlist(webhookVO));
+        commandMap.put(WebhookEnum.COMMAND_304.getKey(), () -> musicSVC.playlistAdd(webhookVO));
+        commandMap.put(WebhookEnum.COMMAND_305.getKey(), () -> musicSVC.playlistRemove(webhookVO));
+        commandMap.put(WebhookEnum.COMMAND_400.getKey(), watchSVC::watch);
+        commandMap.put(WebhookEnum.COMMAND_401.getKey(), () -> watchSVC.watchList(webhookVO));
+        commandMap.put(WebhookEnum.COMMAND_402.getKey(), () -> watchSVC.watchAdd(webhookVO));
+        commandMap.put(WebhookEnum.COMMAND_403.getKey(), () -> watchSVC.watchRemove(webhookVO));
 
         for (WebhookEnum webhookEnum : WebhookEnum.values()) {
             commandMap.put(webhookEnum.getShortKey(), commandMap.get(webhookEnum.getKey()));

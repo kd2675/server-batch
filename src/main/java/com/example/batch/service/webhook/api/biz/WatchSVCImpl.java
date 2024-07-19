@@ -81,13 +81,13 @@ public class WatchSVCImpl implements WatchSVC {
     public void watchAdd(WebhookVO webhookVO) {
         try {
             String[] split = parseSplitText(webhookVO.getText());
-            if (split.length < 2 || split.length > 4) {
+            if (split.length < 2 || split.length > 3) {
                 this.notRun();
                 return;
             }
 
             String title = split[1];
-            int starInfo = Integer.parseInt(split[2]);
+            int starInfo = Integer.parseInt(split[2].trim());
 
             WatchEntity watchEntity = WatchEntity.builder()
                     .title(title)
@@ -95,6 +95,8 @@ public class WatchSVCImpl implements WatchSVC {
                     .build();
 
             watchREP.save(watchEntity);
+
+            mattermostUtil.sendBobChannel("완료");
         } catch (NumberFormatException e) {
             mattermostUtil.sendBobChannel("에러");
             log.error("watchAdd error", e);

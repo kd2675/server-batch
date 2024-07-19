@@ -9,6 +9,8 @@ public interface MusicSVC extends NotRunSVC{
 
     void musicSearch(WebhookVO webhookVO);
 
+    void musicPlay(WebhookVO webhookVO);
+
     void playlist(WebhookVO webhookVO);
 
     void playlistAdd(WebhookVO webhookVO);

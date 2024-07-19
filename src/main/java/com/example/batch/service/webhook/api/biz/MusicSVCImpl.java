@@ -271,6 +271,23 @@ public class MusicSVCImpl implements MusicSVC {
         return sb.toString();
     }
 
+    @Override
+    public void musicPlay(WebhookVO webhookVO) {
+        Long id = Long.valueOf(webhookVO.getText().split(" ")[1]);
+
+        musicREP.findTop1ByNoOrderByIdDesc(id).ifPresentOrElse(
+                (musicEntity) -> {
+                    String youtubeLink = musicEntity.getYoutubeLink() != null ? "[Link]" + "(" + musicEntity.getYoutubeLink() + ")" : "-";
+
+                    String str = youtubeLink;
+                    mattermostUtil.sendBobChannel(str);
+                },
+                () -> {
+
+                }
+        );
+    }
+
     @Transactional(readOnly = true)
     @Override
     public void music() {
@@ -323,44 +340,47 @@ public class MusicSVCImpl implements MusicSVC {
 //                log.info("album : {}", album);
 //                log.info("lyrics : {}", lyrics);
 //                log.info("pubDate : {}", localDate);
+                final Integer number = no;
 
-                MusicEntity musicEntity = musicREP.findTop1ByNoOrderByIdDesc(no.longValue());
+                musicREP.findTop1ByNoOrderByIdDesc(no.longValue()).ifPresentOrElse(
+                        (v)->{
+                            v.updMusic(album, title, singer, lyrics, localDate);
 
-                if (musicEntity != null) {
-                    musicEntity.updMusic(album, title, singer, lyrics, localDate);
-
-                    musicREP.save(musicEntity);
-                } else {
-                    musicREP.save(
-                            MusicEntity.builder()
-                                    .no(no.longValue())
-                                    .title(title)
-                                    .singer(singer)
-                                    .album(album)
-                                    .lyrics(lyrics)
-                                    .pubDate(localDate)
-                                    .build()
-                    );
-                }
+                            musicREP.save(v);
+                        },
+                        ()->{
+                            musicREP.save(
+                                    MusicEntity.builder()
+                                            .no(number.longValue())
+                                            .title(title)
+                                            .singer(singer)
+                                            .album(album)
+                                            .lyrics(lyrics)
+                                            .pubDate(localDate)
+                                            .build()
+                            );
+                        }
+                );
 
                 log.info("done : {}", no);
 
             } catch (Exception e) {
                 log.error("{} insMusic error", no, e);
 
-                MusicEntity musicEntity = musicREP.findTop1ByNoOrderByIdDesc(no.longValue());
+                final Integer number = no;
 
-                if (musicEntity != null) {
-
-                } else {
-                    musicREP.save(
-                            MusicEntity.builder()
-                                    .no(no.longValue())
-                                    .title("")
-                                    .singer("")
-                                    .build()
-                    );
-                }
+                musicREP.findTop1ByNoOrderByIdDesc(no.longValue()).ifPresentOrElse(
+                        (v)->{},
+                        ()->{
+                            musicREP.save(
+                                    MusicEntity.builder()
+                                            .no(number.longValue())
+                                            .title("")
+                                            .singer("")
+                                            .build()
+                            );
+                        }
+                );
             }
         }
     }
