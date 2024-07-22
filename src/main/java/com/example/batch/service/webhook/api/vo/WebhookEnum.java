@@ -21,8 +21,8 @@ public enum WebhookEnum {
 
     COMMAND_400(400L, "$watch", "$w", "추천 리스트 에서 랜덤으로 영화&미드&애니 추천."),
     COMMAND_401(401L, "$watchList", "$wl", "추천 영화&미드&애니 리스트 ex)$watchList"),
-    COMMAND_402(402L, "$watchAdd", "$wad", "추천 영화&미드&애니 리스트 삭제 ex)$watchAdd '제목' 10(평점)"),
-    COMMAND_403(403L, "$watchY", "$wy", "추천 영화&미드&애니 리스트 삭제 ex)$watchY 2(watchList id)"),
+    COMMAND_402(402L, "$watchAdd", "$wad", "추천 영화&미드&애니 리스트 추가 ex)$watchAdd '제목' 10(평점)"),
+    COMMAND_403(403L, "$watchY", "$wy", "추천 영화&미드&애니 리스트 봣음 ex)$watchY 2(watchList id)"),
     COMMAND_404(404L, "$watchRemove", "$wrm", "추천 영화&미드&애니 리스트 삭제 ex)$watchRemove 2(watchList id)"),
 
     COMMAND_500(500L, "$rockScissorsPaper", "rsp", "!작업중! 가위 바위 보"),
