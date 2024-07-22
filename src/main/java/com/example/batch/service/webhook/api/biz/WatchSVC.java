@@ -9,5 +9,7 @@ public interface WatchSVC extends NotRunSVC{
 
     void watchAdd(WebhookVO webhookVO);
 
+    void watchY(WebhookVO webhookVO);
+
     void watchRemove(WebhookVO webhookVO);
 }

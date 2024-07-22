@@ -1,7 +1,7 @@
 package com.example.batch.service.webhook.api.biz;
 
-import com.example.batch.service.webhook.database.rep.jpa.movie.WatchEntity;
-import com.example.batch.service.webhook.database.rep.jpa.movie.WatchREP;
+import com.example.batch.service.webhook.database.rep.jpa.watch.WatchEntity;
+import com.example.batch.service.webhook.database.rep.jpa.watch.WatchREP;
 import com.example.batch.service.webhook.api.dto.WebhookVO;
 import com.example.batch.utils.MattermostUtil;
 import lombok.RequiredArgsConstructor;
@@ -13,6 +13,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -48,8 +49,7 @@ public class WatchSVCImpl implements WatchSVC {
         Integer pagePerCnt = 100;
         Pageable pageable = PageRequest.of(pageNo, pagePerCnt, Sort.Direction.DESC, "id");
 
-        Page<WatchEntity> all = watchREP.findAll(pageable);
-        List<WatchEntity> content = all.getContent();
+        List<WatchEntity> content = watchREP.findByWatchYnOrderByIdDesc("n", pageable);
 
         if (!content.isEmpty()) {
             mattermostUtil.sendBotChannel(this.convertMattermostStr(content));
@@ -118,6 +118,26 @@ public class WatchSVCImpl implements WatchSVC {
                 throw new RuntimeException("parseSplitText error");
             }
             return text.split(" ");
+        }
+    }
+
+    @Override
+    public void watchY(WebhookVO webhookVO) {
+        try {
+            Long id = Long.valueOf(webhookVO.getText().split(" ")[1]);
+
+            Optional<WatchEntity> watchEntity = watchREP.findById(id);
+            watchEntity.ifPresent(
+                    (v->{
+                        v.updateWatchYn("y");
+                        watchREP.save(v);
+                    })
+            );
+
+            mattermostUtil.sendBotChannel("완료");
+        } catch (Exception e) {
+            mattermostUtil.sendBotChannel("에러");
+            log.error("watchRemove error", e);
         }
     }
 

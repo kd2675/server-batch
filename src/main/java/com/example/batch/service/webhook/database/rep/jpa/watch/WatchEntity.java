@@ -1,4 +1,4 @@
-package com.example.batch.service.webhook.database.rep.jpa.movie;
+package com.example.batch.service.webhook.database.rep.jpa.watch;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -6,6 +6,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.example.database.common.rep.jpa.CommonDateEntity;
+import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.DynamicInsert;
 
 @Getter
@@ -26,4 +27,12 @@ public class WatchEntity extends CommonDateEntity {
 
     @Column(name = "star", nullable = false)
     private Integer star;
+
+    @ColumnDefault("'n'")
+    @Column(name = "watch_yn", nullable = false)
+    private String watchYn;
+
+    public void updateWatchYn(String watchYn) {
+        this.watchYn = watchYn;
+    }
 }
