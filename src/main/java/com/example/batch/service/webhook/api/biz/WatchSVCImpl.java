@@ -24,18 +24,18 @@ public class WatchSVCImpl implements WatchSVC {
     private final WatchREP watchREP;
 
     @Override
-    public void notRun() {
-        mattermostUtil.sendBotChannel("잘못된 입력입니다. 설명을 보시려면 [$c]를 입력해주세요");
+    public void notRun(WebhookVO webhookVO) {
+        mattermostUtil.sendWebhookChannel("잘못된 입력입니다. 설명을 보시려면 [$c]를 입력해주세요", webhookVO);
     }
 
     @Override
-    public void watch() {
+    public void watch(WebhookVO webhookVO) {
         watchREP.findWatchRand().ifPresentOrElse(
                 (musicEntity) -> {
                     String title = musicEntity.getTitle();
 
                     String str = title;
-                    mattermostUtil.sendBotChannel(str);
+                    mattermostUtil.sendWebhookChannel(str, webhookVO);
                 },
                 () -> {
 
@@ -52,7 +52,7 @@ public class WatchSVCImpl implements WatchSVC {
         List<WatchEntity> content = watchREP.findByWatchYnOrderByIdDesc("n", pageable);
 
         if (!content.isEmpty()) {
-            mattermostUtil.sendBotChannel(this.convertMattermostStr(content));
+            mattermostUtil.sendWebhookChannel(this.convertMattermostStr(content), webhookVO);
         }
     }
 
@@ -82,7 +82,7 @@ public class WatchSVCImpl implements WatchSVC {
         try {
             String[] split = parseSplitText(webhookVO.getText());
             if (split.length < 2 || split.length > 3) {
-                this.notRun();
+                this.notRun(webhookVO);
                 return;
             }
 
@@ -90,7 +90,7 @@ public class WatchSVCImpl implements WatchSVC {
             int starInfo = Integer.parseInt(split[2].trim());
 
             if (0 > starInfo || starInfo > 100) {
-                mattermostUtil.sendBotChannel("평점은 0부터 100까지 입니다.");
+                mattermostUtil.sendWebhookChannel("평점은 0부터 100까지 입니다.", webhookVO);
                 return;
             }
 
@@ -101,9 +101,9 @@ public class WatchSVCImpl implements WatchSVC {
 
             watchREP.save(watchEntity);
 
-            mattermostUtil.sendBotChannel("완료");
+            mattermostUtil.sendWebhookChannel("완료", webhookVO);
         } catch (NumberFormatException e) {
-            mattermostUtil.sendBotChannel("에러");
+            mattermostUtil.sendWebhookChannel("에러", webhookVO);
             log.error("watchAdd error", e);
         }
     }
@@ -134,9 +134,9 @@ public class WatchSVCImpl implements WatchSVC {
                     })
             );
 
-            mattermostUtil.sendBotChannel("완료");
+            mattermostUtil.sendWebhookChannel("완료", webhookVO);
         } catch (Exception e) {
-            mattermostUtil.sendBotChannel("에러");
+            mattermostUtil.sendWebhookChannel("에러", webhookVO);
             log.error("watchRemove error", e);
         }
     }
@@ -148,9 +148,9 @@ public class WatchSVCImpl implements WatchSVC {
 
             watchREP.deleteById(id);
 
-            mattermostUtil.sendBotChannel("완료");
+            mattermostUtil.sendWebhookChannel("완료", webhookVO);
         } catch (Exception e) {
-            mattermostUtil.sendBotChannel("에러");
+            mattermostUtil.sendWebhookChannel("에러", webhookVO);
             log.error("watchRemove error", e);
         }
     }

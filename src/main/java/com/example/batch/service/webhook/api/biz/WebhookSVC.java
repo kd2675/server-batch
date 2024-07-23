@@ -3,11 +3,11 @@ package com.example.batch.service.webhook.api.biz;
 import com.example.batch.service.webhook.api.dto.WebhookVO;
 
 public interface WebhookSVC extends NotRunSVC {
-    void help();
+    void help(WebhookVO webhookVO);
 
-    void time();
+    void time(WebhookVO webhookVO);
 
-    void uptime();
+    void uptime(WebhookVO webhookVO);
 
     void news(WebhookVO webhookVO);
 

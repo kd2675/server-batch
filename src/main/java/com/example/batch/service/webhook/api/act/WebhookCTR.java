@@ -31,15 +31,19 @@ public class WebhookCTR {
         return "OK";
     }
 
-    @PostMapping("/help")
-    public String command(){
-        webhookSVC.help();
+    @PostMapping("/")
+    public String webhook(@RequestBody final WebhookVO webhookVO){
+        webhookVO.setWebhookType("a");
+
+        webhookCMD.cmdCall(webhookVO);
 
         return "OK";
     }
 
     @PostMapping("/cmd")
     public String command(@RequestBody final WebhookVO webhookVO){
+        webhookVO.setWebhookType("b");
+
         webhookCMD.cmdCall(webhookVO);
 
         return "OK";

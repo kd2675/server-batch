@@ -32,6 +32,13 @@
         </encoder>
     </appender>
 
+<!--    <appender name="LOGSTASH" class="net.logstash.logback.appender.LogstashTcpSocketAppender">-->
+<!--    <destination>ec2_logstash_url:5000</destination>-->
+<!--        <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">-->
+<!--            <pattern>[%thread]%d{yyyy-MM-dd HH:mm:ss} %-5level %logger{36} - %msg%n</pattern>-->
+<!--        </encoder>-->
+<!--    </appender>-->
+
     <appender name="APP_ERROR_APPENDER"
               class="ch.qos.logback.core.rolling.RollingFileAppender">
         <filter class="ch.qos.logback.classic.filter.LevelFilter">
@@ -115,6 +122,10 @@
             <appender-ref ref="APP_ERROR_APPENDER"/>
             <appender-ref ref="APP_WARN_APPENDER"/>
         </root>
+
+<!--        <logger name="com.example" level="TRACE" additivity="false">-->
+<!--            <appender-ref ref="LOGSTASH" />-->
+<!--        </logger>-->
 
         <logger name="org.hibernate.SQL" level="DEBUG" additivity="false">
             <appender-ref ref="CONSOLE"/>

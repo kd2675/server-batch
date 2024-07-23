@@ -39,8 +39,8 @@ public class WebhookSVCImpl implements WebhookCMD, WebhookSVC {
     private final OldNewsREP oldNewsREP;
 
     @Override
-    public void notRun(){
-        mattermostUtil.sendBotChannel("잘못된 입력입니다. 설명을 보시려면 [$c]를 입력해주세요");
+    public void notRun(WebhookVO webhookVO){
+        mattermostUtil.sendWebhookChannel("잘못된 입력입니다. 설명을 보시려면 [$c]를 입력해주세요", webhookVO);
     }
 
     @Transactional
@@ -49,18 +49,18 @@ public class WebhookSVCImpl implements WebhookCMD, WebhookSVC {
         String cmd = webhookVO.getText().split(" ")[0];
 
         Map<String, Runnable> commandMap = new HashMap<>();
-        commandMap.put(WebhookEnum.COMMAND.getKey(), this::help);
-        commandMap.put(WebhookEnum.COMMAND_100.getKey(), this::time);
-        commandMap.put(WebhookEnum.COMMAND_101.getKey(), this::uptime);
+        commandMap.put(WebhookEnum.COMMAND.getKey(), () -> this.help(webhookVO));
+        commandMap.put(WebhookEnum.COMMAND_100.getKey(), () -> this.time(webhookVO));
+        commandMap.put(WebhookEnum.COMMAND_101.getKey(), () -> this.uptime(webhookVO));
         commandMap.put(WebhookEnum.COMMAND_200.getKey(), () -> this.news(webhookVO));
         commandMap.put(WebhookEnum.COMMAND_201.getKey(), () -> this.oldNews(webhookVO));
-        commandMap.put(WebhookEnum.COMMAND_300.getKey(), musicSVC::music);
+        commandMap.put(WebhookEnum.COMMAND_300.getKey(), () -> this.musicSVC.music(webhookVO));
         commandMap.put(WebhookEnum.COMMAND_301.getKey(), () -> musicSVC.musicSearch(webhookVO));
         commandMap.put(WebhookEnum.COMMAND_302.getKey(), () -> musicSVC.musicPlay(webhookVO));
         commandMap.put(WebhookEnum.COMMAND_303.getKey(), () -> musicSVC.playlist(webhookVO));
         commandMap.put(WebhookEnum.COMMAND_304.getKey(), () -> musicSVC.playlistAdd(webhookVO));
         commandMap.put(WebhookEnum.COMMAND_305.getKey(), () -> musicSVC.playlistRemove(webhookVO));
-        commandMap.put(WebhookEnum.COMMAND_400.getKey(), watchSVC::watch);
+        commandMap.put(WebhookEnum.COMMAND_400.getKey(), () -> watchSVC.watch(webhookVO));
         commandMap.put(WebhookEnum.COMMAND_401.getKey(), () -> watchSVC.watchList(webhookVO));
         commandMap.put(WebhookEnum.COMMAND_402.getKey(), () -> watchSVC.watchAdd(webhookVO));
         commandMap.put(WebhookEnum.COMMAND_403.getKey(), () -> watchSVC.watchY(webhookVO));
@@ -70,7 +70,7 @@ public class WebhookSVCImpl implements WebhookCMD, WebhookSVC {
             commandMap.put(webhookEnum.getShortKey(), commandMap.get(webhookEnum.getKey()));
         }
 
-        commandMap.getOrDefault(cmd, this::notRun).run();
+        commandMap.getOrDefault(cmd, () -> notRun(webhookVO)).run();
     }
 
     @Transactional(readOnly = true)
@@ -78,7 +78,7 @@ public class WebhookSVCImpl implements WebhookCMD, WebhookSVC {
     public void news(WebhookVO webhookVO) {
         String[] args = webhookVO.getText().split(" ");
         if (!isValidInput(args)) {
-            this.notRun();
+            this.notRun(webhookVO);
             return;
         }
 
@@ -88,7 +88,7 @@ public class WebhookSVCImpl implements WebhookCMD, WebhookSVC {
 
         List<NewsEntity> newsEntities = searchNews(searchText, pageNo, pagePerCnt);
         if (!newsEntities.isEmpty()) {
-            mattermostUtil.sendBotChannel(convertNewsMattermostMessage(newsEntities));
+            mattermostUtil.sendWebhookChannel(convertNewsMattermostMessage(newsEntities), webhookVO);
         }
     }
 
@@ -107,7 +107,7 @@ public class WebhookSVCImpl implements WebhookCMD, WebhookSVC {
     public void oldNews(WebhookVO webhookVO) {
         String[] args = webhookVO.getText().split(" ");
         if (!isValidInput(args)) {
-            this.notRun();
+            this.notRun(webhookVO);
             return;
         }
 
@@ -117,7 +117,7 @@ public class WebhookSVCImpl implements WebhookCMD, WebhookSVC {
 
         List<OldNewsEntity> oldNewsEntities = searchOldNews(searchText, pageNo, pagePerCnt);
         if (!oldNewsEntities.isEmpty()) {
-            mattermostUtil.sendBotChannel(convertOldNewsMattermostMessage(oldNewsEntities));
+            mattermostUtil.sendWebhookChannel(convertOldNewsMattermostMessage(oldNewsEntities), webhookVO);
         }
     }
 
@@ -200,7 +200,7 @@ public class WebhookSVCImpl implements WebhookCMD, WebhookSVC {
     }
 
     @Override
-    public void help() {
+    public void help(WebhookVO webhookVO) {
         StringBuilder str = new StringBuilder();
 
         for (WebhookEnum webhook : WebhookEnum.values()) {
@@ -213,11 +213,11 @@ public class WebhookSVCImpl implements WebhookCMD, WebhookSVC {
                     .append(webhook.getValue())
                     .append("\n");
         }
-        mattermostUtil.sendBotChannel(str.toString());
+        mattermostUtil.sendWebhookChannel(str.toString(), webhookVO);
     }
 
     @Override
-    public void time() {
+    public void time(WebhookVO webhookVO) {
         LocalDateTime now = LocalDateTime.now();
         LocalDateTime target =
                 LocalDateTime.of(
@@ -259,14 +259,14 @@ public class WebhookSVCImpl implements WebhookCMD, WebhookSVC {
             str.append(fullTime)
                     .append(" 남았습니다.");
 
-            mattermostUtil.sendBotChannel(str.toString());
+            mattermostUtil.sendWebhookChannel(str.toString(), webhookVO);
         } else {
-            mattermostUtil.sendBotChannel("퇴근하세요");
+            mattermostUtil.sendWebhookChannel("퇴근하세요", webhookVO);
         }
     }
 
     @Override
-    public void uptime() {
+    public void uptime(WebhookVO webhookVO) {
         LocalDateTime now = LocalDateTime.now();
         LocalDateTime target =
                 LocalDateTime.of(
@@ -296,9 +296,9 @@ public class WebhookSVCImpl implements WebhookCMD, WebhookSVC {
                             Long.valueOf(seconds).intValue()
                     ).format(DateTimeFormatter.ofPattern("HH:mm:ss"));
 
-            mattermostUtil.sendBotChannel(format + " 지났습니다.");
+            mattermostUtil.sendWebhookChannel(format + " 지났습니다.", webhookVO);
         } else {
-            mattermostUtil.sendBotChannel("출근하세요");
+            mattermostUtil.sendWebhookChannel("출근하세요", webhookVO);
         }
     }
 }

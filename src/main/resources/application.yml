@@ -35,3 +35,10 @@ spring:
       enabled: false
     jdbc:
       initialize-schema: always
+  data:
+    redis:
+      repositories:
+        enabled: false
+    jpa:
+      repositories:
+        enabled: false

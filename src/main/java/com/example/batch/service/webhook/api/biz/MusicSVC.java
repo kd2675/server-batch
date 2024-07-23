@@ -5,7 +5,7 @@ import com.example.batch.service.webhook.api.dto.WebhookVO;
 public interface MusicSVC extends NotRunSVC{
     void insMusic();
 
-    void music();
+    void music(WebhookVO webhookVO);
 
     void musicSearch(WebhookVO webhookVO);
 

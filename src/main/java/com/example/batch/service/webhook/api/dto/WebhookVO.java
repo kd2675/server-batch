@@ -26,4 +26,6 @@ public class WebhookVO {
     private String userId;
     @JsonProperty("user_name")
     private String userName;
+
+    private String webhookType;
 }

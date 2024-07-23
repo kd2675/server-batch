@@ -48,8 +48,8 @@ public class MusicSVCImpl implements MusicSVC {
     private final PlaylistREP playlistREP;
 
     @Override
-    public void notRun(){
-        mattermostUtil.sendBotChannel("잘못된 입력입니다. 설명을 보시려면 [$c]를 입력해주세요");
+    public void notRun(WebhookVO webhookVO){
+        mattermostUtil.sendWebhookChannel("잘못된 입력입니다. 설명을 보시려면 [$c]를 입력해주세요", webhookVO);
     }
 
     //pageNo 있으면 차례로
@@ -65,7 +65,7 @@ public class MusicSVCImpl implements MusicSVC {
         List<PlaylistEntity> content = all.getContent();
 
         if (!content.isEmpty()) {
-            mattermostUtil.sendBotChannel(this.convertMattermostStr(content));
+            mattermostUtil.sendWebhookChannel(this.convertMattermostStr(content), webhookVO);
         }
     }
 
@@ -114,9 +114,9 @@ public class MusicSVCImpl implements MusicSVC {
                         }
                 );
             });
-            mattermostUtil.sendBotChannel("완료");
+            mattermostUtil.sendWebhookChannel("완료", webhookVO);
         } catch (Exception e) {
-            mattermostUtil.sendBotChannel("에러");
+            mattermostUtil.sendWebhookChannel("에러", webhookVO);
             log.error("playlistAdd error", e);
         }
     }
@@ -129,9 +129,9 @@ public class MusicSVCImpl implements MusicSVC {
 
             playlistREP.deleteById(id);
 
-            mattermostUtil.sendBotChannel("완료");
+            mattermostUtil.sendWebhookChannel("완료", webhookVO);
         } catch (Exception e) {
-            mattermostUtil.sendBotChannel("에러");
+            mattermostUtil.sendWebhookChannel("에러", webhookVO);
             log.error("playlistAdd error", e);
         }
     }
@@ -142,7 +142,7 @@ public class MusicSVCImpl implements MusicSVC {
         try {
             String[] split = parseSplitText(webhookVO.getText());
             if (split.length < 2 || split.length > 4) {
-                this.notRun();
+                this.notRun(webhookVO);
                 return;
             }
 
@@ -157,10 +157,10 @@ public class MusicSVCImpl implements MusicSVC {
                     .collect(Collectors.toList());
 
             if (!musicList.isEmpty()) {
-                mattermostUtil.sendBotChannel(this.mattermostConvertMsg(musicList));
+                mattermostUtil.sendWebhookChannel(this.mattermostConvertMsg(musicList), webhookVO);
             }
         } catch (Exception e) {
-            this.notRun();
+            this.notRun(webhookVO);
             log.error("Error in musicSearch", e);
         }
     }
@@ -280,7 +280,7 @@ public class MusicSVCImpl implements MusicSVC {
                     String youtubeLink = musicEntity.getYoutubeLink();
 
                     String str = youtubeLink;
-                    mattermostUtil.sendBotChannel(str);
+                    mattermostUtil.sendWebhookChannel(str, webhookVO);
                 },
                 () -> {
 
@@ -290,7 +290,7 @@ public class MusicSVCImpl implements MusicSVC {
 
     @Transactional(readOnly = true)
     @Override
-    public void music() {
+    public void music(WebhookVO webhookVO) {
         musicREP.findMusicRand().ifPresentOrElse(
                 (musicEntity) -> {
                     String title = musicEntity.getTitle();
@@ -299,7 +299,7 @@ public class MusicSVCImpl implements MusicSVC {
                     String youtubeLink = musicEntity.getYoutubeLink() != null ? "[Link]" + "(" + musicEntity.getYoutubeLink() + ")" : "-";
 
                     String str = title + " " + singer + " " + pubDate + " " + youtubeLink;
-                    mattermostUtil.sendBotChannel(str);
+                    mattermostUtil.sendWebhookChannel(str, webhookVO);
                 },
                 () -> {
 

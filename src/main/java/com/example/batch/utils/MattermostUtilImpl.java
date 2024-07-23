@@ -1,5 +1,6 @@
 package com.example.batch.utils;
 
+import com.example.batch.service.webhook.api.dto.WebhookVO;
 import com.example.batch.utils.enums.ChannelEnum;
 import com.example.batch.utils.vo.MattermostChannelVO;
 import com.example.batch.utils.vo.MattermostPostVO;
@@ -46,8 +47,20 @@ public class MattermostUtilImpl implements MattermostUtil {
     }
 
     @Override
+    public ResponseEntity<MattermostPostVO> sendWebhookChannel(String message, WebhookVO webhookVO) {
+        String channelIdA = ChannelEnum.MATTERMOST_CHANNEL_BOB.getValue();
+        String channelIdB = ChannelEnum.MATTERMOST_CHANNEL_BOT.getValue();
+        if ("a".equals(webhookVO.getWebhookType())) {
+            return send(message, channelIdA);
+        } else if ("b".equals(webhookVO.getWebhookType())) {
+            return send(message, channelIdB);
+        }
+        return null;
+    }
+
+    @Override
     public ResponseEntity<MattermostPostVO> sendBotChannel(String message) {
-        String channelId = ChannelEnum.MATTERMOST_CHANNEL_BOB.getValue();
+        String channelId = ChannelEnum.MATTERMOST_CHANNEL_BOT.getValue();
         return send(message, channelId);
     }
 

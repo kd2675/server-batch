@@ -7,7 +7,8 @@ import lombok.Getter;
 @AllArgsConstructor
 public enum ChannelEnum {
 
-    MATTERMOST_CHANNEL_BOB(5L, "bob", "ajin5qs41b8y5ksyu61zq54f7w"),
+    MATTERMOST_CHANNEL_BOB(5L, "bob", "zmf7at5n7td7uqsykr3kkfobaw"),
+    MATTERMOST_CHANNEL_BOT(5L, "bob", "ajin5qs41b8y5ksyu61zq54f7w"),
 
     MATTERMOST_CHANNEL_COIN(0L, "coin", "947q6tnbc3gw9k9uwyxtboqx5h"),
     MATTERMOST_CHANNEL_NEWS(1L, "news", "sph9p8g1uiygindx7qh8tnxmgr"),
