@@ -35,7 +35,7 @@ public class MattermostUtilImpl implements MattermostUtil {
         HttpEntity<String> entity = new HttpEntity<>(requestBody.toString(), headers);
 
         // API 호출
-        String url = "http://210.123.252.85:8066/api/v4/posts";
+        String url = "http://kimd0.iptime.org:8066/api/v4/posts";
 
         try {
             ResponseEntity<MattermostPostVO> response = restTemplate.exchange(url, HttpMethod.POST, entity, MattermostPostVO.class);
@@ -107,7 +107,7 @@ public class MattermostUtilImpl implements MattermostUtil {
         HttpEntity<String> entity = new HttpEntity<>(requestBody.toString(), headers);
 
         // API 호출
-        String url = "http://210.123.252.85:8066/api/v4/channels/"+channelId+"/posts?page=0&per_page=500";
+        String url = "http://kimd0.iptime.org:8066/api/v4/channels/"+channelId+"/posts?page=0&per_page=500";
 
         try {
             ResponseEntity<MattermostChannelVO> response = restTemplate.exchange(url, HttpMethod.GET, entity, MattermostChannelVO.class);
@@ -131,7 +131,7 @@ public class MattermostUtilImpl implements MattermostUtil {
         HttpEntity<String> entity = new HttpEntity<>(requestBody.toString(), headers);
 
         // API 호출
-        String url = "http://210.123.252.85:8066/api/v4/posts/"+sentId;
+        String url = "http://kimd0.iptime.org:8066/api/v4/posts/"+sentId;
 
         try {
             ResponseEntity<String> response = restTemplate.exchange(url, HttpMethod.DELETE, entity, String.class);
