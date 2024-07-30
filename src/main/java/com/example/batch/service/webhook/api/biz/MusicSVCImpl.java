@@ -80,6 +80,8 @@ public class MusicSVCImpl implements MusicSVC {
             sb.append("|");
             sb.append(v.getId());
             sb.append("|");
+            sb.append(v.getNo());
+            sb.append("|");
             sb.append(v.getTitle());
             sb.append("|");
             sb.append(v.getSinger());
