@@ -68,6 +68,7 @@ public class MusicEntity extends CommonDateEntity {
 
     public PlaylistEntity convertToPlaylistEntity(){
         return PlaylistEntity.builder()
+                .musicId(this.id)
                 .slct(this.slct)
                 .no(this.no)
                 .title(this.title)

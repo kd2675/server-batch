@@ -23,6 +23,9 @@ public class PlaylistEntity extends CommonDateEntity {
     @Column(name = "id")
     private Long id;
 
+    @Column(name = "musicId", nullable = false)
+    private Long musicId;
+
     @Column(name = "slct", nullable = false, length = 1)
     private String slct;
 
