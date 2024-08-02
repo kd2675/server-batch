@@ -36,18 +36,21 @@ public class HealthCheckCTR {
         jobLauncher.run(jobRegistry.getJob(CoinJob.SEND_COIN_JOB), getJobParameters());
     }
 
-    @PostMapping("/mattermost/del")
-    public String test2() {
-        del();
+    @PostMapping("/mattermost/del/{id}")
+    public String test2(@PathVariable(value = "id") String id) {
+        del(id);
 
         return "ok";
     }
 
     @Async("asyncTaskExecutor")
-    public void del() {
-        ResponseEntity<MattermostChannelVO> channel = mattermostUtil.selectAllChannel("6w3xkrc3c7go7jp9q44uio9i4c");
+    public void del(String id) {
+//        ResponseEntity<MattermostChannelVO> channel = mattermostUtil.selectAllChannel("6w3xkrc3c7go7jp9q44uio9i4c");
+        ResponseEntity<MattermostChannelVO> channel = mattermostUtil.selectAllChannel(id);
         Map<String, MattermostPostVO> posts = channel.getBody().getPosts();
 
+        System.out.println(channel.getBody().getNextPostId());
+        System.out.println(posts.values().size());
         System.out.println(channel.getBody().getHasNext());
 
         int idx = 0;

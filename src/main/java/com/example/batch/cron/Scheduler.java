@@ -85,41 +85,41 @@ public class Scheduler {
         }
     }
 
-    @Scheduled(fixedRate = 10000)
-//    @Scheduled(cron = "0/1 * 8-17 * * *")
-    @Async("asyncTaskExecutor")
-    public void coinSaveJob() throws Exception {
-        if (ServerTypeUtils.isProd()) {
-            insCoinService.saveCoinDataBTC();
-        }
-    }
-
-    @Scheduled(cron = "30 0 4 * * *")
-    @Async("asyncTaskExecutor")
-    public void coinDeleteJob() throws Exception {
-        // add parameters as needed
-        if (ServerTypeUtils.isProd()) {
-            jobLauncher.run(jobRegistry.getJob(CoinJob.DEL_COIN_JOB), getJobParameters());
-        }
-    }
-
-    @Scheduled(cron = "20 0,30 8-19 * * *")
-    @Async("asyncTaskExecutor")
-    public void sendCoinJob() throws Exception {
-        // add parameters as needed
-        if (ServerTypeUtils.isProd()) {
-            jobLauncher.run(jobRegistry.getJob(CoinJob.SEND_COIN_JOB), getJobParameters());
-        }
-    }
-
-    @Scheduled(cron = "20 0 20-23,0-7 * * *")
-    @Async("asyncTaskExecutor")
-    public void sendCoinOtherJob() throws Exception {
-        // add parameters as needed
-        if (ServerTypeUtils.isProd()) {
-            jobLauncher.run(jobRegistry.getJob(CoinJob.SEND_COIN_JOB), getJobParameters());
-        }
-    }
+//    @Scheduled(fixedRate = 10000)
+////    @Scheduled(cron = "0/1 * 8-17 * * *")
+//    @Async("asyncTaskExecutor")
+//    public void coinSaveJob() throws Exception {
+//        if (ServerTypeUtils.isProd()) {
+//            insCoinService.saveCoinDataBTC();
+//        }
+//    }
+//
+//    @Scheduled(cron = "30 0 4 * * *")
+//    @Async("asyncTaskExecutor")
+//    public void coinDeleteJob() throws Exception {
+//        // add parameters as needed
+//        if (ServerTypeUtils.isProd()) {
+//            jobLauncher.run(jobRegistry.getJob(CoinJob.DEL_COIN_JOB), getJobParameters());
+//        }
+//    }
+//
+//    @Scheduled(cron = "20 0,30 8-19 * * *")
+//    @Async("asyncTaskExecutor")
+//    public void sendCoinJob() throws Exception {
+//        // add parameters as needed
+//        if (ServerTypeUtils.isProd()) {
+//            jobLauncher.run(jobRegistry.getJob(CoinJob.SEND_COIN_JOB), getJobParameters());
+//        }
+//    }
+//
+//    @Scheduled(cron = "20 0 20-23,0-7 * * *")
+//    @Async("asyncTaskExecutor")
+//    public void sendCoinOtherJob() throws Exception {
+//        // add parameters as needed
+//        if (ServerTypeUtils.isProd()) {
+//            jobLauncher.run(jobRegistry.getJob(CoinJob.SEND_COIN_JOB), getJobParameters());
+//        }
+//    }
 
     public static JobParameters getJobParameters() {
         return new JobParametersBuilder()
