@@ -5,6 +5,7 @@ import com.example.batch.service.batch.job.CoinJob;
 import com.example.batch.service.batch.job.NewsJob;
 import com.example.batch.service.batch.job.OrderJob;
 import com.example.batch.service.coin.api.biz.ins.InsCoinService;
+import com.example.batch.service.sport.biz.InsSportSVC;
 import lombok.RequiredArgsConstructor;
 import org.example.core.utils.ServerTypeUtils;
 import org.springframework.batch.core.*;
@@ -21,7 +22,15 @@ public class Scheduler {
     private final JobLauncher jobLauncher;
     private final JobRegistry jobRegistry;
 
-    private final InsCoinService insCoinService;
+    private final InsSportSVC insSportSVC;
+
+    @Scheduled(fixedRateString = "#{ T(java.util.concurrent.ThreadLocalRandom).current().nextInt(60000)+60000 }")
+    public void sport() throws Exception {
+        // add parameters as needed
+        if (ServerTypeUtils.isLocal()) {
+            insSportSVC.saveSport();
+        }
+    }
 
     @Scheduled(fixedRate = 10000, initialDelay = 10000)
     public void orderJob() throws Exception {
