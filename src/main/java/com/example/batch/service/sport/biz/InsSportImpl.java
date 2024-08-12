@@ -44,7 +44,7 @@ public class InsSportImpl implements InsSportSVC {
                     if (s1 != null && s1.equals("child")) {
                         mattermostUtil.send("테니스장 예약 확인 요망 " + num + "코트 " + "7-9", "35cpu84icbr6xch7ju61k4da6w");
                     }else {
-//                        mattermostUtil.send("테니스장 예약 확인 요망 " + num + "코트 " + "9-11", "35cpu84icbr6xch7ju61k4da6w");
+                        mattermostUtil.send("테니스장 예약 확인 요망 " + num + "코트 " + "9-11", "35cpu84icbr6xch7ju61k4da6w");
                     }
                 }
             }
