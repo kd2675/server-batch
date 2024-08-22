@@ -14,6 +14,8 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class InsSportImpl implements InsSportSVC {
     String URL = "https://www.gwangjusportsinfo.org/reservation/reservation_view/1/";
+    String URL68 = "https://www.gwangjusportsinfo.org/reservation/reservation_view/5/";
+    String URL99 = "https://www.gwangjusportsinfo.org/reservation/reservation_view/2/";
 
     private final ChromeDriverConnUtil chromeDriverConnUtil;
     private final MattermostUtil mattermostUtil;
@@ -42,10 +44,58 @@ public class InsSportImpl implements InsSportSVC {
 
                 if ((s1 != null && s1.equals("child")) || (s2 != null && s2.equals("child"))) {
                     if (s1 != null && s1.equals("child")) {
-                        mattermostUtil.send("테니스장 예약 확인 요망 " + num + "코트 " + "7-9", "35cpu84icbr6xch7ju61k4da6w");
+                        mattermostUtil.send("@kimd00 테니스장 예약 확인 요망 " + num + "코트 " + "7-9", "35cpu84icbr6xch7ju61k4da6w");
                     }else {
-                        mattermostUtil.send("테니스장 예약 확인 요망 " + num + "코트 " + "9-11", "35cpu84icbr6xch7ju61k4da6w");
+                        mattermostUtil.send("@kimd00 테니스장 예약 확인 요망 " + num + "코트 " + "9-11", "35cpu84icbr6xch7ju61k4da6w");
                     }
+                }
+            }
+        }
+    }
+
+    @Override
+    public void saveSport68() {
+        for (int num = 5; num < 17; num++) {
+            String url = URL68 + String.valueOf(num) + "?agree=1";
+            Document doc = chromeDriverConnUtil.conn(url);
+
+            for (Element element : doc.getElementsByClass("sat btn_pop")) {
+                String s1 = null;
+                try {
+                    s1 = element.getElementsByTag("li").get(0).className();
+                    String s1Str = element.getElementsByTag("li").get(0).getElementsByTag("b").get(0).ownText();
+
+                    log.warn("{}", s1);
+                    log.warn("{}", s1Str);
+                } catch (Exception e) {
+                }
+
+                if ((s1 != null && s1.equals("child"))) {
+                    mattermostUtil.send("@kimd00 테니스장 예약 확인 요망 " + (num-2) + "코트 " + "6-8", "35cpu84icbr6xch7ju61k4da6w");
+                }
+            }
+        }
+    }
+
+    @Override
+    public void saveSport99() {
+        for (int num = 1; num < 5; num++) {
+            String url = URL99 + String.valueOf(num) + "?agree=1";
+            Document doc = chromeDriverConnUtil.conn(url);
+
+            for (Element element : doc.getElementsByClass("sat btn_pop")) {
+                String s1 = null;
+                try {
+                    s1 = element.getElementsByTag("li").get(0).className();
+                    String s1Str = element.getElementsByTag("li").get(0).getElementsByTag("b").get(0).ownText();
+
+                    log.warn("{}", s1);
+                    log.warn("{}", s1Str);
+                } catch (Exception e) {
+                }
+
+                if ((s1 != null && s1.equals("child"))) {
+                    mattermostUtil.send("@kimd00 테니스장 예약 확인 요망 " + num + "코트 " + "99", "35cpu84icbr6xch7ju61k4da6w");
                 }
             }
         }

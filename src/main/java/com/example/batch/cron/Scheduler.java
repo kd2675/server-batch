@@ -32,6 +32,14 @@ public class Scheduler {
         }
     }
 
+    @Scheduled(fixedRateString = "#{ T(java.util.concurrent.ThreadLocalRandom).current().nextInt(60000)+60000 }")
+    public void sport68() throws Exception {
+        // add parameters as needed
+        if (ServerTypeUtils.isLocal()) {
+//            insSportSVC.saveSport68();
+        }
+    }
+
     @Scheduled(fixedRate = 10000, initialDelay = 10000)
     public void orderJob() throws Exception {
         // add parameters as needed
