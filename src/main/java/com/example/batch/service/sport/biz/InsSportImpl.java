@@ -29,24 +29,35 @@ public class InsSportImpl implements InsSportSVC {
             for (Element element : doc.getElementsByClass("sat btn_pop")) {
                 String s1 = null;
                 String s2 = null;
+                String s3 = null;
                 try {
                     s1 = element.getElementsByTag("li").get(0).className();
                     String s1Str = element.getElementsByTag("li").get(0).getElementsByTag("b").get(0).ownText();
                     s2 = element.getElementsByTag("li").get(1).className();
                     String s2Str = element.getElementsByTag("li").get(1).getElementsByTag("b").get(0).ownText();
+//                    s3 = element.getElementsByTag("li").get(4).className();
+//                    String s3Str = element.getElementsByTag("li").get(4).getElementsByTag("b").get(0).ownText();
 
                     log.warn("{}", s1);
                     log.warn("{}", s1Str);
                     log.warn("{}", s2);
                     log.warn("{}", s2Str);
+//                    log.warn("{}", s3);
+//                    log.warn("{}", s3Str);
                 } catch (Exception e) {
                 }
 
-                if ((s1 != null && s1.equals("child")) || (s2 != null && s2.equals("child"))) {
+                if ((s1 != null && s1.equals("child")) || (s2 != null && s2.equals("child")) || (s3 != null && s3.equals("child"))) {
                     if (s1 != null && s1.equals("child")) {
                         mattermostUtil.send("@kimd00 테니스장 예약 확인 요망 " + num + "코트 " + "7-9", "35cpu84icbr6xch7ju61k4da6w");
-                    }else {
+                    }
+
+                    if (s2 != null && s2.equals("child")) {
                         mattermostUtil.send("@kimd00 테니스장 예약 확인 요망 " + num + "코트 " + "9-11", "35cpu84icbr6xch7ju61k4da6w");
+                    }
+
+                    if (s3 != null && s3.equals("child")) {
+//                        mattermostUtil.send("@kimd00 테니스장 예약 확인 요망 " + num + "코트 " + "15-17", "35cpu84icbr6xch7ju61k4da6w");
                     }
                 }
             }
@@ -71,7 +82,31 @@ public class InsSportImpl implements InsSportSVC {
                 }
 
                 if ((s1 != null && s1.equals("child"))) {
-                    mattermostUtil.send("@kimd00 테니스장 예약 확인 요망 " + (num-2) + "코트 " + "6-8", "35cpu84icbr6xch7ju61k4da6w");
+                    mattermostUtil.send("@kimd00 테니스장 예약 확인 요망 " + (num - 2) + "코트 " + "6-8", "35cpu84icbr6xch7ju61k4da6w");
+                }
+            }
+        }
+    }
+
+    @Override
+    public void saveSport68Cus() {
+        for (int num = 5; num < 17; num++) {
+            String url = URL68 + String.valueOf(num) + "?agree=1";
+            Document doc = chromeDriverConnUtil.conn(url);
+
+            for (Element element : doc.getElementById("2024-09-20").children()) {
+                String s1 = null;
+                try {
+                    s1 = element.getElementsByTag("li").get(7).className();
+                    String s1Str = element.getElementsByTag("li").get(7).getElementsByTag("b").get(0).ownText();
+
+                    log.warn("{}", s1);
+                    log.warn("{}", s1Str);
+                } catch (Exception e) {
+                }
+
+                if ((s1 != null && s1.equals("child"))) {
+                    mattermostUtil.send("@kimd00 테니스장 예약 확인 요망 " + (num - 2) + "코트 " + "20-22", "35cpu84icbr6xch7ju61k4da6w");
                 }
             }
         }

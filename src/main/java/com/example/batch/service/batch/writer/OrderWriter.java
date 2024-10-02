@@ -135,6 +135,7 @@ public class OrderWriter {
         marketEntity.marketAdjust(newPrice, newCnt, newCleanPrice);
 
         marketRepository.save(marketEntity);
+
         logService.market(UserDTO.of(userEntity), MarketDTO.of(marketEntity), "buy");
 
         WalletEntity walletEntity = userEntity.getWalletEntity();
@@ -209,6 +210,7 @@ public class OrderWriter {
                 .build();
 
         marketRepository.save(marketEntity);
+
         logService.market(UserDTO.of(userEntity), MarketDTO.of(marketEntity), "buy");
 
         WalletEntity walletEntity = userEntity.getWalletEntity();
