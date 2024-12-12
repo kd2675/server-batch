@@ -5,4 +5,5 @@ public interface InsSportSVC {
     void saveSport68();
     void saveSport68Cus();
     void saveSport99();
+    void saveSportJangSung911();
 }
