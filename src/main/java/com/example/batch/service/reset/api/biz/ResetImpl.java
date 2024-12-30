@@ -45,7 +45,7 @@ public class ResetImpl implements Reset {
             delChannelPost(ChannelEnum.MATTERMOST_CHANNEL_NEWS_MARKETING.getValue());
             delChannelPost(ChannelEnum.MATTERMOST_CHANNEL_NEWS_STOCK.getValue());
 
-            mattermostSentREP.deleteAll();
+            mattermostSentREP.deleteByCategory("news");
 
             for (ResetPoint resetPoint : resetPoints) {
                 resetPoint.setResetY();
