@@ -1,6 +1,7 @@
 package com.example.batch.service.reset.api.biz;
 
 import com.example.batch.service.batch.job.NewsJob;
+import com.example.batch.service.mattermost.database.rep.jpa.mattermost.sent.MattermostSentREP;
 import com.example.batch.service.reset.database.rep.jpa.ResetPoint;
 import com.example.batch.service.reset.database.rep.jpa.ResetPointREP;
 import com.example.batch.utils.MattermostUtil;
@@ -29,10 +30,9 @@ import static com.example.batch.cron.Scheduler.getJobParameters;
 @RequiredArgsConstructor
 public class ResetImpl implements Reset {
     private final ResetPointREP resetPointREP;
-    private final MattermostUtil mattermostUtil;
+    private final MattermostSentREP mattermostSentREP;
 
-    private final JobLauncher jobLauncher;
-    private final JobRegistry jobRegistry;
+    private final MattermostUtil mattermostUtil;
 
     @Transactional
     @Override
@@ -45,7 +45,7 @@ public class ResetImpl implements Reset {
             delChannelPost(ChannelEnum.MATTERMOST_CHANNEL_NEWS_MARKETING.getValue());
             delChannelPost(ChannelEnum.MATTERMOST_CHANNEL_NEWS_STOCK.getValue());
 
-            jobLauncher.run(jobRegistry.getJob(NewsJob.DEL_NEWS_JOB), getJobParameters());
+            mattermostSentREP.deleteAll();
 
             for (ResetPoint resetPoint : resetPoints) {
                 resetPoint.setResetY();
