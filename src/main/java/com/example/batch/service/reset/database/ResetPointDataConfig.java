@@ -25,8 +25,8 @@ import java.util.Map;
 @EnableTransactionManagement
 @EnableJpaRepositories(
         basePackages = "com.example.batch.service.reset.database.rep.jpa",
-        entityManagerFactoryRef = "batchEntityManagerFactory",
-        transactionManagerRef = "batchTransactionManager"
+        entityManagerFactoryRef = "resetEntityManagerFactory",
+        transactionManagerRef = "resetTransactionManager"
 )
 public class ResetPointDataConfig {
     @Bean
@@ -35,7 +35,6 @@ public class ResetPointDataConfig {
         return new DataSourceProperties();
     }
 
-    @Primary
     @Bean
     @ConfigurationProperties("database.datasource.reset.master.configure")
     public DataSource resetMasterDatasource() {
@@ -60,7 +59,6 @@ public class ResetPointDataConfig {
                 .build();
     }
 
-    @Primary
     @Bean(name = "resetEntityManagerFactory")
     public LocalContainerEntityManagerFactoryBean resetEntityManagerFactory(
             EntityManagerFactoryBuilder builder,
@@ -94,7 +92,6 @@ public class ResetPointDataConfig {
                 .build();
     }
 
-    @Primary
     @Bean(name = "resetTransactionManager")
     public PlatformTransactionManager resetTransactionManager(
             final @Qualifier("resetEntityManagerFactory") EntityManagerFactory localContainerEntityManagerFactoryBean

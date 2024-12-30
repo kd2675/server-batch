@@ -121,7 +121,6 @@ public class Scheduler {
     }
 
     @Scheduled(cron = "0 5,35 * * * *")
-    @Async("asyncTaskExecutor")
     public void reset() throws Exception {
         // add parameters as needed
         if (ServerTypeUtils.isProd()) {
