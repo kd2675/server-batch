@@ -5,6 +5,7 @@ import com.example.batch.service.batch.job.CoinJob;
 import com.example.batch.service.batch.job.NewsJob;
 import com.example.batch.service.batch.job.OrderJob;
 import com.example.batch.service.coin.api.biz.ins.InsCoinService;
+import com.example.batch.service.reset.api.biz.Reset;
 import com.example.batch.service.sport.biz.InsSportSVC;
 import lombok.RequiredArgsConstructor;
 import org.example.core.utils.ServerTypeUtils;
@@ -24,6 +25,7 @@ public class Scheduler {
 
     private final InsSportSVC insSportSVC;
     private final InsCoinService insCoinService;
+    private final Reset reset;
 
 //    @Scheduled(fixedRateString = "#{ T(java.util.concurrent.ThreadLocalRandom).current().nextInt(60000)+60000 }")
 //    public void sport() throws Exception {
@@ -115,6 +117,15 @@ public class Scheduler {
         // add parameters as needed
         if (ServerTypeUtils.isProd()) {
             jobLauncher.run(jobRegistry.getJob(NewsJob.DEL_NEWS_JOB), getJobParameters());
+        }
+    }
+
+    @Scheduled(cron = "0 5,35 * * * *")
+    @Async("asyncTaskExecutor")
+    public void reset() throws Exception {
+        // add parameters as needed
+        if (ServerTypeUtils.isProd()) {
+            reset.mattermostDelReset();
         }
     }
 

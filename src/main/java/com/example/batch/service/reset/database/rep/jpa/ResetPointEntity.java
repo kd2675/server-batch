@@ -16,7 +16,7 @@ import org.hibernate.annotations.DynamicInsert;
 @DynamicInsert
 @Entity
 @Table(name = "RESET_POINT")
-public class ResetPoint extends CommonDateEntity {
+public class ResetPointEntity extends CommonDateEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false)
@@ -29,6 +29,7 @@ public class ResetPoint extends CommonDateEntity {
     @Column(name = "point_explain", nullable = true, length = 255, updatable = false)
     private String pointExplain;
 
+    @ColumnDefault("n")
     @Column(name = "reset_yn", nullable = false, length = 1, updatable = false)
     private String resetYn;
 
