@@ -46,16 +46,22 @@ public class HealthCheckCTR {
     @Async("asyncTaskExecutor")
     public void del(String id) {
 //        ResponseEntity<MattermostChannelVO> channel = mattermostUtil.selectAllChannel("6w3xkrc3c7go7jp9q44uio9i4c");
-        ResponseEntity<MattermostChannelVO> channel = mattermostUtil.selectAllChannel(id);
-        Map<String, MattermostPostVO> posts = channel.getBody().getPosts();
+        for (;;) {
+            ResponseEntity<MattermostChannelVO> channel = mattermostUtil.selectAllChannel(id);
+            Map<String, MattermostPostVO> posts = channel.getBody().getPosts();
 
-        System.out.println(channel.getBody().getNextPostId());
-        System.out.println(posts.values().size());
-        System.out.println(channel.getBody().getHasNext());
+            System.out.println(channel.getBody().getNextPostId());
+            System.out.println(posts.values().size());
+            System.out.println(channel.getBody().getHasNext());
 
-        int idx = 0;
-        for (MattermostPostVO vo : posts.values()) {
-            mattermostUtil.delete(vo.getId());
+            int idx = 0;
+            for (MattermostPostVO vo : posts.values()) {
+                mattermostUtil.delete(vo.getId());
+            }
+
+            if (posts.values().size() < 100) {
+                break;
+            }
         }
     }
 
@@ -63,6 +69,5 @@ public class HealthCheckCTR {
     @DeleteMapping("/mattermost/job/news")
     public void delMattermostNewsJob() throws Exception {
         jobLauncher.run(jobRegistry.getJob(NewsJob.DEL_NEWS_JOB), getJobParameters());
-
     }
 }

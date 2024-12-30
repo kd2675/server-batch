@@ -33,13 +33,13 @@ public class Scheduler {
 //        }
 //    }
 
-    @Scheduled(fixedRateString = "#{ T(java.util.concurrent.ThreadLocalRandom).current().nextInt(60000)+60000 }")
-    public void sport68() throws Exception {
-        // add parameters as needed
-        if (ServerTypeUtils.isLocal()) {
-            insSportSVC.saveSport68();
-        }
-    }
+//    @Scheduled(fixedRateString = "#{ T(java.util.concurrent.ThreadLocalRandom).current().nextInt(60000)+60000 }")
+//    public void sport68() throws Exception {
+//        // add parameters as needed
+//        if (ServerTypeUtils.isLocal()) {
+//            insSportSVC.saveSport68();
+//        }
+//    }
 //    @Scheduled(fixedRateString = "#{ T(java.util.concurrent.ThreadLocalRandom).current().nextInt(60000)+100000 }")
 //    public void sport68() throws Exception {
 //        // add parameters as needed

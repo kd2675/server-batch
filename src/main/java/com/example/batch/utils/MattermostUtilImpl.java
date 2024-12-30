@@ -6,10 +6,12 @@ import com.example.batch.utils.vo.MattermostChannelVO;
 import com.example.batch.utils.vo.MattermostPostVO;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.hc.core5.http.impl.bootstrap.HttpServer;
 import org.json.JSONObject;
 import org.springframework.http.*;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.HttpClientErrorException;
+import org.springframework.web.client.HttpServerErrorException;
 import org.springframework.web.client.RestTemplate;
 
 @Slf4j
@@ -41,7 +43,10 @@ public class MattermostUtilImpl implements MattermostUtil {
             ResponseEntity<MattermostPostVO> response = restTemplate.exchange(url, HttpMethod.POST, entity, MattermostPostVO.class);
             return response;
         } catch (HttpClientErrorException e) {
-            log.error("mattermost send error -> {}", e.toString());
+            log.error("mattermost client send error -> {}", e.toString());
+            throw e;
+        } catch (HttpServerErrorException e) {
+            log.error("mattermost server send error -> {}", e.toString());
             throw e;
         }
     }
@@ -107,13 +112,16 @@ public class MattermostUtilImpl implements MattermostUtil {
         HttpEntity<String> entity = new HttpEntity<>(requestBody.toString(), headers);
 
         // API 호출
-        String url = "http://kimd0.iptime.org:8066/api/v4/channels/"+channelId+"/posts?page=0&per_page=500";
+        String url = "http://kimd0.iptime.org:8066/api/v4/channels/"+channelId+"/posts?page=0&per_page=100";
 
         try {
             ResponseEntity<MattermostChannelVO> response = restTemplate.exchange(url, HttpMethod.GET, entity, MattermostChannelVO.class);
             return response;
         } catch (HttpClientErrorException e) {
-            log.error("mattermost selectAllChannel error -> {}", e.toString());
+            log.error("mattermost client selectAllChannel error -> {}", e.toString());
+            throw e;
+        } catch (HttpServerErrorException e) {
+            log.error("mattermost server selectAllChannel error -> {}", e.toString());
             throw e;
         }
     }
@@ -137,7 +145,10 @@ public class MattermostUtilImpl implements MattermostUtil {
             ResponseEntity<String> response = restTemplate.exchange(url, HttpMethod.DELETE, entity, String.class);
             return response;
         } catch (HttpClientErrorException e) {
-            log.error("mattermost delete error -> {}", e.toString());
+            log.error("mattermost client delete error -> {}", e.toString());
+            throw e;
+        } catch (HttpServerErrorException e) {
+            log.error("mattermost server delete error -> {}", e.toString());
             throw e;
         }
     }

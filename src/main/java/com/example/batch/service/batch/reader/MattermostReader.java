@@ -31,7 +31,7 @@ public class MattermostReader {
         reader.setName("jpaPagingItemReader");
         reader.setPageSize(NewsStep.PAGE_SIZE);
         reader.setEntityManagerFactory(entityManagerFactory);
-        reader.setQueryString("SELECT e FROM MattermostSentEntity e WHERE e.createDate < :date and e.category = 'news'");
+        reader.setQueryString("SELECT e FROM MattermostSentEntity e WHERE e.createDate < :date and e.category = 'news' order by e.createDate");
 
         HashMap<String, Object> param = new HashMap<>();
         param.put("date", LocalDateTime.now().minusHours(3));
