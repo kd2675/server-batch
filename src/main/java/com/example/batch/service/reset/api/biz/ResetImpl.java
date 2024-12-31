@@ -58,7 +58,9 @@ public class ResetImpl implements Reset {
 
             int idx = 0;
             for (MattermostPostVO vo : posts.values()) {
-                mattermostUtil.delete(vo.getId());
+                try {
+                    mattermostUtil.delete(vo.getId());
+                }catch (Exception e){}
             }
 
             if (posts.values().size() < 100) {
