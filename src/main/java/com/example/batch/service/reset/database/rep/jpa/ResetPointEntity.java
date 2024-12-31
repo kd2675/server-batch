@@ -30,7 +30,7 @@ public class ResetPointEntity extends CommonDateEntity {
     private String pointExplain;
 
     @ColumnDefault("n")
-    @Column(name = "reset_yn", nullable = false, length = 1, updatable = false)
+    @Column(name = "reset_yn", nullable = false, length = 1)
     private String resetYn;
 
     public void setResetY() {
