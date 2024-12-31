@@ -19,7 +19,7 @@ RUN apk add unzip
 
 
 
-COPY --from=builder /build/server-batch/build/libs/*.jar ./app.jar
+COPY --from=builder /build/service-batch/build/libs/*.jar ./app.jar
 ENV	USE_PROFILE dev
 
 ENTRYPOINT ["java", "-Dspring.profiles.active=${USE_PROFILE}", "-jar", "/app/app.jar"]
