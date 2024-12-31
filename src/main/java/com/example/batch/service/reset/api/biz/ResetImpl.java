@@ -28,7 +28,7 @@ public class ResetImpl implements Reset {
 
     @Transactional
     @Override
-    public void mattermostDelReset() throws Exception {
+    public void mattermostDelReset() {
         List<ResetPointEntity> resetPointEntities = resetPointREP.findByResetYnAndPointIdInOrderByCreateDateDesc("n", Collections.singletonList(1));
 
         if (resetPointEntities.size() >= 3) {

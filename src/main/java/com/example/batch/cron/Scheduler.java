@@ -121,7 +121,7 @@ public class Scheduler {
     }
 
     @Scheduled(cron = "0 5,35 * * * *")
-    public void reset() throws Exception {
+    public void reset() {
         // add parameters as needed
         if (ServerTypeUtils.isProd()) {
             reset.mattermostDelReset();
