@@ -17,13 +17,7 @@ RUN apk add wget
 
 RUN apk add unzip
 
-RUN wget https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb
 
-RUN apk add ./google-chrome-stable_current_amd64.deb
-
-RUN wget -O /tmp/chromedriver.zip https://chromedriver.storage.googleapis.com/` curl -sS chromedriver.storage.googleapis.com/LATEST_RELEASE`/chromedriver_linux64.zip
-
-RUN unzip /tmp/chromedriver.zip chromedriver -d /usr/bin
 
 COPY --from=builder /build/server-batch/build/libs/*.jar ./app.jar
 ENV	USE_PROFILE dev
