@@ -17,9 +17,9 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
-@Service
 @Slf4j
 @RequiredArgsConstructor
+@Service
 public class ResetImpl implements Reset {
     private final ResetPointREP resetPointREP;
     private final MattermostSentREP mattermostSentREP;
