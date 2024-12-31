@@ -6,5 +6,5 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface MattermostSentREP extends JpaRepository<MattermostSentEntity, Long> {
-    long deleteByCategory(@NonNull String category);
+    void deleteAllByCategory(@NonNull String category);
 }
