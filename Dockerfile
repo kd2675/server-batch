@@ -18,6 +18,7 @@ RUN apk add wget
 RUN apk add unzip
 
 
+
 COPY --from=builder /build/server-batch/build/libs/*.jar ./app.jar
 ENV	USE_PROFILE dev
 
