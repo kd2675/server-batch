@@ -89,6 +89,8 @@ public class WebhookSVCImpl implements WebhookCMD, WebhookSVC {
         List<NewsEntity> newsEntities = searchNews(searchText, pageNo, pagePerCnt);
         if (!newsEntities.isEmpty()) {
             mattermostUtil.sendWebhookChannel(convertNewsMattermostMessage(newsEntities), webhookVO);
+        } else {
+            mattermostUtil.sendWebhookChannel("검색된 기사가 없습니다.", webhookVO);
         }
     }
 
