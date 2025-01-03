@@ -7,14 +7,14 @@ import lombok.Getter;
 @AllArgsConstructor
 public enum ChannelEnum {
 
-    MATTERMOST_CHANNEL_BOB(5L, "bob", "zmf7at5n7td7uqsykr3kkfobaw"),
-    MATTERMOST_CHANNEL_BOT(5L, "bob", "ajin5qs41b8y5ksyu61zq54f7w"),
+    MATTERMOST_CHANNEL_BOB(5L, "bob", "ao4inqs76jf4bqsw3ukyj84tyw"),
+    MATTERMOST_CHANNEL_BOT(5L, "bob", "py5k9sbz1f8udfa5fgj9abcjsw"),
 
-    MATTERMOST_CHANNEL_COIN(0L, "coin", "947q6tnbc3gw9k9uwyxtboqx5h"),
-    MATTERMOST_CHANNEL_NEWS(1L, "news", "sph9p8g1uiygindx7qh8tnxmgr"),
-    MATTERMOST_CHANNEL_NEWS_FLASH(2L, "news", "8k97zj11hiyiic54xtbc3sieho"),
-    MATTERMOST_CHANNEL_NEWS_MARKETING(3L, "news", "5hy139iizpg33decuwtcpyjm3c"),
-    MATTERMOST_CHANNEL_NEWS_STOCK(4L, "news", "6w3xkrc3c7go7jp9q44uio9i4c");
+    MATTERMOST_CHANNEL_COIN(0L, "coin", "49te3so5pirzubzrwis4h39uya"),
+    MATTERMOST_CHANNEL_NEWS(1L, "news", "7ah4awp48fd9dfqxs87tia4h6c"),
+    MATTERMOST_CHANNEL_NEWS_FLASH(2L, "news", "y5g4ki1ypbbezk97rwuwqnpiga"),
+    MATTERMOST_CHANNEL_NEWS_MARKETING(3L, "news", "mnkeeidfgbbexf5zkmpthqhzza"),
+    MATTERMOST_CHANNEL_NEWS_STOCK(4L, "news", "q3outnqxs3gidxrwzk1y6z7ika");
 
     private Long id;
     private String key;

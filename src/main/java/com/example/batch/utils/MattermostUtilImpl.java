@@ -19,7 +19,7 @@ import org.springframework.web.client.RestTemplate;
 @RequiredArgsConstructor
 @Service
 public class MattermostUtilImpl implements MattermostUtil {
-    private static final String MATTERMOST_SYSTEM_BOT_TOKEN = "urhoyjtmgjytmepm399nb476mr";
+    private static final String MATTERMOST_SYSTEM_BOT_TOKEN = "dxzfhkdinpgn8pqxydwaro13fo";
 
     private final RestTemplate restTemplate;
     private final ResetPointREP resetPointREP;
