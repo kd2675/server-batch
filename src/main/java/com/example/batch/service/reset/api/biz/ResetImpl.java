@@ -1,5 +1,6 @@
 package com.example.batch.service.reset.api.biz;
 
+import com.example.batch.service.mattermost.database.rep.jpa.mattermost.sent.MattermostSentEntity;
 import com.example.batch.service.mattermost.database.rep.jpa.mattermost.sent.MattermostSentREP;
 import com.example.batch.service.reset.database.rep.jpa.ResetPointEntity;
 import com.example.batch.service.reset.database.rep.jpa.ResetPointREP;
@@ -37,7 +38,9 @@ public class ResetImpl implements Reset {
             delChannelPost(ChannelEnum.MATTERMOST_CHANNEL_NEWS_MARKETING.getValue());
             delChannelPost(ChannelEnum.MATTERMOST_CHANNEL_NEWS_STOCK.getValue());
 
-            mattermostSentREP.deleteAllByCategory("news");
+            List<MattermostSentEntity> allByCategory = mattermostSentREP.findAllByCategory("news");
+
+            mattermostSentREP.deleteAll(allByCategory);
 
             for (ResetPointEntity resetPointEntity : resetPointEntities) {
                 resetPointEntity.setResetY();
