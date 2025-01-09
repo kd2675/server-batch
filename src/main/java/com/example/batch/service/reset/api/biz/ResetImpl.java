@@ -17,6 +17,8 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -37,8 +39,11 @@ public class ResetImpl implements Reset {
             delChannelPost(ChannelEnum.MATTERMOST_CHANNEL_NEWS_FLASH.getValue());
             delChannelPost(ChannelEnum.MATTERMOST_CHANNEL_NEWS_MARKETING.getValue());
             delChannelPost(ChannelEnum.MATTERMOST_CHANNEL_NEWS_STOCK.getValue());
+            delChannelPost(ChannelEnum.MATTERMOST_CHANNEL_COIN.getValue());
 
-            List<MattermostSentEntity> allByCategory = mattermostSentREP.findAllByCategory("news");
+            List<MattermostSentEntity> allByCategoryNews = mattermostSentREP.findAllByCategory("news");
+            List<MattermostSentEntity> allByCategoryCoin = mattermostSentREP.findAllByCategory("coin");
+            List<MattermostSentEntity> allByCategory = Stream.concat(allByCategoryNews.stream(), allByCategoryCoin.stream()).collect(Collectors.toList());
 
             mattermostSentREP.deleteAll(allByCategory);
 
