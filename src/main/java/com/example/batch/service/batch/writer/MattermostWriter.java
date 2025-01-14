@@ -216,8 +216,8 @@ public class MattermostWriter {
         DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
         String regexEmojis = "[\uD83C-\uDBFF\uDC00-\uDFFF]+";
 
-        String header = "| id | 시각 | img | 제목 | 가격 |\n";
-        String line = "| :-:|:--:|:--:|:----:|:--: |\n";
+        String header = "| 시각 | img | 제목 | 가격 |\n";
+        String line = "| :--:|:--:|:----:|:--: |\n";
 //        String header = "| 시각 | 제목 | 시각 | 제목 |\n";
 //        String line = "| :-:|:--:|:-:|:--: |\n";
         result.append(header)
@@ -234,9 +234,6 @@ public class MattermostWriter {
                 HotdealEntity remove = q.remove();
 
                 content.append("| ")
-                        .append(remove.getId())
-                        .append(" | ")
-
                         .append(dtf.format(remove.getCreateDate()))
                         .append(" | ")
 
