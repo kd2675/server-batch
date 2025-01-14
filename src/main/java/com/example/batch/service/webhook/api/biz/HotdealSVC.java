@@ -1,0 +1,7 @@
+package com.example.batch.service.webhook.api.biz;
+
+import com.example.batch.service.webhook.api.dto.WebhookVO;
+
+public interface HotdealSVC extends NotRunSVC{
+    void hotdealSearch(WebhookVO webhookVO);
+}

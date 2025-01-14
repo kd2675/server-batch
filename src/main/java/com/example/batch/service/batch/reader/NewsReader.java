@@ -29,6 +29,7 @@ import java.util.*;
 @RequiredArgsConstructor
 @Configuration
 public class NewsReader {
+    private static final int PAGE_SIZE = 100;
     public static final String FIND_NAVER_NEWS_API = "findNaverNewsApi";
     public static final String FIND_TOP_15_NEWS = "findTop15News";
     public static final String FIND_TOP_15_NEWS_FLASH = "findTop15NewsFlash";
@@ -85,7 +86,7 @@ public class NewsReader {
         JpaPagingItemReader<NewsEntity> reader = new DelJpaPagingItemReader<>();
 
         reader.setName("jpaPagingItemReader");
-        reader.setPageSize(NewsStep.PAGE_SIZE);
+        reader.setPageSize(PAGE_SIZE);
         reader.setEntityManagerFactory(entityManagerFactory);
         reader.setQueryString("SELECT e FROM NewsEntity e WHERE e.pubDate < :date");
 

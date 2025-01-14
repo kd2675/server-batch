@@ -2,6 +2,7 @@ package com.example.batch.service.batch.writer;
 
 import com.example.batch.service.batch.common.BasicWriter;
 import com.example.batch.service.coin.database.rep.jpa.coin.CoinEntity;
+import com.example.batch.service.hotdeal.database.rep.jpa.HotdealEntity;
 import com.example.batch.service.mattermost.database.rep.jpa.mattermost.sent.MattermostSentEntity;
 import com.example.batch.service.mattermost.database.rep.jpa.mattermost.sent.MattermostSentREP;
 import com.example.batch.service.news.database.rep.jpa.news.NewsEntity;
@@ -17,6 +18,7 @@ import org.springframework.context.annotation.Configuration;
 import java.text.NumberFormat;
 import java.time.format.DateTimeFormatter;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.Locale;
 import java.util.Queue;
 
@@ -28,6 +30,7 @@ public class MattermostWriter {
     public static final String SEND_NEWS_FLASH_AND_SAVE_MATTERMOST_SENT = "sendNewsFlashAndSaveMattermostSent";
     public static final String SEND_NEWS_MARKETING_AND_SAVE_MATTERMOST_SENT = "sendNewsMarketingAndSaveMattermostSent";
     public static final String SEND_NEWS_STOCK_AND_SAVE_MATTERMOST_SENT = "sendNewsStockAndSaveMattermostSent";
+    public static final String SEND_HOTDEAL_AND_SAVE_MATTERMOST_SENT = "sendHotdealAndSaveMattermostSent";
     public static final String SEND_COIN_AND_SAVE_MATTERMOST_SENT = "sendCoinAndSaveMattermostSent";
     public static final String DEL_MATTERMOST_UTIL_BY_ID = "delMattermostUtilById";
     public static final String DEL_ALL_MATTERMOST_SENT = "delAllMattermostSent";
@@ -111,6 +114,25 @@ public class MattermostWriter {
         };
     }
 
+    @Bean(name = SEND_HOTDEAL_AND_SAVE_MATTERMOST_SENT)
+    @StepScope
+    public BasicWriter<HotdealEntity> sendHotdealAndSaveMattermostSent() {
+        return new BasicWriter<HotdealEntity>() {
+            @Override
+            public void write(Chunk<? extends HotdealEntity> chunk) throws Exception {
+                mattermostSentREP.save(MattermostSentEntity.builder()
+                        .sentId(
+                                mattermostUtil.sendHotdealChannel(convertHotdealMattermostMessage(chunk))
+                                        .getBody()
+                                        .getId()
+                        )
+                        .category("hotdeal")
+                        .build()
+                );
+            }
+        };
+    }
+
     @Bean(name = SEND_COIN_AND_SAVE_MATTERMOST_SENT)
     @StepScope
     public BasicWriter<CoinEntity> sendCoinAndSaveMattermostSent() {
@@ -183,6 +205,59 @@ public class MattermostWriter {
                         .replace("|", "") + "]" + "(" + remove.getLink() + ")";
             }
             content += " |\n";
+            result.append(content);
+        }
+
+        return result.toString();
+    }
+
+    private String convertHotdealMattermostMessage(Chunk<? extends HotdealEntity> entityList) {
+        StringBuilder result = new StringBuilder();
+        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+        String regexEmojis = "[\uD83C-\uDBFF\uDC00-\uDFFF]+";
+
+        String header = "| id | 시각 | img | 제목 | 가격 |\n";
+        String line = "| :-:|:--:|:--:|:----:|:--: |\n";
+//        String header = "| 시각 | 제목 | 시각 | 제목 |\n";
+//        String line = "| :-:|:--:|:-:|:--: |\n";
+        result.append(header)
+                .append(line);
+
+
+        Queue<HotdealEntity> q = new LinkedList<>(entityList.getItems());
+        while (!q.isEmpty()) {
+            StringBuilder content = new StringBuilder();
+            for (int i = 0; i < 1; i++) {
+                if (q.isEmpty()) {
+                    break;
+                }
+                HotdealEntity remove = q.remove();
+
+                content.append("| ")
+                        .append(remove.getId())
+                        .append(" | ")
+
+                        .append(dtf.format(remove.getCreateDate()))
+                        .append(" | ")
+
+                        .append(remove.getImgUrl100X100())
+                        .append(" | ")
+
+                        .append("[")
+                        .append(remove.getTitle().replaceAll(regexEmojis, "")
+                                .replace("[", "")
+                                .replace("]", "")
+                                .replace("♥", "")
+                                .replace("|", ""))
+                        .append("]")
+                        .append("(")
+                        .append(remove.getLink())
+                        .append(")")
+                        .append(" | ")
+
+                        .append(remove.getPriceStr());
+            }
+            content.append(" |\n");
             result.append(content);
         }
 

@@ -40,6 +40,7 @@ public class ResetImpl implements Reset {
             delChannelPost(ChannelEnum.MATTERMOST_CHANNEL_NEWS_MARKETING.getValue());
             delChannelPost(ChannelEnum.MATTERMOST_CHANNEL_NEWS_STOCK.getValue());
             delChannelPost(ChannelEnum.MATTERMOST_CHANNEL_COIN.getValue());
+            delChannelPost(ChannelEnum.MATTERMOST_CHANNEL_HOTDEAL.getValue());
 
             List<MattermostSentEntity> allByCategoryNews = mattermostSentREP.findAllByCategory("news");
             List<MattermostSentEntity> allByCategoryCoin = mattermostSentREP.findAllByCategory("coin");

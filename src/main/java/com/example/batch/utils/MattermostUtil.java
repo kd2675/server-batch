@@ -18,6 +18,8 @@ public interface MattermostUtil {
     ResponseEntity<MattermostPostVO> sendNewsMarketingChannel(String message);
     ResponseEntity<MattermostPostVO> sendNewsStockChannel(String message);
 
+    ResponseEntity<MattermostPostVO> sendHotdealChannel(String message);
+
     ResponseEntity<MattermostChannelVO> selectAllChannel(String channelId);
     ResponseEntity delete(String sentId);
 }

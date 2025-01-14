@@ -34,6 +34,7 @@ public class WebhookSVCImpl implements WebhookCMD, WebhookSVC {
 
     private final MusicSVC musicSVC;
     private final WatchSVC watchSVC;
+    private final HotdealSVC hotdealSVC;
 
     private final NewsREP newsREP;
     private final OldNewsREP oldNewsREP;
@@ -65,6 +66,7 @@ public class WebhookSVCImpl implements WebhookCMD, WebhookSVC {
         commandMap.put(WebhookEnum.COMMAND_402.getKey(), () -> watchSVC.watchAdd(webhookVO));
         commandMap.put(WebhookEnum.COMMAND_403.getKey(), () -> watchSVC.watchY(webhookVO));
         commandMap.put(WebhookEnum.COMMAND_404.getKey(), () -> watchSVC.watchRemove(webhookVO));
+        commandMap.put(WebhookEnum.COMMAND_600.getKey(), () -> hotdealSVC.hotdealSearch(webhookVO));
 
         for (WebhookEnum webhookEnum : WebhookEnum.values()) {
             commandMap.put(webhookEnum.getShortKey(), commandMap.get(webhookEnum.getKey()));

@@ -20,6 +20,7 @@ import java.util.HashMap;
 @Configuration
 public class MattermostReader {
     //    public static final String FIND_ALL_MATTERMOST_SENT_FIX_PAGE_0 = "findAllMattermostSentFixPage0";
+    private static final int PAGE_SIZE = 100;
     public static final String FIND_BY_CATEGORY_IS_NEWS = "findByCategoryIsNews";
     public static final String FIND_BY_CATEGORY_IS_COIN = "findByCategoryIsCoin";
 
@@ -29,7 +30,7 @@ public class MattermostReader {
         JpaPagingItemReader<MattermostSentEntity> reader = new DelJpaPagingItemReader<>();
 
         reader.setName("jpaPagingItemReader");
-        reader.setPageSize(NewsStep.PAGE_SIZE);
+        reader.setPageSize(PAGE_SIZE);
         reader.setEntityManagerFactory(entityManagerFactory);
         reader.setQueryString("SELECT e FROM MattermostSentEntity e WHERE e.createDate < :date and e.category = 'news' order by e.createDate");
 
@@ -45,7 +46,7 @@ public class MattermostReader {
         JpaPagingItemReader<MattermostSentEntity> reader = new DelJpaPagingItemReader<>();
 
         reader.setName("jpaPagingItemReader");
-        reader.setPageSize(NewsStep.PAGE_SIZE);
+        reader.setPageSize(PAGE_SIZE);
         reader.setEntityManagerFactory(entityManagerFactory);
         reader.setQueryString("SELECT e FROM MattermostSentEntity e WHERE e.createDate < :date and e.category = 'coin'");
 

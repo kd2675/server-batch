@@ -33,6 +33,7 @@ public class NewsProcessor {
             }
         };
     }
+
     @Bean(name = NEWS_ENTITY_UPD_SEND_YN_Y)
     @StepScope
     public BasicProcessor<NewsEntity, NewsEntity> itemProcessor() {

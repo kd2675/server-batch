@@ -2,6 +2,7 @@ package com.example.batch.cron;
 
 import com.example.batch.service.batch.common.CustomJobParametersIncrementer;
 import com.example.batch.service.batch.job.CoinJob;
+import com.example.batch.service.batch.job.HotdealJob;
 import com.example.batch.service.batch.job.NewsJob;
 import com.example.batch.service.batch.job.OrderJob;
 import com.example.batch.service.coin.api.biz.ins.InsCoinService;
@@ -12,7 +13,6 @@ import org.example.core.utils.ServerTypeUtils;
 import org.springframework.batch.core.*;
 import org.springframework.batch.core.configuration.JobRegistry;
 import org.springframework.batch.core.launch.JobLauncher;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
@@ -57,6 +57,23 @@ public class Scheduler {
 //            insSportSVC.saveSport68Cus();
 //        }
 //    }
+
+    @Scheduled(fixedRateString = "#{ T(java.util.concurrent.ThreadLocalRandom).current().nextInt(120000)+240000 }")
+    public void insHotdeal() throws Exception {
+        // add parameters as needed
+//        if (ServerTypeUtils.isProd()) {
+            jobLauncher.run(jobRegistry.getJob(HotdealJob.INS_HOTDEAL_JOB), getJobParameters());
+//        }
+    }
+
+    @Scheduled(cron = "0 0/5 8-23 * * *")
+    @Async("asyncTaskExecutor")
+    public void sendHotdeal() throws Exception {
+        // add parameters as needed
+//        if (ServerTypeUtils.isProd()) {
+            jobLauncher.run(jobRegistry.getJob(HotdealJob.SEND_HOTDEAL_JOB), getJobParameters());
+//        }
+    }
 
     @Scheduled(fixedRate = 10000, initialDelay = 10000)
     public void orderJob() throws Exception {

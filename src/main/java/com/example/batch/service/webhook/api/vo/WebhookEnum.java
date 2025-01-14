@@ -25,7 +25,9 @@ public enum WebhookEnum {
     COMMAND_403(403L, "$watchY", "$wy", "추천 영화&미드&애니 리스트 봣음 ex)$watchY 2(watchList id)"),
     COMMAND_404(404L, "$watchRemove", "$wrm", "추천 영화&미드&애니 리스트 삭제 ex)$watchRemove 2(watchList id)"),
 
-    COMMAND_500(500L, "$rockScissorsPaper", "rsp", "!작업중! 가위 바위 보"),
+    COMMAND_500(500L, "$rockScissorsPaper", "$rsp", "!작업중! 가위 바위 보"),
+
+    COMMAND_600(600L, "$hotdealSearch", "$hs", "핫딜 검색 ex)$hs 밥,세일,탕수육(and조건) 0(pageNo) 10(pagePerCnt<=10)"),
 
     COMMAND(9999L, "$command", "$c", "명령어 설명");
 

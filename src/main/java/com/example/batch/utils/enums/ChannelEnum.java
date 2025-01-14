@@ -14,7 +14,8 @@ public enum ChannelEnum {
     MATTERMOST_CHANNEL_NEWS(1L, "news", "7ah4awp48fd9dfqxs87tia4h6c"),
     MATTERMOST_CHANNEL_NEWS_FLASH(2L, "news", "y5g4ki1ypbbezk97rwuwqnpiga"),
     MATTERMOST_CHANNEL_NEWS_MARKETING(3L, "news", "mnkeeidfgbbexf5zkmpthqhzza"),
-    MATTERMOST_CHANNEL_NEWS_STOCK(4L, "news", "q3outnqxs3gidxrwzk1y6z7ika");
+    MATTERMOST_CHANNEL_NEWS_STOCK(4L, "news", "q3outnqxs3gidxrwzk1y6z7ika"),
+    MATTERMOST_CHANNEL_HOTDEAL(5L, "hotdeal", "cmn3hqjawpdn8cwoscock4bmsw");
 
     private Long id;
     private String key;

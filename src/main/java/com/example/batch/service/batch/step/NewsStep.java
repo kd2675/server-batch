@@ -24,8 +24,8 @@ import org.springframework.transaction.PlatformTransactionManager;
 
 @Configuration
 public class NewsStep {
-    public static final int CHUNK_SIZE = 100;
-    public static final int PAGE_SIZE = 100;
+    private static final int CHUNK_SIZE = 100;
+
     public static final String INS_NEWS_STEP = "insNewsStep";
     public static final String SEND_NEWS_STEP = "sendNewsStep";
     public static final String SEND_NEWS_FLASH_STEP = "sendNewsFlashStep";
