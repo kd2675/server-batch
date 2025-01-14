@@ -111,8 +111,8 @@ public class HotdealSVCImpl implements HotdealSVC {
         DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
         String regexEmojis = "[\uD83C-\uDBFF\uDC00-\uDFFF]+";
 
-        String header = "| 시각 | img | 제목 | 가격 |\n";
-        String line = "| :--:|:--:|:----:|:--: |\n";
+        String header = "| img | 제목 | 가격 |\n";
+        String line = "| :--:|:----:|:--: |\n";
 //        String header = "| 시각 | 제목 | 시각 | 제목 |\n";
 //        String line = "| :-:|:--:|:-:|:--: |\n";
         result.append(header)
@@ -129,9 +129,6 @@ public class HotdealSVCImpl implements HotdealSVC {
                 HotdealEntity remove = q.remove();
 
                 content.append("| ")
-                        .append(dtf.format(remove.getCreateDate()))
-                        .append(" | ")
-
                         .append(remove.getImgUrl100X100())
                         .append(" | ")
 
@@ -159,7 +156,8 @@ public class HotdealSVCImpl implements HotdealSVC {
     private List<HotdealDTO> getHotdeal(int num, String keyword) {
         URI uri = UriComponentsBuilder
                 .fromUriString("https://www.algumon.com")
-                .path("/more/" + num + "?keyword=" + keyword)
+                .path("/more/" + num)
+                .queryParam("keyword", keyword)
                 .encode()
                 .build()
                 .toUri();
