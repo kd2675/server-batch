@@ -49,7 +49,7 @@ public class HotdealStep {
     public Step sendHotdealStep(
             JobRepository jobRepository,
             @Qualifier("hotdealTransactionManager") PlatformTransactionManager platformTransactionManager,
-            @Qualifier(HotdealReader.FIND_HOTDEAL_TOP5_SEND_YN_N) ListItemReader<HotdealEntity> itemReader,
+            @Qualifier(HotdealReader.FIND_ALL_HOTDEAL_SEND_YN_N) ListItemReader<HotdealEntity> itemReader,
             @Qualifier(HotdealProcessor.UPD_HOTDEAL_SEND_YN_Y) BasicProcessor<HotdealEntity, HotdealEntity> itemProcessor,
             @Qualifier(HotdealComposeWriter.HOTDEAL_MATTERMOST_SEND_AND_UPD_SEND_YN) CompositeItemWriter<HotdealEntity> itemWriter
     ) {

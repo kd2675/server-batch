@@ -30,7 +30,7 @@ import java.util.List;
 public class HotdealReader {
     private static final int PAGE_SIZE = 100;
     public static final String FIND_HOTDEAL = "findHotdeal";
-    public static final String FIND_HOTDEAL_TOP5_SEND_YN_N = "findHotdealTop15SendYnN";
+    public static final String FIND_ALL_HOTDEAL_SEND_YN_N = "findAllHotdealSendYnN";
 
     private final RestTemplate restTemplate;
 
@@ -42,11 +42,11 @@ public class HotdealReader {
         return new ListItemReader<HotdealDTO>(this.getHotdeal());
     }
 
-    @Bean(name = FIND_HOTDEAL_TOP5_SEND_YN_N, destroyMethod = "")
+    @Bean(name = FIND_ALL_HOTDEAL_SEND_YN_N, destroyMethod = "")
     @StepScope
-    public ListItemReader<HotdealEntity> findTop5News(@Qualifier("hotdealEntityManagerFactory") EntityManagerFactory entityManagerFactory) {
+    public ListItemReader<HotdealEntity> findAllHotdealSendYnN(@Qualifier("hotdealEntityManagerFactory") EntityManagerFactory entityManagerFactory) {
         return new ListItemReader<>(
-                hotdealEntityREP.findTop5BySendYnOrderByIdDesc("n")
+                hotdealEntityREP.findAllBySendYnOrderByIdDesc("n")
         );
     }
 

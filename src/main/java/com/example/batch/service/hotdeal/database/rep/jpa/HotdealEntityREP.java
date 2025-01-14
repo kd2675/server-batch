@@ -13,4 +13,6 @@ public interface HotdealEntityREP extends JpaRepository<HotdealEntity, Long> {
     Page<HotdealEntity> findAll(Specification<HotdealEntity> spec, Pageable pageable);
 
     List<HotdealEntity> findTop5BySendYnOrderByIdDesc(String sendYn);
+
+    List<HotdealEntity> findAllBySendYnOrderByIdDesc(String sendYn);
 }
