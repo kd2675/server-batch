@@ -4,4 +4,5 @@ import com.example.batch.service.webhook.api.dto.WebhookVO;
 
 public interface HotdealSVC extends NotRunSVC{
     void hotdealSearch(WebhookVO webhookVO);
+    void hotdealSearchApi(WebhookVO webhookVO);
 }

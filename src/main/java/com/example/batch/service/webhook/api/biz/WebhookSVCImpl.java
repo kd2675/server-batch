@@ -67,6 +67,7 @@ public class WebhookSVCImpl implements WebhookCMD, WebhookSVC {
         commandMap.put(WebhookEnum.COMMAND_403.getKey(), () -> watchSVC.watchY(webhookVO));
         commandMap.put(WebhookEnum.COMMAND_404.getKey(), () -> watchSVC.watchRemove(webhookVO));
         commandMap.put(WebhookEnum.COMMAND_600.getKey(), () -> hotdealSVC.hotdealSearch(webhookVO));
+        commandMap.put(WebhookEnum.COMMAND_601.getKey(), () -> hotdealSVC.hotdealSearchApi(webhookVO));
 
         for (WebhookEnum webhookEnum : WebhookEnum.values()) {
             commandMap.put(webhookEnum.getShortKey(), commandMap.get(webhookEnum.getKey()));
