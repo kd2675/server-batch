@@ -28,7 +28,7 @@ public enum WebhookEnum {
     COMMAND_500(500L, "$rockScissorsPaper", "$rsp", "!작업중! 가위 바위 보"),
 
     COMMAND_600(600L, "$hotdealSearch", "$hs", "핫딜 검색 ex)$hs 밥,세일,탕수육(and조건) 0(pageNo) 10(pagePerCnt<=10)"),
-    COMMAND_601(601L, "$hotdealSearchApi", "$hsa", "핫딜 검색 ex)$hsa 밥,세일,탕수육(and조건) 0(pageNo) 10(pagePerCnt<=10)"),
+    COMMAND_601(601L, "$hotdealSearchApi", "$hsa", "핫딜 API 검색 ex)$hsa 밥,세일,탕수육(and조건) 0(pageNo)"),
 
     COMMAND(9999L, "$command", "$c", "명령어 설명");
 

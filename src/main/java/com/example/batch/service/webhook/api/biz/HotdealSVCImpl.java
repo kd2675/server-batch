@@ -159,7 +159,7 @@ public class HotdealSVCImpl implements HotdealSVC {
     private List<HotdealDTO> getHotdeal(int num, String keyword) {
         URI uri = UriComponentsBuilder
                 .fromUriString("https://www.algumon.com")
-                .path("/more/" + num + "?" + keyword)
+                .path("/more/" + num + "?keyword=" + keyword)
                 .encode()
                 .build()
                 .toUri();
