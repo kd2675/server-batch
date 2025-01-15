@@ -75,6 +75,15 @@ public class Scheduler {
         }
     }
 
+    @Scheduled(cron = "0 0/30 * * * *")
+    @Async("asyncTaskExecutor")
+    public void delHotdealJob() throws Exception {
+        // add parameters as needed
+        if (ServerTypeUtils.isProd()) {
+            jobLauncher.run(jobRegistry.getJob(HotdealJob.DEL_HOTDEAL_JOB), getJobParameters());
+        }
+    }
+
     @Scheduled(fixedRate = 10000, initialDelay = 10000)
     public void orderJob() throws Exception {
         // add parameters as needed
