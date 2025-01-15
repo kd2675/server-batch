@@ -44,7 +44,8 @@ public class ResetImpl implements Reset {
 
             List<MattermostSentEntity> allByCategoryNews = mattermostSentREP.findAllByCategory("news");
             List<MattermostSentEntity> allByCategoryCoin = mattermostSentREP.findAllByCategory("coin");
-            List<MattermostSentEntity> allByCategory = Stream.concat(allByCategoryNews.stream(), allByCategoryCoin.stream()).collect(Collectors.toList());
+            List<MattermostSentEntity> allByCategoryHotdeal = mattermostSentREP.findAllByCategory("hotdeal");
+            List<MattermostSentEntity> allByCategory = Stream.concat(Stream.concat(allByCategoryNews.stream(), allByCategoryCoin.stream()), allByCategoryHotdeal.stream()).collect(Collectors.toList());
 
             mattermostSentREP.deleteAll(allByCategory);
 
