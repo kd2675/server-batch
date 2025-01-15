@@ -201,8 +201,10 @@ public class HotdealReader {
 
                                         hotdealAlimEntityREP.save(hotdealAlimEntity);
 
-                                        mattermostUtil.sendBotChannel("@" + v.getChannelId() + "핫딜 키워드 알림 : " + hotdealAlimEntity.getKeyword());
-                                        mattermostUtil.sendBotChannel(convertHotdealMattermostMessage(list));
+//                                        mattermostUtil.sendBotChannel("@" + v.getUserId() + "핫딜 키워드 알림 : " + hotdealAlimEntity.getKeyword());
+//                                        mattermostUtil.sendBotChannel(convertHotdealMattermostMessage(list));
+                                        mattermostUtil.send("핫딜 키워드 알림 : " + hotdealAlimEntity.getKeyword(), v.getDirectChannelId());
+                                        mattermostUtil.send(convertHotdealMattermostMessage(list), v.getDirectChannelId());
                                     }
                                 },
                                 () -> {

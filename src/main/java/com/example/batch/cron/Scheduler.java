@@ -61,9 +61,9 @@ public class Scheduler {
     @Scheduled(fixedRateString = "#{ T(java.util.concurrent.ThreadLocalRandom).current().nextInt(100000)+180000 }")
     public void insHotdeal() throws Exception {
         // add parameters as needed
-//        if (ServerTypeUtils.isProd()) {
+        if (ServerTypeUtils.isProd()) {
             jobLauncher.run(jobRegistry.getJob(HotdealJob.INS_HOTDEAL_JOB), getJobParameters());
-//        }
+        }
     }
 
     @Scheduled(cron = "0 0/5 8-23 * * *")
