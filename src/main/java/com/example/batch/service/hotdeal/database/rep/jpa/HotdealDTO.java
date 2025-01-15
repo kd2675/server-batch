@@ -19,4 +19,8 @@ public class HotdealDTO extends CommonDateEntity {
     private String shop;
     private String site;
     private String sendYn;
+
+    public String getImgUrl100X100(){
+        return "![](" + this.img + "?d=100x100" + ")";
+    }
 }

@@ -29,6 +29,9 @@ public enum WebhookEnum {
 
     COMMAND_600(600L, "$hotdealSearch", "$hs", "핫딜 검색 ex)$hs 밥,세일,탕수육(and조건) 0(pageNo) 10(pagePerCnt<=10)"),
     COMMAND_601(601L, "$hotdealSearchApi", "$hsa", "핫딜 API 검색 ex)$hsa 밥,세일,탕수육(and조건) 0(pageNo)"),
+    COMMAND_602(602L, "$hotdealAlimIns", "$hi", "핫딜 키워드알림 추가 ex)$hi 밥 호(용, 우, 김, 주, 갑)"),
+    COMMAND_603(603L, "$hotdealAlimDel", "$hd", "핫딜 키워드알림 삭제 ex)$hd 123(id)"),
+    COMMAND_604(604L, "$hotdealAlimList", "$hl", "핫딜 키워드알림 리스트 출력 ex)$hl 호(용, 우, 김, 주, 갑)"),
 
     COMMAND(9999L, "$command", "$c", "명령어 설명");
 

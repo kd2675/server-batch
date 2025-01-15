@@ -1,12 +1,8 @@
 package com.example.batch.service.webhook.api.biz;
 
-import com.example.batch.service.hotdeal.database.rep.jpa.HotdealDTO;
-import com.example.batch.service.hotdeal.database.rep.jpa.HotdealEntity;
-import com.example.batch.service.hotdeal.database.rep.jpa.HotdealEntityREP;
-import com.example.batch.service.hotdeal.database.rep.jpa.HotdealSpec;
-import com.example.batch.service.news.database.rep.jpa.news.NewsEntity;
-import com.example.batch.service.news.database.rep.jpa.news.NewsSpec;
+import com.example.batch.service.hotdeal.database.rep.jpa.*;
 import com.example.batch.service.webhook.api.dto.WebhookVO;
+import com.example.batch.service.webhook.api.vo.MemberEnum;
 import com.example.batch.utils.MattermostUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -35,6 +31,7 @@ public class HotdealSVCImpl implements HotdealSVC {
     private final HotdealEntityREP hotdealEntityREP;
 
     private final RestTemplate restTemplate;
+    private final HotdealAlimEntityREP hotdealAlimEntityREP;
 
     @Override
     public void notRun(WebhookVO webhookVO) {
@@ -50,15 +47,19 @@ public class HotdealSVCImpl implements HotdealSVC {
             return;
         }
 
-        String searchText = args[1];
-        int pageNo = args.length == 4 ? Integer.parseInt(args[2]) : 0;
-        int pagePerCnt = args.length == 4 ? Integer.parseInt(args[3]) : 3;
+        try {
+            String searchText = args[1];
+            int pageNo = args.length == 4 ? Integer.parseInt(args[2]) : 0;
+            int pagePerCnt = args.length == 4 ? Integer.parseInt(args[3]) : 3;
 
-        List<HotdealEntity> hotdealEntities = searchHotdeal(searchText, pageNo, pagePerCnt);
-        if (!hotdealEntities.isEmpty()) {
-            mattermostUtil.sendWebhookChannel(convertNewsMattermostMessage(hotdealEntities), webhookVO);
-        } else {
-            mattermostUtil.sendWebhookChannel("검색된 핫딜이 없습니다.", webhookVO);
+            List<HotdealEntity> hotdealEntities = searchHotdeal(searchText, pageNo, pagePerCnt);
+            if (!hotdealEntities.isEmpty()) {
+                mattermostUtil.sendWebhookChannel(this.convertHotdealMattermostMessage(hotdealEntities), webhookVO);
+            } else {
+                mattermostUtil.sendWebhookChannel("검색된 핫딜이 없습니다.", webhookVO);
+            }
+        } catch (NumberFormatException e) {
+            this.notRun(webhookVO);
         }
     }
 
@@ -70,29 +71,139 @@ public class HotdealSVCImpl implements HotdealSVC {
             return;
         }
 
-        String searchText = args[1];
-        int pageNo = args.length == 3 ? Integer.parseInt(args[2]) : 0;
+        try {
+            String searchText = args[1];
+            int pageNo = args.length == 3 ? Integer.parseInt(args[2]) : 0;
 
-        List<HotdealDTO> hotdealDTOS = getHotdeal(pageNo, searchText);
+            List<HotdealDTO> hotdealDTOS = getHotdeal(pageNo, searchText);
 
-        List<HotdealEntity> hotdealEntities = hotdealDTOS.stream()
-                .map(v -> HotdealEntity.builder()
-                        .productId(v.getProductId())
-                        .title(v.getTitle())
-                        .price(v.getPrice())
-                        .priceSlct(v.getPriceSlct())
-                        .priceStr(v.getPriceStr())
-                        .link(v.getLink())
-                        .img(v.getImg())
-                        .shop(v.getShop())
-                        .site(v.getSite())
-                        .sendYn(v.getSendYn()).build()
-                ).toList();
+            List<HotdealEntity> hotdealEntities = hotdealDTOS.stream()
+                    .map(v -> HotdealEntity.builder()
+                            .productId(v.getProductId())
+                            .title(v.getTitle())
+                            .price(v.getPrice())
+                            .priceSlct(v.getPriceSlct())
+                            .priceStr(v.getPriceStr())
+                            .link(v.getLink())
+                            .img(v.getImg())
+                            .shop(v.getShop())
+                            .site(v.getSite())
+                            .sendYn(v.getSendYn()).build()
+                    ).toList();
 
-        if (!hotdealEntities.isEmpty()) {
-            mattermostUtil.sendWebhookChannel(convertNewsMattermostMessage(hotdealEntities), webhookVO);
-        } else {
-            mattermostUtil.sendWebhookChannel("검색된 핫딜이 없습니다.", webhookVO);
+            if (!hotdealEntities.isEmpty()) {
+                mattermostUtil.sendWebhookChannel(this.convertHotdealMattermostMessage(hotdealEntities), webhookVO);
+            } else {
+                mattermostUtil.sendWebhookChannel("검색된 핫딜이 없습니다.", webhookVO);
+            }
+        } catch (NumberFormatException e) {
+            this.notRun(webhookVO);
+        }
+    }
+
+    @Override
+    @Transactional
+    public void hotdealAlimIns(WebhookVO webhookVO) {
+        String[] args = webhookVO.getText().split(" ");
+        if (!(args.length == 3)) {
+            this.notRun(webhookVO);
+            return;
+        }
+
+        try {
+            String searchText = args[1];
+            String target = args[2];
+
+            if(Arrays.stream(MemberEnum.values()).
+                    noneMatch(v->StringUtils.equals(v.getTarget(), target))
+            ){
+                this.notRun(webhookVO);
+                return;
+            }
+
+            if (searchText.isEmpty()){
+                this.notRun(webhookVO);
+                return;
+            }
+
+            List<HotdealAlimEntity> byTarget = hotdealAlimEntityREP.findByTargetAndSendYn(target, "n");
+            if (byTarget.size() >= 10){
+                mattermostUtil.sendWebhookChannel("알림 등록은 최대 10건 입니다.", webhookVO);
+                return;
+            }
+
+            HotdealAlimEntity keywordAndTargetAndSendYn = hotdealAlimEntityREP.findByKeywordAndTargetAndSendYn(searchText, target, "n");
+            if (keywordAndTargetAndSendYn != null){
+                mattermostUtil.sendWebhookChannel("같은 알림이 이미 존재합니다.", webhookVO);
+                return;
+            }
+
+            HotdealAlimEntity hotdealAlimEntity = HotdealAlimEntity.builder()
+                    .keyword(searchText)
+                    .target(target)
+                    .build();
+
+            HotdealAlimEntity save = hotdealAlimEntityREP.save(hotdealAlimEntity);
+
+            mattermostUtil.sendWebhookChannel("키워드알림 등록 : id : " + " " + save.getId() + " 키워드 : " + save.getKeyword() + " 대상 : " + save.getTarget(), webhookVO);
+        } catch (Exception e) {
+            this.notRun(webhookVO);
+        }
+    }
+
+    @Override
+    @Transactional
+    public void hotdealAlimDel(WebhookVO webhookVO) {
+        String[] args = webhookVO.getText().split(" ");
+        if (!(args.length == 2)) {
+            this.notRun(webhookVO);
+            return;
+        }
+
+        try {
+            String searchText = args[1];
+
+            hotdealAlimEntityREP.findById(Long.valueOf(searchText)).stream()
+                    .findFirst()
+                            .ifPresentOrElse(
+                                    (entity) -> {
+                                        hotdealAlimEntityREP.delete(entity);
+                                        mattermostUtil.sendWebhookChannel("삭제되었습니다.", webhookVO);
+                                    },
+                                    ()-> mattermostUtil.sendWebhookChannel("존재하지 않는 알림입니다.", webhookVO)
+                            );
+        } catch (Exception e) {
+            this.notRun(webhookVO);
+        }
+    }
+
+    @Override
+    public void hotdealAlimList(WebhookVO webhookVO) {
+        String[] args = webhookVO.getText().split(" ");
+        if (!(args.length == 2)) {
+            this.notRun(webhookVO);
+            return;
+        }
+
+        try {
+            String searchText = args[1];
+
+            if(Arrays.stream(MemberEnum.values()).
+                    noneMatch(v->StringUtils.equals(v.getTarget(), searchText))
+            ){
+                this.notRun(webhookVO);
+                return;
+            }
+
+            List<HotdealAlimEntity> byTarget = hotdealAlimEntityREP.findByTargetAndSendYn(searchText, "n");
+
+            if (!byTarget.isEmpty()) {
+                mattermostUtil.sendWebhookChannel(convertHotdealAlimMattermostMessage(byTarget), webhookVO);
+            } else {
+                mattermostUtil.sendWebhookChannel("검색된 알림이 없습니다.", webhookVO);
+            }
+        } catch (Exception e) {
+            this.notRun(webhookVO);
         }
     }
 
@@ -106,7 +217,7 @@ public class HotdealSVCImpl implements HotdealSVC {
         return args.length == 4 && Integer.parseInt(args[3]) <= 10 || args.length == 2;
     }
 
-    private String convertNewsMattermostMessage(List<HotdealEntity> entityList) {
+    private String convertHotdealMattermostMessage(List<HotdealEntity> entityList) {
         StringBuilder result = new StringBuilder();
         DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
         String regexEmojis = "[\uD83C-\uDBFF\uDC00-\uDFFF]+";
@@ -134,10 +245,10 @@ public class HotdealSVCImpl implements HotdealSVC {
 
                         .append("[")
                         .append(remove.getTitle().replaceAll(regexEmojis, "")
-                        .replace("[", "")
-                        .replace("]", "")
-                        .replace("♥", "")
-                        .replace("|", ""))
+                                .replace("[", "")
+                                .replace("]", "")
+                                .replace("♥", "")
+                                .replace("|", ""))
                         .append("]")
                         .append("(")
                         .append(remove.getLink())
@@ -239,6 +350,44 @@ public class HotdealSVCImpl implements HotdealSVC {
         }
 
         return Collections.emptyList();
+    }
+
+    private String convertHotdealAlimMattermostMessage(List<HotdealAlimEntity> entityList) {
+        StringBuilder result = new StringBuilder();
+        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+        String regexEmojis = "[\uD83C-\uDBFF\uDC00-\uDFFF]+";
+
+        String header = "| id | 키워드 | 대상 |\n";
+        String line = "| :--:|:----:|:--: |\n";
+//        String header = "| 시각 | 제목 | 시각 | 제목 |\n";
+//        String line = "| :-:|:--:|:-:|:--: |\n";
+        result.append(header)
+                .append(line);
+
+
+        Queue<HotdealAlimEntity> q = new LinkedList<>(entityList);
+        while (!q.isEmpty()) {
+            StringBuilder content = new StringBuilder();
+            for (int i = 0; i < 1; i++) {
+                if (q.isEmpty()) {
+                    break;
+                }
+                HotdealAlimEntity remove = q.remove();
+
+                content.append("| ")
+                        .append(remove.getId())
+                        .append(" | ")
+
+                        .append(remove.getKeyword())
+                        .append(" | ")
+
+                        .append(remove.getTarget());
+            }
+            content.append(" |\n");
+            result.append(content);
+        }
+
+        return result.toString();
     }
 
 }

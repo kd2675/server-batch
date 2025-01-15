@@ -1,8 +1,8 @@
 package com.example.batch.service.batch.reader;
 
-import com.example.batch.service.hotdeal.database.rep.jpa.HotdealDTO;
-import com.example.batch.service.hotdeal.database.rep.jpa.HotdealEntity;
-import com.example.batch.service.hotdeal.database.rep.jpa.HotdealEntityREP;
+import com.example.batch.service.hotdeal.database.rep.jpa.*;
+import com.example.batch.service.webhook.api.vo.MemberEnum;
+import com.example.batch.utils.MattermostUtil;
 import jakarta.persistence.EntityManagerFactory;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -20,9 +20,8 @@ import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import java.net.URI;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
+import java.time.format.DateTimeFormatter;
+import java.util.*;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -35,6 +34,8 @@ public class HotdealReader {
     private final RestTemplate restTemplate;
 
     private final HotdealEntityREP hotdealEntityREP;
+    private final HotdealAlimEntityREP hotdealAlimEntityREP;
+    private final MattermostUtil mattermostUtil;
 
     @Bean(name = FIND_HOTDEAL, destroyMethod = "")
     @StepScope
@@ -80,6 +81,12 @@ public class HotdealReader {
         } else {
             List<HotdealDTO> hotdeal = this.getHotdeal(0);
             result.addAll(hotdeal);
+        }
+
+        try {
+            this.hotdealAlimSend(result);
+        } catch (Exception e) {
+            log.error("hotdealAlimSend error : {}", e);
         }
 
         return result;
@@ -170,5 +177,86 @@ public class HotdealReader {
         }
 
         return Collections.emptyList();
+    }
+
+    private void hotdealAlimSend(List<HotdealDTO> hotdealDTOS) {
+        List<HotdealAlimEntity> hotdealAlimEntities = hotdealAlimEntityREP.findBySendYn("n");
+
+        for (HotdealDTO hotdealDTO : hotdealDTOS) {
+            String title = hotdealDTO.getTitle();
+
+            for (HotdealAlimEntity hotdealAlimEntity : hotdealAlimEntities) {
+                String target = hotdealAlimEntity.getTarget();
+                Arrays.stream(MemberEnum.values())
+                        .filter(v -> StringUtils.equals(v.getTarget(), target))
+                        .findFirst()
+                        .ifPresentOrElse(
+                                (v) -> {
+                                    boolean contains = StringUtils.contains(title, hotdealAlimEntity.getKeyword());
+
+                                    if (contains) {
+                                        List<HotdealDTO> list = Arrays.asList(hotdealDTO);
+                                        hotdealAlimEntity.updSendYn("y");
+
+                                        hotdealAlimEntityREP.save(hotdealAlimEntity);
+
+                                        mattermostUtil.sendBotChannel("@" + v.getChannelId() + "핫딜 키워드 알림 : " + hotdealAlimEntity.getKeyword());
+                                        mattermostUtil.sendBotChannel(convertHotdealMattermostMessage(list));
+                                    }
+                                },
+                                () -> {
+
+                                }
+                        );
+
+            }
+        }
+    }
+
+    private String convertHotdealMattermostMessage(List<HotdealDTO> entityList) {
+        StringBuilder result = new StringBuilder();
+        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+        String regexEmojis = "[\uD83C-\uDBFF\uDC00-\uDFFF]+";
+
+        String header = "| img | 제목 | 가격 |\n";
+        String line = "| :--:|:----:|:--: |\n";
+//        String header = "| 시각 | 제목 | 시각 | 제목 |\n";
+//        String line = "| :-:|:--:|:-:|:--: |\n";
+        result.append(header)
+                .append(line);
+
+
+        Queue<HotdealDTO> q = new LinkedList<>(entityList);
+        while (!q.isEmpty()) {
+            StringBuilder content = new StringBuilder();
+            for (int i = 0; i < 1; i++) {
+                if (q.isEmpty()) {
+                    break;
+                }
+                HotdealDTO remove = q.remove();
+
+                content.append("| ")
+                        .append(remove.getImgUrl100X100())
+                        .append(" | ")
+
+                        .append("[")
+                        .append(remove.getTitle().replaceAll(regexEmojis, "")
+                                .replace("[", "")
+                                .replace("]", "")
+                                .replace("♥", "")
+                                .replace("|", ""))
+                        .append("]")
+                        .append("(")
+                        .append(remove.getLink())
+                        .append(")")
+                        .append(" | ")
+
+                        .append(remove.getPriceStr());
+            }
+            content.append(" |\n");
+            result.append(content);
+        }
+
+        return result.toString();
     }
 }
