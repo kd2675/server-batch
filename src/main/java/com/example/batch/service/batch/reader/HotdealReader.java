@@ -196,7 +196,8 @@ public class HotdealReader {
 
                                     if (contains) {
                                         List<HotdealDTO> list = Arrays.asList(hotdealDTO);
-                                        hotdealAlimEntity.updSendYn("y");
+
+//                                        hotdealAlimEntity.updSendYn("y");
 
                                         hotdealAlimEntityREP.save(hotdealAlimEntity);
 
