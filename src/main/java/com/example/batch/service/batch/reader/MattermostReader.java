@@ -23,6 +23,7 @@ public class MattermostReader {
     private static final int PAGE_SIZE = 100;
     public static final String FIND_BY_CATEGORY_IS_NEWS = "findByCategoryIsNews";
     public static final String FIND_BY_CATEGORY_IS_COIN = "findByCategoryIsCoin";
+    public static final String FIND_BY_CATEGORY_IS_HOTDEAL = "findByCategoryIsHotdeal";
 
     @Bean(name = FIND_BY_CATEGORY_IS_NEWS, destroyMethod = "")
     @StepScope
@@ -52,6 +53,22 @@ public class MattermostReader {
 
         HashMap<String, Object> param = new HashMap<>();
         param.put("date", LocalDateTime.now().minusHours(1));
+        reader.setParameterValues(param);
+        return reader;
+    }
+
+    @Bean(name = FIND_BY_CATEGORY_IS_HOTDEAL, destroyMethod = "")
+    @StepScope
+    public JpaPagingItemReader<MattermostSentEntity> findByCategoryIsHotdeal(@Qualifier("mattermostEntityManagerFactory") EntityManagerFactory entityManagerFactory) {
+        JpaPagingItemReader<MattermostSentEntity> reader = new DelJpaPagingItemReader<>();
+
+        reader.setName("jpaPagingItemReader");
+        reader.setPageSize(PAGE_SIZE);
+        reader.setEntityManagerFactory(entityManagerFactory);
+        reader.setQueryString("SELECT e FROM MattermostSentEntity e WHERE e.createDate < :date and e.category = 'hotdeal' order by e.createDate");
+
+        HashMap<String, Object> param = new HashMap<>();
+        param.put("date", LocalDateTime.now().minusDays(1));
         reader.setParameterValues(param);
         return reader;
     }

@@ -4,6 +4,7 @@ import com.example.batch.service.batch.common.BasicProcessor;
 import com.example.batch.service.batch.processor.NewsProcessor;
 import com.example.batch.service.batch.reader.MattermostReader;
 import com.example.batch.service.batch.reader.NewsReader;
+import com.example.batch.service.batch.writer.MattermostComposeWriter;
 import com.example.batch.service.batch.writer.NewsComposeWriter;
 import com.example.batch.service.batch.writer.NewsWriter;
 import com.example.batch.service.news.api.vo.NaverNewsApiItemVO;
@@ -130,7 +131,7 @@ public class NewsStep {
             JobRepository jobRepository,
             @Qualifier("newsTransactionManager") PlatformTransactionManager platformTransactionManager,
             @Qualifier(MattermostReader.FIND_BY_CATEGORY_IS_NEWS) JpaPagingItemReader<MattermostSentEntity> itemReader,
-            @Qualifier(NewsComposeWriter.DEL_MATTERMOST_UTIL_BY_ID_AND_DEL_ALL_MATTERMOST_SENT) CompositeItemWriter<MattermostSentEntity> itemCompose
+            @Qualifier(MattermostComposeWriter.DEL_MATTERMOST_UTIL_BY_ID_AND_DEL_ALL_MATTERMOST_SENT) CompositeItemWriter<MattermostSentEntity> itemCompose
     ) {
         return new StepBuilder(SENT_NEWS_STEP, jobRepository)
                 .<MattermostSentEntity, MattermostSentEntity>chunk(CHUNK_SIZE, platformTransactionManager)

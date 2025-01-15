@@ -6,6 +6,7 @@ import com.example.batch.service.batch.processor.CoinProcessor;
 import com.example.batch.service.batch.reader.CoinReader;
 import com.example.batch.service.batch.reader.MattermostReader;
 import com.example.batch.service.batch.writer.CoinWriter;
+import com.example.batch.service.batch.writer.MattermostComposeWriter;
 import com.example.batch.service.batch.writer.MattermostWriter;
 import com.example.batch.service.batch.writer.NewsComposeWriter;
 import com.example.batch.service.coin.database.rep.jpa.coin.CoinEntity;
@@ -70,7 +71,7 @@ public class CoinStep {
             JobRepository jobRepository,
             @Qualifier("coinTransactionManager") PlatformTransactionManager platformTransactionManager,
             @Qualifier(MattermostReader.FIND_BY_CATEGORY_IS_COIN) JpaPagingItemReader<MattermostSentEntity> itemReader,
-            @Qualifier(NewsComposeWriter.DEL_MATTERMOST_UTIL_BY_ID_AND_DEL_ALL_MATTERMOST_SENT) CompositeItemWriter<MattermostSentEntity> itemCompose
+            @Qualifier(MattermostComposeWriter.DEL_MATTERMOST_UTIL_BY_ID_AND_DEL_ALL_MATTERMOST_SENT) CompositeItemWriter<MattermostSentEntity> itemCompose
     ) {
         return new StepBuilder(SENT_COIN_STEP, jobRepository)
                 .<MattermostSentEntity, MattermostSentEntity>chunk(CHUNK_SIZE, platformTransactionManager)
