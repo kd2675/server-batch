@@ -7,6 +7,7 @@ import com.example.batch.utils.MattermostUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
+import org.example.log.annotation.Log;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -153,6 +154,7 @@ public class HotdealSVCImpl implements HotdealSVC {
 
     @Override
     @Transactional
+    @Log
     public void hotdealAlimDel(WebhookVO webhookVO) {
         String[] args = webhookVO.getText().split(" ");
         if (!(args.length == 2)) {

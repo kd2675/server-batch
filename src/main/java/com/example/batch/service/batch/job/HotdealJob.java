@@ -1,8 +1,6 @@
 package com.example.batch.service.batch.job;
 
-import com.example.batch.service.batch.step.CoinStep;
 import com.example.batch.service.batch.step.HotdealStep;
-import com.example.batch.service.batch.step.NewsStep;
 import org.springframework.batch.core.Job;
 import org.springframework.batch.core.Step;
 import org.springframework.batch.core.job.builder.JobBuilder;
@@ -15,6 +13,7 @@ import org.springframework.context.annotation.Configuration;
 public class HotdealJob {
     public static final String INS_HOTDEAL_JOB = "insHotdealJob";
     public static final String SEND_HOTDEAL_JOB = "sendHotdealJob";
+    public static final String DEL_SENT_HOTDEAL_JOB = "delSentHotdealHob";
     public static final String DEL_HOTDEAL_JOB = "delHotdealHob";
 
     @Bean(name = INS_HOTDEAL_JOB)
@@ -33,6 +32,16 @@ public class HotdealJob {
             @Qualifier(HotdealStep.SEND_HOTDEAL_STEP) Step step
     ) {
         return new JobBuilder(SEND_HOTDEAL_JOB, jobRepository)
+                .start(step)
+                .build();
+    }
+
+    @Bean(name = DEL_SENT_HOTDEAL_JOB)
+    public Job delSentHotdealJob(
+            JobRepository jobRepository,
+            @Qualifier(HotdealStep.DEL_SENT_HOTDEAL_STEP) Step step
+    ) {
+        return new JobBuilder(DEL_SENT_HOTDEAL_JOB, jobRepository)
                 .start(step)
                 .build();
     }

@@ -1,6 +1,8 @@
 package com.example.batch.service.batch.reader;
 
+import com.example.batch.service.batch.common.DelJpaPagingItemReader;
 import com.example.batch.service.hotdeal.database.rep.jpa.*;
+import com.example.batch.service.news.database.rep.jpa.news.NewsEntity;
 import com.example.batch.service.webhook.api.vo.MemberEnum;
 import com.example.batch.utils.MattermostUtil;
 import jakarta.persistence.EntityManagerFactory;
@@ -12,6 +14,7 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 import org.springframework.batch.core.configuration.annotation.StepScope;
+import org.springframework.batch.item.database.JpaPagingItemReader;
 import org.springframework.batch.item.support.ListItemReader;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
@@ -20,6 +23,7 @@ import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import java.net.URI;
+import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
 
@@ -30,6 +34,7 @@ public class HotdealReader {
     private static final int PAGE_SIZE = 100;
     public static final String FIND_HOTDEAL = "findHotdeal";
     public static final String FIND_ALL_HOTDEAL_SEND_YN_N = "findAllHotdealSendYnN";
+    public static final String FIND_ALL_HOTDEAL_FIX_PAGE_0 = "findAllHotdealFixPage0";
 
     private final RestTemplate restTemplate;
 
@@ -49,6 +54,22 @@ public class HotdealReader {
         return new ListItemReader<>(
                 hotdealEntityREP.findAllBySendYnOrderByIdDesc("n")
         );
+    }
+
+    @Bean(name = FIND_ALL_HOTDEAL_FIX_PAGE_0, destroyMethod = "")
+    @StepScope
+    public JpaPagingItemReader<HotdealEntity> hotdealFindAllFixPage0(@Qualifier("hotdealEntityManagerFactory") EntityManagerFactory entityManagerFactory) {
+        JpaPagingItemReader<HotdealEntity> reader = new DelJpaPagingItemReader<>();
+
+        reader.setName("jpaPagingItemReader");
+        reader.setPageSize(PAGE_SIZE);
+        reader.setEntityManagerFactory(entityManagerFactory);
+        reader.setQueryString("SELECT e FROM HotdealEntity e WHERE e.createDate < :date");
+
+        HashMap<String, Object> param = new HashMap<>();
+        param.put("date", LocalDateTime.now().minusDays(15));
+        reader.setParameterValues(param);
+        return reader;
     }
 
     private List<HotdealDTO> getHotdeal() {

@@ -12,7 +12,8 @@ public enum MemberEnum {
     KIM(4L, "김", "irzi4hmjb781ppfd1nrpfm8ruw", "kimd0", "6fombw5e8ifmuqgbzgpwhnfgne"),
     JOO(5L, "주", "46h1ubq517dff8x6ifr1bhwcie", "kimd0young", "ipym1z4wo3nc3eahdcehhnirpo"),
     GAP(6L, "갑", "hy4ynqft37fmudw1pjdx14uu9y", "kappa", "x5c5bzk9qfrjtrtcmay3sz8fpr"),
-    SYSTEM(7L, "시스템", "hbdk91y6jprwuxr5a7xyd6s3uh", "system", "6fombw5e8ifmuqgbzgpwhnfgne");
+    SYSTEM(7L, "시스템", "hbdk91y6jprwuxr5a7xyd6s3uh", "system", "6fombw5e8ifmuqgbzgpwhnfgne"),
+    gyu(8L, "뀨", "hkf1r5tohiyaidca6qjz64z4fc", "gyuhyolee", "w3s55e3eofnk7ex8h1of1cmyue");
 
     private Long id;
     private String target;

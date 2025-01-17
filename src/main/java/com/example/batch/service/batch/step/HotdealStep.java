@@ -1,15 +1,19 @@
 package com.example.batch.service.batch.step;
 
 import com.example.batch.service.batch.common.BasicProcessor;
+import com.example.batch.service.batch.common.BasicWriter;
 import com.example.batch.service.batch.processor.HotdealProcessor;
 import com.example.batch.service.batch.reader.HotdealReader;
 import com.example.batch.service.batch.reader.MattermostReader;
+import com.example.batch.service.batch.reader.NewsReader;
 import com.example.batch.service.batch.writer.HotdealComposeWriter;
 import com.example.batch.service.batch.writer.HotdealWriter;
 import com.example.batch.service.batch.writer.MattermostComposeWriter;
+import com.example.batch.service.batch.writer.NewsComposeWriter;
 import com.example.batch.service.hotdeal.database.rep.jpa.HotdealDTO;
 import com.example.batch.service.hotdeal.database.rep.jpa.HotdealEntity;
 import com.example.batch.service.mattermost.database.rep.jpa.mattermost.sent.MattermostSentEntity;
+import com.example.batch.service.news.database.rep.jpa.news.NewsEntity;
 import org.springframework.batch.core.Step;
 import org.springframework.batch.core.configuration.annotation.JobScope;
 import org.springframework.batch.core.repository.JobRepository;
@@ -29,6 +33,7 @@ public class HotdealStep {
     public static final int PAGE_SIZE = 100;
     public static final String INS_HOTDEAL_STEP = "insHotdealStep";
     public static final String SEND_HOTDEAL_STEP = "sendHotdealStep";
+    public static final String DEL_SENT_HOTDEAL_STEP = "delSentHotdealStep";
     public static final String DEL_HOTDEAL_STEP = "delHotdealStep";
 
     @Bean(name = INS_HOTDEAL_STEP)
@@ -67,7 +72,7 @@ public class HotdealStep {
                 .build();
     }
 
-    @Bean(name = DEL_HOTDEAL_STEP)
+    @Bean(name = DEL_SENT_HOTDEAL_STEP)
     @JobScope
     public Step delHotdealStep(
             JobRepository jobRepository,
@@ -75,13 +80,29 @@ public class HotdealStep {
             @Qualifier(MattermostReader.FIND_BY_CATEGORY_IS_HOTDEAL) JpaPagingItemReader<MattermostSentEntity> itemReader,
             @Qualifier(MattermostComposeWriter.DEL_MATTERMOST_UTIL_BY_ID_AND_DEL_ALL_MATTERMOST_SENT) CompositeItemWriter<MattermostSentEntity> itemCompose
     ) {
-        return new StepBuilder(DEL_HOTDEAL_STEP, jobRepository)
+        return new StepBuilder(DEL_SENT_HOTDEAL_STEP, jobRepository)
                 .<MattermostSentEntity, MattermostSentEntity>chunk(CHUNK_SIZE, platformTransactionManager)
                 .reader(itemReader)
                 .writer(itemCompose)
 //                .allowStartIfComplete(true)
 //                .faultTolerant()
 //                .skip(HttpClientErrorException.class).skipLimit(10)
+                .build();
+    }
+
+    @Bean(name = DEL_HOTDEAL_STEP)
+    @JobScope
+    public Step saveOldNewsAndDelAllNewsStep(
+            JobRepository jobRepository,
+            @Qualifier("hotdealTransactionManager") PlatformTransactionManager platformTransactionManager,
+            @Qualifier(HotdealReader.FIND_ALL_HOTDEAL_FIX_PAGE_0) JpaPagingItemReader<HotdealEntity> itemReader,
+            @Qualifier(HotdealWriter.DEL_ALL_HOTDEAL) BasicWriter<HotdealEntity> itemWriter
+    ) {
+        return new StepBuilder(DEL_HOTDEAL_STEP, jobRepository)
+//                .allowStartIfComplete(true)
+                .<HotdealEntity, HotdealEntity>chunk(CHUNK_SIZE, platformTransactionManager)
+                .reader(itemReader)
+                .writer(itemWriter)
                 .build();
     }
 }

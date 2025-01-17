@@ -24,6 +24,7 @@ public class NewsWriter {
 
     private final OldNewsREP oldNewsREP;
     private final NewsREP newsREP;
+
     @Bean(name = JPA_ITEM_WRITER)
     @StepScope
     public JpaItemWriter<NewsEntity> jpaItemWriter(@Qualifier("newsEntityManagerFactory") EntityManagerFactory entityManagerFactory) {
@@ -31,6 +32,7 @@ public class NewsWriter {
                 .entityManagerFactory(entityManagerFactory)
                 .build();
     }
+
     @Bean(name = OLD_NEWS_SAVE)
     @StepScope
     public BasicWriter<NewsEntity> oldNewsSave() {
@@ -51,6 +53,7 @@ public class NewsWriter {
             }
         };
     }
+
     @Bean(name = DEL_ALL_NEWS)
     @StepScope
     public BasicWriter<NewsEntity> newsDelAll() {

@@ -42,46 +42,6 @@ public class HealthCheckCTR {
 
     @GetMapping("/health")
     public String health() {
-        URI uri = UriComponentsBuilder
-                .fromUriString("https://www.algumon.com")
-                .path("/more/0")
-                .encode()
-                .build()
-                .toUri();
-
-        // JSON 데이터 가져오기
-        String response = restTemplate.getForObject(uri, String.class);
-
-        // JSON 데이터 출력
-        try { // ObjectMapper 객체 생성
-            Document doc = Jsoup.parse(response);
-            Elements postElements = doc.select(".post-li");
-
-            List<Product> products = new ArrayList<>();
-
-            for (Element postElement : postElements) {
-                String id = postElement.attr("data-post-id");
-                String name = postElement.select(".item-name").text().trim();
-                String price = postElement.select(".product-price").text()
-                        .replaceAll("원", "")
-                        .replaceAll(",", "")
-                        .trim();
-                String priceStr = postElement.select(".product-price").text().trim();
-                String link = "https://www.algumon.com" + postElement.select(".product-link").attr("href").trim();
-                String img = postElement.select(".product-img").select("img").attr("src").trim();
-                String shop = postElement.select(".label.shop").text().trim();
-                String site = postElement.select(".label.site:nth-of-type(1)").text().trim();
-
-                Product product = new Product(id, name, price, priceStr, link, img, shop, site);
-                products.add(product);
-            }
-
-            for (Product product : products) {
-                System.out.println(product);
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
         return "ok";
     }
 
@@ -124,28 +84,5 @@ public class HealthCheckCTR {
     @DeleteMapping("/mattermost/job/news")
     public void delMattermostNewsJob() throws Exception {
         jobLauncher.run(jobRegistry.getJob(NewsJob.DEL_NEWS_JOB), getJobParameters());
-    }
-}
-
-@ToString
-class Product {
-    private String id;
-    private String name;
-    private String price;
-    private String priceStr;
-    private String link;
-    private String img;
-    private String shop;
-    private String site;
-
-    public Product(String id, String name, String price, String priceStr, String link, String img, String shop, String site) {
-        this.id = id;
-        this.name = name;
-        this.price = price;
-        this.priceStr = priceStr;
-        this.link = link;
-        this.img = img;
-        this.shop = shop;
-        this.site = site;
     }
 }
