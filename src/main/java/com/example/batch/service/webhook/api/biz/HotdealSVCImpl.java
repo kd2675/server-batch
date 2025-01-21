@@ -411,7 +411,7 @@ public class HotdealSVCImpl implements HotdealSVC {
         DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
         String regexEmojis = "[\uD83C-\uDBFF\uDC00-\uDFFF]+";
 
-        String header = "| id | 키워드 | 대상 |\n";
+        String header = "| id | 종류 | 키워드 | 대상 |\n";
         String line = "| :--:|:----:|:--: |\n";
 //        String header = "| 시각 | 제목 | 시각 | 제목 |\n";
 //        String line = "| :-:|:--:|:-:|:--: |\n";
@@ -430,6 +430,9 @@ public class HotdealSVCImpl implements HotdealSVC {
 
                 content.append("| ")
                         .append(remove.getId())
+                        .append(" | ")
+
+                        .append(StringUtils.equals(remove.getKeywordSlct(), "i") ? "타이틀" : "브랜드")
                         .append(" | ")
 
                         .append(remove.getKeyword())
