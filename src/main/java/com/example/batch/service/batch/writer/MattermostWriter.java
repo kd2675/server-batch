@@ -216,8 +216,8 @@ public class MattermostWriter {
         DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
         String regexEmojis = "[\uD83C-\uDBFF\uDC00-\uDFFF]+";
 
-        String header = "| 시각 | img | 제목 | 가격 |\n";
-        String line = "| :--:|:--:|:----:|:--: |\n";
+        String header = "| 시각 | img | 제목 | 가격 | 브랜드 |\n";
+        String line = "| :--:|:--:|:----:|:--:|:--: |\n";
 //        String header = "| 시각 | 제목 | 시각 | 제목 |\n";
 //        String line = "| :-:|:--:|:-:|:--: |\n";
         result.append(header)
@@ -252,7 +252,10 @@ public class MattermostWriter {
                         .append(")")
                         .append(" | ")
 
-                        .append(remove.getPriceStr());
+                        .append(remove.getPriceStr())
+                        .append(" | ")
+
+                        .append(remove.getShop());
             }
             content.append(" |\n");
             result.append(content);

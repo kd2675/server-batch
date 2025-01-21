@@ -412,7 +412,7 @@ public class HotdealSVCImpl implements HotdealSVC {
         String regexEmojis = "[\uD83C-\uDBFF\uDC00-\uDFFF]+";
 
         String header = "| id | 종류 | 키워드 | 대상 |\n";
-        String line = "| :--:|:----:|:--: |\n";
+        String line = "| :--:|:----:|:--:|:--: |\n";
 //        String header = "| 시각 | 제목 | 시각 | 제목 |\n";
 //        String line = "| :-:|:--:|:-:|:--: |\n";
         result.append(header)
