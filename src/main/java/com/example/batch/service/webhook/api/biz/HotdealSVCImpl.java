@@ -140,7 +140,6 @@ public class HotdealSVCImpl implements HotdealSVC {
             }
 
             HotdealAlimEntity hotdealAlimEntity = HotdealAlimEntity.builder()
-                    .keywordSlct("i")
                     .keyword(searchText)
                     .target(target)
                     .build();
@@ -148,57 +147,6 @@ public class HotdealSVCImpl implements HotdealSVC {
             HotdealAlimEntity save = hotdealAlimEntityREP.save(hotdealAlimEntity);
 
             mattermostUtil.sendWebhookChannel("키워드알림 등록 : id : " + " " + save.getId() + " 키워드 : " + save.getKeyword() + " 대상 : " + save.getTarget(), webhookVO);
-        } catch (Exception e) {
-            this.notRun(webhookVO);
-        }
-    }
-
-    @Override
-    @Transactional
-    public void hotdealAlimBrandIns(WebhookVO webhookVO) {
-        String[] args = webhookVO.getText().split(" ");
-        if (!(args.length == 3)) {
-            this.notRun(webhookVO);
-            return;
-        }
-
-        try {
-            String searchText = args[1];
-            String target = args[2];
-
-            if(Arrays.stream(MemberEnum.values()).
-                    noneMatch(v->StringUtils.equals(v.getTarget(), target))
-            ){
-                this.notRun(webhookVO);
-                return;
-            }
-
-            if (searchText.isEmpty()){
-                this.notRun(webhookVO);
-                return;
-            }
-
-            List<HotdealAlimEntity> byTarget = hotdealAlimEntityREP.findByTargetAndSendYn(target, "n");
-            if (byTarget.size() >= 10){
-                mattermostUtil.sendWebhookChannel("알림 등록은 최대 10건 입니다.", webhookVO);
-                return;
-            }
-
-            HotdealAlimEntity keywordAndTargetAndSendYn = hotdealAlimEntityREP.findByKeywordAndTargetAndSendYn(searchText, target, "n");
-            if (keywordAndTargetAndSendYn != null){
-                mattermostUtil.sendWebhookChannel("같은 알림이 이미 존재합니다.", webhookVO);
-                return;
-            }
-
-            HotdealAlimEntity hotdealAlimEntity = HotdealAlimEntity.builder()
-                    .keywordSlct("b")
-                    .keyword(searchText)
-                    .target(target)
-                    .build();
-
-            HotdealAlimEntity save = hotdealAlimEntityREP.save(hotdealAlimEntity);
-
-            mattermostUtil.sendWebhookChannel("브랜드알림 등록 : id : " + " " + save.getId() + " 키워드 : " + save.getKeyword() + " 대상 : " + save.getTarget(), webhookVO);
         } catch (Exception e) {
             this.notRun(webhookVO);
         }
@@ -411,8 +359,8 @@ public class HotdealSVCImpl implements HotdealSVC {
         DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
         String regexEmojis = "[\uD83C-\uDBFF\uDC00-\uDFFF]+";
 
-        String header = "| id | 종류 | 키워드 | 대상 |\n";
-        String line = "| :--:|:----:|:--:|:--: |\n";
+        String header = "| id | 키워드 | 대상 |\n";
+        String line = "| :--:|:----:|:--: |\n";
 //        String header = "| 시각 | 제목 | 시각 | 제목 |\n";
 //        String line = "| :-:|:--:|:-:|:--: |\n";
         result.append(header)
@@ -430,9 +378,6 @@ public class HotdealSVCImpl implements HotdealSVC {
 
                 content.append("| ")
                         .append(remove.getId())
-                        .append(" | ")
-
-                        .append(StringUtils.equals(remove.getKeywordSlct(), "i") ? "타이틀" : "브랜드")
                         .append(" | ")
 
                         .append(remove.getKeyword())

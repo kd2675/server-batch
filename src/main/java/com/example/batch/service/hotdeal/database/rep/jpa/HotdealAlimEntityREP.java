@@ -6,7 +6,7 @@ import org.springframework.lang.Nullable;
 import java.util.List;
 
 public interface HotdealAlimEntityREP extends JpaRepository<HotdealAlimEntity, Long> {
-    List<HotdealAlimEntity> findByKeywordSlctAndSendYn(@Nullable String keywordSlct, @Nullable String sendYn);
+    List<HotdealAlimEntity> findBySendYn(@Nullable String sendYn);
 
     List<HotdealAlimEntity> findByTargetAndSendYn(@Nullable String target, @Nullable String sendYn);
 

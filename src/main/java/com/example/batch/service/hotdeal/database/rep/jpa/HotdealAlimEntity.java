@@ -21,9 +21,6 @@ public class HotdealAlimEntity extends CommonDateEntity {
     @Column(name = "id")
     private Long id;
 
-    @Column(name = "keyword_slct", nullable = false, length = 1)
-    private String keywordSlct;
-
     @Column(name = "keyword", nullable = false, length = 255)
     private String keyword;
 

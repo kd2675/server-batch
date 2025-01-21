@@ -8,5 +8,4 @@ public interface HotdealSVC extends NotRunSVC{
     void hotdealAlimIns(WebhookVO webhookVO);
     void hotdealAlimDel(WebhookVO webhookVO);
     void hotdealAlimList(WebhookVO webhookVO);
-    void hotdealAlimBrandIns(WebhookVO webhookVO);
 }
