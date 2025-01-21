@@ -10,6 +10,8 @@ import org.springframework.batch.core.configuration.JobRegistry;
 import org.springframework.batch.core.launch.JobLauncher;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
+
 @Slf4j
 @RequiredArgsConstructor
 @RestController
@@ -32,20 +34,20 @@ public class WebhookCTR {
     }
 
     @PostMapping("/")
-    public String webhook(@RequestBody final WebhookVO webhookVO){
+    public HashMap<String, String> webhook(@RequestBody final WebhookVO webhookVO){
         webhookVO.setWebhookType("a");
 
         webhookCMD.cmdCall(webhookVO);
 
-        return "OK";
+        return new HashMap<>();
     }
 
     @PostMapping("/cmd")
-    public String command(@RequestBody final WebhookVO webhookVO){
+    public HashMap<String, String> command(@RequestBody final WebhookVO webhookVO){
         webhookVO.setWebhookType("b");
 
         webhookCMD.cmdCall(webhookVO);
 
-        return "OK";
+        return new HashMap<>();
     }
 }
