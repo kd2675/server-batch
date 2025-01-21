@@ -2,7 +2,6 @@ package com.example.batch.service.batch.reader;
 
 import com.example.batch.service.batch.common.DelJpaPagingItemReader;
 import com.example.batch.service.hotdeal.database.rep.jpa.*;
-import com.example.batch.service.news.database.rep.jpa.news.NewsEntity;
 import com.example.batch.service.webhook.api.vo.MemberEnum;
 import com.example.batch.utils.MattermostUtil;
 import jakarta.persistence.EntityManagerFactory;
@@ -110,6 +109,12 @@ public class HotdealReader {
             log.error("hotdealAlimSend error : {}", e);
         }
 
+        try {
+            this.hotdealAlimBrandSend(result);
+        } catch (Exception e) {
+            log.error("hotdealAlimBrandSend error : {}", e);
+        }
+
         return result;
     }
 
@@ -201,7 +206,7 @@ public class HotdealReader {
     }
 
     private void hotdealAlimSend(List<HotdealDTO> hotdealDTOS) {
-        List<HotdealAlimEntity> hotdealAlimEntities = hotdealAlimEntityREP.findBySendYn("n");
+        List<HotdealAlimEntity> hotdealAlimEntities = hotdealAlimEntityREP.findByKeywordSlctAndSendYn("i", "n");
 
         for (HotdealDTO hotdealDTO : hotdealDTOS) {
             String title = hotdealDTO.getTitle();
@@ -232,7 +237,42 @@ public class HotdealReader {
 
                                 }
                         );
+            }
+        }
+    }
 
+    private void hotdealAlimBrandSend(List<HotdealDTO> hotdealDTOS) {
+        List<HotdealAlimEntity> hotdealAlimEntities = hotdealAlimEntityREP.findByKeywordSlctAndSendYn("b", "n");
+
+        for (HotdealDTO hotdealDTO : hotdealDTOS) {
+            String shop = hotdealDTO.getShop();
+
+            for (HotdealAlimEntity hotdealAlimEntity : hotdealAlimEntities) {
+                String target = hotdealAlimEntity.getTarget();
+                Arrays.stream(MemberEnum.values())
+                        .filter(v -> StringUtils.equals(v.getTarget(), target))
+                        .findFirst()
+                        .ifPresentOrElse(
+                                (v) -> {
+                                    boolean contains = StringUtils.contains(shop, hotdealAlimEntity.getKeyword());
+
+                                    if (contains) {
+                                        List<HotdealDTO> list = Arrays.asList(hotdealDTO);
+
+//                                        hotdealAlimEntity.updSendYn("y");
+
+                                        hotdealAlimEntityREP.save(hotdealAlimEntity);
+
+//                                        mattermostUtil.sendBotChannel("@" + v.getUserId() + "핫딜 키워드 알림 : " + hotdealAlimEntity.getKeyword());
+//                                        mattermostUtil.sendBotChannel(convertHotdealMattermostMessage(list));
+                                        mattermostUtil.send("핫딜 브랜드 알림 : " + hotdealAlimEntity.getKeyword(), v.getDirectChannelId());
+                                        mattermostUtil.send(convertHotdealMattermostMessage(list), v.getDirectChannelId());
+                                    }
+                                },
+                                () -> {
+
+                                }
+                        );
             }
         }
     }

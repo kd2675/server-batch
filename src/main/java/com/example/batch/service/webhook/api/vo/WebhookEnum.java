@@ -32,6 +32,7 @@ public enum WebhookEnum {
     COMMAND_602(602L, "$hotdealAlimIns", "$hi", "핫딜 키워드알림 추가 ex)$hi 밥 호(용, 우, 김, 주, 갑, 뀨)"),
     COMMAND_603(603L, "$hotdealAlimDel", "$hd", "핫딜 키워드알림 삭제 ex)$hd 123(id)"),
     COMMAND_604(604L, "$hotdealAlimList", "$hl", "핫딜 키워드알림 리스트 출력 ex)$hl 호(용, 우, 김, 주, 갑, 뀨)"),
+    COMMAND_605(605L, "$hotdealAlimBrandIns", "$hbi", "핫딜 브랜드알림 추가 ex)$hbi 무신사 호(용, 우, 김, 주, 갑, 뀨)"),
 
     COMMAND(9999L, "$command", "$c", "명령어 설명");
 
