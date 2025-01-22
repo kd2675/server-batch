@@ -227,8 +227,8 @@ public class HotdealReader {
 
 //                                        mattermostUtil.sendBotChannel("@" + v.getUserId() + "핫딜 키워드 알림 : " + hotdealAlimEntity.getKeyword());
 //                                        mattermostUtil.sendBotChannel(convertHotdealMattermostMessage(list));
-                                        mattermostUtil.send("핫딜 키워드 알림 : " + hotdealAlimEntity.getKeyword(), v.getDirectChannelId());
-                                        mattermostUtil.send(convertHotdealMattermostMessage(list), v.getDirectChannelId());
+//                                        mattermostUtil.send("핫딜 키워드 알림 : " + hotdealAlimEntity.getKeyword(), v.getDirectChannelId());
+                                        mattermostUtil.send(convertHotdealMattermostMessage(list, hotdealAlimEntity.getKeyword()), v.getDirectChannelId());
                                     }
                                 },
                                 () -> {
@@ -239,13 +239,13 @@ public class HotdealReader {
         }
     }
 
-    private String convertHotdealMattermostMessage(List<HotdealDTO> entityList) {
+    private String convertHotdealMattermostMessage(List<HotdealDTO> entityList, String keyword) {
         StringBuilder result = new StringBuilder();
         DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
         String regexEmojis = "[\uD83C-\uDBFF\uDC00-\uDFFF]+";
 
-        String header = "| img | 제목 | 가격 |\n";
-        String line = "| :--:|:----:|:--: |\n";
+        String header = "| 키워드 | img | 제목 | 가격 |\n";
+        String line = "| :--:|:--:|:-----:|:--: |\n";
 //        String header = "| 시각 | 제목 | 시각 | 제목 |\n";
 //        String line = "| :-:|:--:|:-:|:--: |\n";
         result.append(header)
@@ -262,6 +262,9 @@ public class HotdealReader {
                 HotdealDTO remove = q.remove();
 
                 content.append("| ")
+                        .append(keyword)
+                        .append(" | ")
+
                         .append(remove.getImgUrl100X100())
                         .append(" | ")
 
