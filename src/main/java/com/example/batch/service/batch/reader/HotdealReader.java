@@ -215,8 +215,8 @@ public class HotdealReader {
                         .ifPresentOrElse(
                                 (v) -> {
                                     boolean contains = StringUtils.contains(title, hotdealAlimEntity.getKeyword());
-                                    boolean contains2 = StringUtils.contains(shop, hotdealAlimEntity.getKeyword());
-                                    boolean contains3 = StringUtils.contains(site, hotdealAlimEntity.getKeyword());
+                                    boolean contains2 = StringUtils.equals(shop, hotdealAlimEntity.getKeyword());
+                                    boolean contains3 = StringUtils.equals(site, hotdealAlimEntity.getKeyword());
 
                                     if (contains || contains2 || contains3) {
                                         List<HotdealDTO> list = Arrays.asList(hotdealDTO);
