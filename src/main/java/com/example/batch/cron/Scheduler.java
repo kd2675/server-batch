@@ -27,13 +27,13 @@ public class Scheduler {
     private final InsCoinService insCoinService;
     private final Reset reset;
 
-//    @Scheduled(fixedRateString = "#{ T(java.util.concurrent.ThreadLocalRandom).current().nextInt(60000)+60000 }")
-//    public void sport() throws Exception {
-//        // add parameters as needed
-//        if (ServerTypeUtils.isLocal()) {
-//            insSportSVC.saveSport();
-//        }
-//    }
+    @Scheduled(fixedRateString = "#{ T(java.util.concurrent.ThreadLocalRandom).current().nextInt(60000)+60000 }")
+    public void sport() throws Exception {
+        // add parameters as needed
+        if (ServerTypeUtils.isLocal()) {
+            insSportSVC.saveSport();
+        }
+    }
 
 //    @Scheduled(fixedRateString = "#{ T(java.util.concurrent.ThreadLocalRandom).current().nextInt(60000)+60000 }")
 //    public void sport68() throws Exception {

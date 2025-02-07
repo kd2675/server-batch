@@ -133,7 +133,7 @@ public class NewsReader {
 
     private List<NaverNewsApiItemVO> getItems(String query, int start) {
         try {
-            ResponseEntity conn = naverApiUtil.conn(query, 100, start, "date");
+            ResponseEntity conn = naverApiUtil.conn("news", query, 100, start, "date");
             String body = (String) conn.getBody();
 
             ObjectMapper objectMapper = new ObjectMapper();

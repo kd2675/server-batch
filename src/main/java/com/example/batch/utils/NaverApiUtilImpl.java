@@ -14,19 +14,19 @@ import java.net.URI;
 @Service
 public class NaverApiUtilImpl implements NaverApiUtil{
     private static final String NAVER_API_URL = "https://openapi.naver.com";
-    private static final String NAVER_API_PATH = "/v1/search/news.json";
+    private static final String NAVER_API_PATH = "/v1/search/";
     private static final String NAVER_API_CLIENT_ID = "97avHwhY7N2bJ4RysxAx";
     private static final String NAVER_API_CLIENT_SECRET = "74r7XpIXPi";
 
     private final RestTemplate restTemplate;
 
     @Override
-    public ResponseEntity conn(String query, int display, int start, String sort) {
+    public ResponseEntity conn(String path, String query, int display, int start, String sort) {
         //이 가 다 는 을 고 하 에
         //속보 코인 주식(주가)
         URI uri = UriComponentsBuilder
                 .fromUriString(NAVER_API_URL)
-                .path(NAVER_API_PATH)
+                .path(NAVER_API_PATH + ".json")
                 .queryParam("query", query)
                 .queryParam("display", display)
                 .queryParam("start", start)
