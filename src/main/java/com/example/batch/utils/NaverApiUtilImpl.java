@@ -26,7 +26,7 @@ public class NaverApiUtilImpl implements NaverApiUtil{
         //속보 코인 주식(주가)
         URI uri = UriComponentsBuilder
                 .fromUriString(NAVER_API_URL)
-                .path(NAVER_API_PATH + ".json")
+                .path(NAVER_API_PATH + path + ".json")
                 .queryParam("query", query)
                 .queryParam("display", display)
                 .queryParam("start", start)
