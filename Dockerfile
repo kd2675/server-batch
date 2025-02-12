@@ -6,16 +6,26 @@ RUN gradle build -x test --parallel --continue > /dev/null 2>&1 || true
 # 빌더 이미지에서 애플리케이션 빌드
 COPY . /build
 RUN gradle build -x test --parallel
-FROM openjdk:17-jdk-alpine
+FROM openjdk:17.0.1-jdk-slim
 WORKDIR /app
 
 #RUN apt -y install curl
 
-RUN apk add curl
+RUN apt-get -y update
 
-RUN apk add wget
+RUN apt -y install curl
 
-RUN apk add unzip
+RUN apt -y install wget
+
+RUN apt -y install unzip
+
+RUN wget https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb
+
+RUN apt -y install ./google-chrome-stable_current_amd64.deb
+
+RUN wget -O /tmp/chromedriver.zip https://chromedriver.storage.googleapis.com/` curl -sS chromedriver.storage.googleapis.com/LATEST_RELEASE`/chromedriver_linux64.zip
+
+RUN unzip /tmp/chromedriver.zip chromedriver -d /usr/bin
 
 COPY --from=builder /build/server-batch/build/libs/*.jar ./app.jar
 ENV	USE_PROFILE dev
