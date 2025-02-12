@@ -6,18 +6,18 @@ RUN gradle build -x test --parallel --continue > /dev/null 2>&1 || true
 # 빌더 이미지에서 애플리케이션 빌드
 COPY . /build
 RUN gradle build -x test --parallel
-FROM openjdk:17.0.1-jdk-slim
+FROM openjdk:17-slim
 WORKDIR /app
 
 #RUN apt -y install curl
 
-RUN apt-get -y update
+RUN apt-get update
 
-RUN apt-get -y install curl
+RUN apt-get install -y curl
 
-RUN apt-get -y install wget
+RUN apt-get install -y wget
 
-RUN apt-get -y install unzip
+RUN apt-get install -y unzip
 
 RUN wget https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb
 
