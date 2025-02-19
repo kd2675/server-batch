@@ -2,29 +2,18 @@ package com.example.batch.service.health.api;
 
 import com.example.batch.service.batch.job.CoinJob;
 import com.example.batch.service.batch.job.NewsJob;
-import com.example.batch.service.coin.api.vo.BitHumbResultVO;
+import com.example.batch.service.lotto.api.biz.LottoService;
 import com.example.batch.utils.MattermostUtil;
 import com.example.batch.utils.vo.MattermostChannelVO;
 import com.example.batch.utils.vo.MattermostPostVO;
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
-import lombok.ToString;
-import org.jsoup.Jsoup;
-import org.jsoup.nodes.Document;
-import org.jsoup.nodes.Element;
-import org.jsoup.select.Elements;
 import org.springframework.batch.core.configuration.JobRegistry;
 import org.springframework.batch.core.launch.JobLauncher;
 import org.springframework.http.ResponseEntity;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
-import org.springframework.web.util.UriComponentsBuilder;
 
-import java.net.URI;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Map;
 
 import static com.example.batch.cron.Scheduler.getJobParameters;
@@ -39,6 +28,14 @@ public class HealthCheckCTR {
     private final JobRegistry jobRegistry;
 
     private final RestTemplate restTemplate;
+
+    private final LottoService lottoService;
+
+    @PostMapping("/test")
+    public String test() {
+        lottoService.check();
+        return "ok";
+    }
 
     @GetMapping("/health")
     public String health() {

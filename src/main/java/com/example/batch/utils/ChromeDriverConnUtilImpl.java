@@ -9,7 +9,7 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class ChromeDriverConnUtilImpl implements ChromeDriverConnUtil {
-    public Document conn(String url){
+    public Document conn(String url) {
         ChromeOptions options = new ChromeOptions();
         options.addArguments("headless");
         WebDriver driver = new ChromeDriver(options);
@@ -20,7 +20,8 @@ public class ChromeDriverConnUtilImpl implements ChromeDriverConnUtil {
 
         return doc;
     }
-    public Document conn(String url, ChromeOptions chromeOptions){
+
+    public Document conn(String url, ChromeOptions chromeOptions) {
         WebDriver driver = new ChromeDriver(chromeOptions);
 
         driver.get(url);

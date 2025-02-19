@@ -6,6 +6,7 @@ import com.example.batch.service.batch.job.HotdealJob;
 import com.example.batch.service.batch.job.NewsJob;
 import com.example.batch.service.batch.job.OrderJob;
 import com.example.batch.service.coin.api.biz.ins.InsCoinService;
+import com.example.batch.service.lotto.api.biz.LottoService;
 import com.example.batch.service.reset.api.biz.Reset;
 import com.example.batch.service.sport.biz.InsSportSVC;
 import lombok.RequiredArgsConstructor;
@@ -27,13 +28,31 @@ public class Scheduler {
     private final InsCoinService insCoinService;
     private final Reset reset;
 
-    @Scheduled(fixedRateString = "#{ T(java.util.concurrent.ThreadLocalRandom).current().nextInt(60000)+60000 }")
-    public void sport() throws Exception {
+    private final LottoService lottoService;
+
+
+    @Scheduled(cron = "0 0 9 * * MON")
+    public void buy() throws Exception {
         // add parameters as needed
-        if (ServerTypeUtils.isLocal()) {
-            insSportSVC.saveSport();
+        if (ServerTypeUtils.isProd()) {
+            lottoService.buy();
         }
     }
+    @Scheduled(cron = "0 0 9 * * SUN")
+    public void check() throws Exception {
+        // add parameters as needed
+        if (ServerTypeUtils.isProd()) {
+            lottoService.check();
+        }
+    }
+
+//    @Scheduled(fixedRateString = "#{ T(java.util.concurrent.ThreadLocalRandom).current().nextInt(60000)+60000 }")
+//    public void sport() throws Exception {
+//        // add parameters as needed
+//        if (ServerTypeUtils.isLocal()) {
+//            insSportSVC.saveSport();
+//        }
+//    }
 
 //    @Scheduled(fixedRateString = "#{ T(java.util.concurrent.ThreadLocalRandom).current().nextInt(60000)+60000 }")
 //    public void sport68() throws Exception {
@@ -205,22 +224,22 @@ public class Scheduler {
                 .toJobParameters();
     }
 
-//    --------------------------------------------local-----------------------------------------------
+//    --------------------------------------------dev-----------------------------------------------
 
 
     @Scheduled(fixedRate = 1000 * 60 * 10)
 //    @Scheduled(cron = "0/1 * 8-17 * * *")
     @Async("asyncTaskExecutor")
-    public void coinSaveJobLocal() throws Exception {
-        if (!ServerTypeUtils.isProd()) {
+    public void coinSaveJobDev() throws Exception {
+        if (ServerTypeUtils.isDev()) {
             insCoinService.saveCoinDataBTC();
         }
     }
 
     @Scheduled(fixedRate = 1000 * 60, initialDelay = 1000 * 60)
-    public void orderJobLocal() throws Exception {
+    public void orderJobDev() throws Exception {
         // add parameters as needed
-        if (!ServerTypeUtils.isProd()) {
+        if (ServerTypeUtils.isDev()) {
             jobLauncher.run(jobRegistry.getJob(OrderJob.UPD_ORDER_JOB), getJobParameters());
         }
     }
