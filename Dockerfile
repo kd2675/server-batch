@@ -20,7 +20,7 @@ RUN apt-get install -y wget
 RUN apt-get install -y unzip
 
 ENV	CHROME_VERSION current
-ENV	CHROME_DRIVER_VERSION 113.0.5672.63
+ENV	CHROME_DRIVER_VERSION LATEST_RELEASE
 
 #RUN wget https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb
 
