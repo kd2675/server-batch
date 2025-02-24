@@ -551,12 +551,14 @@ public class LottoServiceImpl implements LottoService {
     public class BalanceError extends RuntimeException {
         public BalanceError() {
             super("예치금 잔액이 부족합니다.");
+            mattermostUtil.send("예치금 잔액이 부족합니다.", "5zqu88zsef83x8kj86igsqe1wa");
         }
     }
 
     public class ResultError extends RuntimeException {
         public ResultError() {
             super("구매목록이 존재하지 않습니다.");
+            mattermostUtil.send("구매목록이 존재하지 않습니다.", "5zqu88zsef83x8kj86igsqe1wa");
         }
     }
 }

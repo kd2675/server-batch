@@ -31,6 +31,14 @@ public class Scheduler {
     private final LottoService lottoService;
 
 
+    @Scheduled(cron = "0 10 11 * * *")
+    public void buyTest() throws Exception {
+        // add parameters as needed
+        if (ServerTypeUtils.isProd()) {
+            lottoService.buy();
+        }
+    }
+
     @Scheduled(cron = "0 0 10 * * SAT")
     public void buy() throws Exception {
         // add parameters as needed
