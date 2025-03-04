@@ -41,7 +41,10 @@ public class LottoServiceImpl implements LottoService {
     @Override
     public void buy() {
         ChromeOptions options = new ChromeOptions();
-        options.addArguments("headless");
+        options.addArguments("--headless");
+        options.addArguments("--no-sandbox");
+        options.addArguments("--single-process");
+        options.addArguments("--disable-dev-shm-usage");
         options.addArguments("--start-maximized");
 //        InternetExplorerOptions options = new InternetExplorerOptions();
 //        options.setCapability("ignoreProtectedModeSettings", true);
@@ -66,7 +69,7 @@ public class LottoServiceImpl implements LottoService {
     @Override
     public void check() {
         ChromeOptions options = new ChromeOptions();
-        options.addArguments("headless");
+        options.addArguments("--headless");
         options.addArguments("--no-sandbox");
         options.addArguments("--single-process");
         options.addArguments("--disable-dev-shm-usage");
