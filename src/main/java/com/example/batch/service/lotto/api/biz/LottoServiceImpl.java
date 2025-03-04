@@ -40,7 +40,7 @@ public class LottoServiceImpl implements LottoService {
 
     @Override
     public void buy() {
-        System.setProperty("webdriver.chrome.driver", "./chromedriver");
+        System.setProperty("webdriver.chrome.driver", "/opt/google/chrome/chromedrive");
 
         ChromeOptions options = new ChromeOptions();
         options.addArguments("headless");
@@ -67,7 +67,7 @@ public class LottoServiceImpl implements LottoService {
 
     @Override
     public void check() {
-        System.setProperty("webdriver.chrome.driver", "./chromedriver");
+        System.setProperty("webdriver.chrome.driver", "/opt/google/chrome/chromedrive");
 
         ChromeOptions options = new ChromeOptions();
         options.addArguments("headless");
