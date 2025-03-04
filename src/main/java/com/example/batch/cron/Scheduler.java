@@ -31,11 +31,11 @@ public class Scheduler {
     private final LottoService lottoService;
 
 
-    @Scheduled(cron = "0 15 14 * * *")
+    @Scheduled(cron = "0 35 14 * * *")
     public void buyTest() throws Exception {
         // add parameters as needed
         if (ServerTypeUtils.isProd()) {
-            lottoService.buy();
+            lottoService.check();
         }
     }
 
