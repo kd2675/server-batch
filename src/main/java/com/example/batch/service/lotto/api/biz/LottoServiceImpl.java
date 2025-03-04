@@ -40,8 +40,6 @@ public class LottoServiceImpl implements LottoService {
 
     @Override
     public void buy() {
-        System.setProperty("webdriver.chrome.driver", "/opt/google/chrome/chromedrive");
-
         ChromeOptions options = new ChromeOptions();
         options.addArguments("headless");
         options.addArguments("--start-maximized");
@@ -67,10 +65,11 @@ public class LottoServiceImpl implements LottoService {
 
     @Override
     public void check() {
-        System.setProperty("webdriver.chrome.driver", "/opt/google/chrome/chromedrive");
-
         ChromeOptions options = new ChromeOptions();
         options.addArguments("headless");
+        options.addArguments("--no-sandbox");
+        options.addArguments("--single-process");
+        options.addArguments("--disable-dev-shm-usage");
         options.addArguments("--start-maximized");
 //        InternetExplorerOptions options = new InternetExplorerOptions();
 //        options.setCapability("ignoreProtectedModeSettings", true);
