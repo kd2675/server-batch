@@ -85,40 +85,40 @@ public class Scheduler {
 //        }
 //    }
 
-    @Scheduled(fixedRateString = "#{ T(java.util.concurrent.ThreadLocalRandom).current().nextInt(100000)+180000 }")
-    public void insHotdeal() throws Exception {
-        // add parameters as needed
-        if (ServerTypeUtils.isProd()) {
-            jobLauncher.run(jobRegistry.getJob(HotdealJob.INS_HOTDEAL_JOB), getJobParameters());
-        }
-    }
-
-    @Scheduled(cron = "0 0/5 8-23 * * *")
-    @Async("asyncTaskExecutor")
-    public void sendHotdeal() throws Exception {
-        // add parameters as needed
-        if (ServerTypeUtils.isProd()) {
-            jobLauncher.run(jobRegistry.getJob(HotdealJob.SEND_HOTDEAL_JOB), getJobParameters());
-        }
-    }
-
-    @Scheduled(cron = "0 0/30 * * * *")
-    @Async("asyncTaskExecutor")
-    public void delSentHotdealJob() throws Exception {
-        // add parameters as needed
-        if (ServerTypeUtils.isProd()) {
-            jobLauncher.run(jobRegistry.getJob(HotdealJob.DEL_SENT_HOTDEAL_JOB), getJobParameters());
-        }
-    }
-
-    @Scheduled(cron = "0 0 4 20 * *")
-    @Async("asyncTaskExecutor")
-    public void delHotdealJob() throws Exception {
-        // add parameters as needed
-        if (ServerTypeUtils.isProd()) {
-            jobLauncher.run(jobRegistry.getJob(HotdealJob.DEL_HOTDEAL_JOB), getJobParameters());
-        }
-    }
+//    @Scheduled(fixedRateString = "#{ T(java.util.concurrent.ThreadLocalRandom).current().nextInt(100000)+180000 }")
+//    public void insHotdeal() throws Exception {
+//        // add parameters as needed
+//        if (ServerTypeUtils.isProd()) {
+//            jobLauncher.run(jobRegistry.getJob(HotdealJob.INS_HOTDEAL_JOB), getJobParameters());
+//        }
+//    }
+//
+//    @Scheduled(cron = "0 0/5 8-23 * * *")
+//    @Async("asyncTaskExecutor")
+//    public void sendHotdeal() throws Exception {
+//        // add parameters as needed
+//        if (ServerTypeUtils.isProd()) {
+//            jobLauncher.run(jobRegistry.getJob(HotdealJob.SEND_HOTDEAL_JOB), getJobParameters());
+//        }
+//    }
+//
+//    @Scheduled(cron = "0 0/30 * * * *")
+//    @Async("asyncTaskExecutor")
+//    public void delSentHotdealJob() throws Exception {
+//        // add parameters as needed
+//        if (ServerTypeUtils.isProd()) {
+//            jobLauncher.run(jobRegistry.getJob(HotdealJob.DEL_SENT_HOTDEAL_JOB), getJobParameters());
+//        }
+//    }
+//
+//    @Scheduled(cron = "0 0 4 20 * *")
+//    @Async("asyncTaskExecutor")
+//    public void delHotdealJob() throws Exception {
+//        // add parameters as needed
+//        if (ServerTypeUtils.isProd()) {
+//            jobLauncher.run(jobRegistry.getJob(HotdealJob.DEL_HOTDEAL_JOB), getJobParameters());
+//        }
+//    }
 
     @Scheduled(fixedRate = 10000, initialDelay = 10000)
     public void orderJob() throws Exception {
