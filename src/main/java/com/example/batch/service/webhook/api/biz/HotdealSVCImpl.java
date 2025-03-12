@@ -270,6 +270,11 @@ public class HotdealSVCImpl implements HotdealSVC {
         URI uri = UriComponentsBuilder
                 .fromUriString("https://www.algumon.com")
                 .path("/more/" + num)
+                .queryParam("homeFeedType", "TYPE_ENDED")
+                .queryParam("site", "")
+                .queryParam("topSequence", "")
+                .queryParam("maxPid", "")
+                .queryParam("prevTopDid", "")
                 .queryParam("keyword", keyword)
                 .encode()
                 .build()

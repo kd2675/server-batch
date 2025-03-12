@@ -113,9 +113,23 @@ public class HotdealReader {
     }
 
     private List<HotdealDTO> getHotdeal(int num) {
+//        {
+//            "types": "TYPE_ENDED",
+//                "homeFeedType": "LATEST",
+//                "site": "",
+//                "topSequence": "795959",
+//                "maxPid": "795959",
+//                "prevTopDid": "794675"
+//        }
+
         URI uri = UriComponentsBuilder
                 .fromUriString("https://www.algumon.com")
                 .path("/more/" + num)
+                .queryParam("homeFeedType", "TYPE_ENDED")
+                .queryParam("site", "")
+                .queryParam("topSequence", "")
+                .queryParam("maxPid", "")
+                .queryParam("prevTopDid", "")
                 .encode()
                 .build()
                 .toUri();
