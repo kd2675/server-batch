@@ -490,14 +490,18 @@ public class LottoServiceImpl implements LottoService {
 //                System.out.println("당첨 번호: " + mainNumbers);
 //                System.out.println("보너스 번호: " + bonus);
 
+                mattermostUtil.send(resultText, "5zqu88zsef83x8kj86igsqe1wa");
+
                 result.addAll(mainNumbers);
                 result.add(bonus);
 
                 return result;
             } else {
+                mattermostUtil.send("당첨 번호를 올바르게 가져오지 못했습니다.", "5zqu88zsef83x8kj86igsqe1wa");
 //                System.out.println("당첨 번호를 올바르게 가져오지 못했습니다.");
             }
         } else {
+            mattermostUtil.send("로또 당첨 정보를 가져오지 못했습니다.", "5zqu88zsef83x8kj86igsqe1wa");
 //            System.out.println("로또 당첨 정보를 가져오지 못했습니다.");
         }
 
