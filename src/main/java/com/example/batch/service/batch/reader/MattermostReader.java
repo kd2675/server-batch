@@ -36,7 +36,7 @@ public class MattermostReader {
         reader.setQueryString("SELECT e FROM MattermostSentEntity e WHERE e.createDate < :date and e.category = 'news' order by e.createDate");
 
         HashMap<String, Object> param = new HashMap<>();
-        param.put("date", LocalDateTime.now().minusHours(3));
+        param.put("date", LocalDateTime.now().minusHours(24));
         reader.setParameterValues(param);
         return reader;
     }
@@ -52,7 +52,7 @@ public class MattermostReader {
         reader.setQueryString("SELECT e FROM MattermostSentEntity e WHERE e.createDate < :date and e.category = 'coin'");
 
         HashMap<String, Object> param = new HashMap<>();
-        param.put("date", LocalDateTime.now().minusHours(1));
+        param.put("date", LocalDateTime.now().minusHours(24));
         reader.setParameterValues(param);
         return reader;
     }
