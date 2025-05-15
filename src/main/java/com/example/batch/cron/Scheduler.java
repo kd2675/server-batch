@@ -48,6 +48,7 @@ public class Scheduler {
             lottoService.buy();
         }
     }
+
     @Scheduled(cron = "0 0 22 * * SAT")
     public void check() throws Exception {
         // add parameters as needed
@@ -138,7 +139,7 @@ public class Scheduler {
         }
     }
 
-    @Scheduled(cron = "10 * 8-20 * * *")
+    @Scheduled(cron = "10 * * * * *")
     @Async("asyncTaskExecutor")
     public void insNewsJob() throws Exception {
         // add parameters as needed
