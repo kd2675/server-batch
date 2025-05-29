@@ -12,6 +12,7 @@ public interface MattermostUtil {
 
     ResponseEntity<MattermostPostVO> sendBotChannel(String message);
 
+    ResponseEntity<MattermostPostVO> sendSubNewsChannel(String message);
     ResponseEntity<MattermostPostVO> sendCoinChannel(String message);
     ResponseEntity<MattermostPostVO> sendNewsChannel(String message);
     ResponseEntity<MattermostPostVO> sendNewsFlashChannel(String message);

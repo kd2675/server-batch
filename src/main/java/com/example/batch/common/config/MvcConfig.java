@@ -4,6 +4,10 @@ import lombok.RequiredArgsConstructor;
 import org.apache.hc.client5.http.classic.HttpClient;
 import org.apache.hc.client5.http.impl.classic.HttpClientBuilder;
 import org.apache.hc.client5.http.impl.io.PoolingHttpClientConnectionManagerBuilder;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.chrome.ChromeOptions;
+import org.openqa.selenium.support.ui.WebDriverWait;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
@@ -19,6 +23,7 @@ import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 import java.text.SimpleDateFormat;
+import java.time.Duration;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -58,6 +63,24 @@ public class MvcConfig implements WebMvcConfigurer {
     @Bean
     public RestTemplate restTemplate(HttpComponentsClientHttpRequestFactory factory) {
         return new RestTemplate(factory);
+    }
+
+    @Bean
+    public ChromeRecord chromeRecord() {
+        ChromeOptions options = new ChromeOptions();
+        options.addArguments("--headless");
+        options.addArguments("--no-sandbox");
+        options.addArguments("--single-process");
+        options.addArguments("--disable-dev-shm-usage");
+        options.addArguments("--start-maximized");
+//        InternetExplorerOptions options = new InternetExplorerOptions();
+//        options.setCapability("ignoreProtectedModeSettings", true);
+
+        WebDriver webDriver = new ChromeDriver(options);
+        WebDriverWait webDriverWait = new WebDriverWait(webDriver, Duration.ofSeconds(10));
+
+        ChromeRecord chromeRec = new ChromeRecord(webDriver, webDriverWait);
+        return chromeRec;
     }
 
     @Override

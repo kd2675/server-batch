@@ -11,6 +11,9 @@ public enum WebhookEnum {
 
     COMMAND_200(200L, "$news", "$n", "뉴스 찾아드립니다. ex)$news 밥,세일,탕수육(and조건) 0(pageNo) 10(pagePerCnt<=10)"),
     COMMAND_201(201L, "$oldNews", "$on", "지난 뉴스 찾아드립니다. ex)$oldNews 밥,세일,탕수육(and조건) 0(pageNo) 10(pagePerCnt<=10)"),
+    COMMAND_202(202L, "$subscribeNews", "$scn", "뉴스구독 리스트 ex)$scn"),
+    COMMAND_203(203L, "$subscribeNewsIns", "$scni", "뉴스구독 추가 ex)$scni 밥,세일,탕수육(and조건), $scn '밥 세일 탕수육'(한줄)"),
+    COMMAND_204(204L, "$subscribeNewsDel", "$scnd", "뉴스구독 삭제 ex)$scnd 3(id)"),
 
     COMMAND_300(300L, "$music", "$m", "전체 리스트 에서 랜덤으로 노래 추천."),
     COMMAND_301(301L, "$musicSearch", "$ms", "노래검색 ex)$musicSearch '노래' 0(pageNo) 10(pagePerCnt<=10)"),

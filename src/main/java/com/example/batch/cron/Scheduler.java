@@ -1,14 +1,15 @@
 package com.example.batch.cron;
 
-import com.example.batch.service.batch.common.CustomJobParametersIncrementer;
-import com.example.batch.service.batch.job.CoinJob;
-import com.example.batch.service.batch.job.HotdealJob;
-import com.example.batch.service.batch.job.NewsJob;
-import com.example.batch.service.batch.job.OrderJob;
+import com.example.batch.cron.common.CustomJobParametersIncrementer;
+import com.example.batch.cron.job.CoinJob;
+import com.example.batch.cron.job.HotdealJob;
+import com.example.batch.cron.job.NewsJob;
+import com.example.batch.cron.job.OrderJob;
 import com.example.batch.service.coin.api.biz.ins.InsCoinService;
 import com.example.batch.service.lotto.api.biz.LottoService;
 import com.example.batch.service.reset.api.biz.Reset;
 import com.example.batch.service.sport.biz.InsSportSVC;
+import com.example.batch.service.sport.biz.ReserveSportSVC;
 import lombok.RequiredArgsConstructor;
 import org.example.core.utils.ServerTypeUtils;
 import org.springframework.batch.core.*;
@@ -31,6 +32,7 @@ public class Scheduler {
     private final Reset reset;
 
     private final LottoService lottoService;
+    private final ReserveSportSVC reserveSportSVC;
 
 
 //    @Scheduled(cron = "0 55 14 * * *")
@@ -40,6 +42,22 @@ public class Scheduler {
 //            lottoService.check();
 //        }
 //    }
+
+//    @Scheduled(initialDelay = 1000 * 1)
+//    public void test() throws Exception {
+//        // add parameters as needed
+//        if (ServerTypeUtils.isLocal()) {
+//            reserveSportSVC.test1();
+//        }
+//    }
+
+    @Scheduled(cron = "0 0 18 * * FRI")
+    public void orderCheck() throws Exception {
+        // add parameters as needed
+        if (ServerTypeUtils.isProd()) {
+            lottoService.account();
+        }
+    }
 
     @Scheduled(cron = "0 0 10 * * SAT")
     public void buy() throws Exception {
@@ -57,13 +75,13 @@ public class Scheduler {
         }
     }
 
-//    @Scheduled(fixedRateString = "#{ T(java.util.concurrent.ThreadLocalRandom).current().nextInt(60000)+60000 }")
-//    public void sport() throws Exception {
-//        // add parameters as needed
-//        if (ServerTypeUtils.isLocal()) {
-//            insSportSVC.saveSport();
-//        }
-//    }
+    @Scheduled(fixedRateString = "#{ T(java.util.concurrent.ThreadLocalRandom).current().nextInt(60000)+60000 }")
+    public void sport() throws Exception {
+        // add parameters as needed
+        if (ServerTypeUtils.isLocal()) {
+            insSportSVC.saveSport();
+        }
+    }
 
 //    @Scheduled(fixedRateString = "#{ T(java.util.concurrent.ThreadLocalRandom).current().nextInt(60000)+60000 }")
 //    public void sport68() throws Exception {
@@ -148,7 +166,7 @@ public class Scheduler {
         }
     }
 
-    @Scheduled(cron = "10,30,50 * 8,11,13,17 * * *")
+    @Scheduled(cron = "10,30,50 * 8,9,11,13,17 * * *")
     @Async("asyncTaskExecutor")
     public void sendNewsJob() throws Exception {
         // add parameters as needed

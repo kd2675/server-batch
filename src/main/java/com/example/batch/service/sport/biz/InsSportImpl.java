@@ -1,6 +1,5 @@
 package com.example.batch.service.sport.biz;
 
-import com.example.batch.service.kospi.database.rep.jpa.kospi.KospiREP;
 import com.example.batch.utils.ChromeDriverConnUtil;
 import com.example.batch.utils.MattermostUtil;
 import lombok.RequiredArgsConstructor;
@@ -13,8 +12,13 @@ import org.springframework.stereotype.Service;
 @Service
 @RequiredArgsConstructor
 public class InsSportImpl implements InsSportSVC {
+    //전천후
     String URL = "https://www.gwangjusportsinfo.org/reservation/reservation_view/1/";
+    //전천후
+    String URL_NEXT_PAGE = "https://www.gwangjusportsinfo.org/reservation/reservation_view/1/";
+    //진월
     String URL68 = "https://www.gwangjusportsinfo.org/reservation/reservation_view/5/";
+    //염주
     String URL99 = "https://www.gwangjusportsinfo.org/reservation/reservation_view/2/";
     String URLJangSung = "https://www.jangseong.go.kr/home/ok/health/warabel_gym?step=two";
 
@@ -41,43 +45,69 @@ public class InsSportImpl implements InsSportSVC {
 
     @Override
     public void saveSport() {
+//        for (int num = 2; num < 5; num++) {
+//            String url = URL + String.valueOf(num) + "?agree=1";
+//            Document doc = chromeDriverConnUtil.conn(url);
+//
+//            for (Element element : doc.getElementsByClass("sat btn_pop")) {
+//                String s1 = null;
+//                String s2 = null;
+//                String s3 = null;
+//                try {
+//                    s1 = element.getElementsByTag("li").get(0).className();
+//                    String s1Str = element.getElementsByTag("li").get(0).getElementsByTag("b").get(0).ownText();
+//                    s2 = element.getElementsByTag("li").get(1).className();
+//                    String s2Str = element.getElementsByTag("li").get(1).getElementsByTag("b").get(0).ownText();
+////                    s3 = element.getElementsByTag("li").get(4).className();
+////                    String s3Str = element.getElementsByTag("li").get(4).getElementsByTag("b").get(0).ownText();
+//
+//                    log.warn("{}", s1);
+//                    log.warn("{}", s1Str);
+//                    log.warn("{}", s2);
+//                    log.warn("{}", s2Str);
+////                    log.warn("{}", s3);
+////                    log.warn("{}", s3Str);
+//                } catch (Exception e) {
+//                }
+//
+////                if (s1 != null && s1.equals("child")) {
+////                    mattermostUtil.send("테니스장 예약 확인 요망 " + num + "코트 " + "7-9", "5zqu88zsef83x8kj86igsqe1wa");
+////                }
+//
+//                if (s2 != null && s2.equals("child")) {
+//                    mattermostUtil.send("테니스장 예약 확인 요망 " + num + "코트 " + "9-11", "5zqu88zsef83x8kj86igsqe1wa");
+//                }
+//
+//                if (s3 != null && s3.equals("child")) {
+////                        mattermostUtil.send("@kimd00 테니스장 예약 확인 요망 " + num + "코트 " + "15-17", "5zqu88zsef83x8kj86igsqe1wa");
+//                }
+//            }
+//        }
         for (int num = 2; num < 5; num++) {
-            String url = URL + String.valueOf(num) + "?agree=1";
-            Document doc = chromeDriverConnUtil.conn(url);
+            this.tst(num);
+        }
+    }
 
-            for (Element element : doc.getElementsByClass("sat btn_pop")) {
-                String s1 = null;
-                String s2 = null;
-                String s3 = null;
-                try {
-                    s1 = element.getElementsByTag("li").get(0).className();
-                    String s1Str = element.getElementsByTag("li").get(0).getElementsByTag("b").get(0).ownText();
-                    s2 = element.getElementsByTag("li").get(1).className();
-                    String s2Str = element.getElementsByTag("li").get(1).getElementsByTag("b").get(0).ownText();
-//                    s3 = element.getElementsByTag("li").get(4).className();
-//                    String s3Str = element.getElementsByTag("li").get(4).getElementsByTag("b").get(0).ownText();
+    public void tst(int num) {
+        String url = "https://www.gwangjusportsinfo.org/reservation/reservation_view/1/"+num+"?year=2025&month=5&agree=1";
 
-                    log.warn("{}", s1);
-                    log.warn("{}", s1Str);
-                    log.warn("{}", s2);
-                    log.warn("{}", s2Str);
-//                    log.warn("{}", s3);
-//                    log.warn("{}", s3Str);
-                } catch (Exception e) {
-                }
+        Document doc = chromeDriverConnUtil.conn(url);
 
-                if (s1 != null && s1.equals("child")) {
-                    mattermostUtil.send("테니스장 예약 확인 요망 " + num + "코트 " + "7-9", "5zqu88zsef83x8kj86igsqe1wa");
-                }
+        Element element = doc.getElementById("2025-05-31");
 
-                if (s2 != null && s2.equals("child")) {
-                    mattermostUtil.send("테니스장 예약 확인 요망 " + num + "코트 " + "9-11", "5zqu88zsef83x8kj86igsqe1wa");
-                }
+        String s2 = null;
 
-                if (s3 != null && s3.equals("child")) {
-//                        mattermostUtil.send("@kimd00 테니스장 예약 확인 요망 " + num + "코트 " + "15-17", "5zqu88zsef83x8kj86igsqe1wa");
-                }
-            }
+        try {
+            s2 = element.getElementsByTag("li").get(1).className();
+            String s2Str = element.getElementsByTag("li").get(1).getElementsByTag("b").get(0).ownText();
+
+            log.warn("{}", s2);
+            log.warn("{}", s2Str);
+        } catch (Exception e) {
+        }
+
+        if (s2 != null && s2.equals("child")) {
+            mattermostUtil.send("테니스장 예약 확인 요망 " + num + "코트 " + "9-11", "5zqu88zsef83x8kj86igsqe1wa");
         }
     }
 

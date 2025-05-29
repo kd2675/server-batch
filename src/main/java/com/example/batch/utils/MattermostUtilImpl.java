@@ -1,7 +1,7 @@
 package com.example.batch.utils;
 
-import com.example.batch.service.reset.database.rep.jpa.ResetPointEntity;
-import com.example.batch.service.reset.database.rep.jpa.ResetPointREP;
+import com.example.batch.cron.database.rep.jpa.ResetPointEntity;
+import com.example.batch.cron.database.rep.jpa.ResetPointREP;
 import com.example.batch.service.webhook.api.dto.WebhookVO;
 import com.example.batch.utils.enums.ChannelEnum;
 import com.example.batch.utils.vo.MattermostChannelVO;
@@ -79,6 +79,12 @@ public class MattermostUtilImpl implements MattermostUtil {
     @Override
     public ResponseEntity<MattermostPostVO> sendCoinChannel(String message) {
         String channelId = ChannelEnum.MATTERMOST_CHANNEL_COIN.getValue();
+        return send(message, channelId);
+    }
+
+    @Override
+    public ResponseEntity<MattermostPostVO> sendSubNewsChannel(String message) {
+        String channelId = ChannelEnum.MATTERMOST_CHANNEL_SUB_NEWS.getValue();
         return send(message, channelId);
     }
 

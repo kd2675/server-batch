@@ -1,9 +1,9 @@
 package com.example.batch.service.reset.api.biz;
 
-import com.example.batch.service.mattermost.database.rep.jpa.mattermost.sent.MattermostSentEntity;
-import com.example.batch.service.mattermost.database.rep.jpa.mattermost.sent.MattermostSentREP;
-import com.example.batch.service.reset.database.rep.jpa.ResetPointEntity;
-import com.example.batch.service.reset.database.rep.jpa.ResetPointREP;
+import com.example.batch.common.database.rep.jpa.mattermost.sent.MattermostSentEntity;
+import com.example.batch.common.database.rep.jpa.mattermost.sent.MattermostSentREP;
+import com.example.batch.cron.database.rep.jpa.ResetPointEntity;
+import com.example.batch.cron.database.rep.jpa.ResetPointREP;
 import com.example.batch.utils.MattermostUtil;
 import com.example.batch.utils.enums.ChannelEnum;
 import com.example.batch.utils.vo.MattermostChannelVO;

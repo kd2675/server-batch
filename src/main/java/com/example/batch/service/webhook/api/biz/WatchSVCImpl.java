@@ -1,12 +1,11 @@
 package com.example.batch.service.webhook.api.biz;
 
-import com.example.batch.service.webhook.database.rep.jpa.watch.WatchEntity;
-import com.example.batch.service.webhook.database.rep.jpa.watch.WatchREP;
+import com.example.batch.common.database.rep.jpa.watch.WatchEntity;
+import com.example.batch.common.database.rep.jpa.watch.WatchREP;
 import com.example.batch.service.webhook.api.dto.WebhookVO;
 import com.example.batch.utils.MattermostUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;

@@ -1,11 +1,13 @@
 package com.example.batch.service.webhook.api.biz;
 
-import com.example.batch.service.news.database.rep.jpa.news.NewsEntity;
-import com.example.batch.service.news.database.rep.jpa.news.NewsREP;
-import com.example.batch.service.news.database.rep.jpa.news.NewsSpec;
-import com.example.batch.service.news.database.rep.jpa.oldnews.OldNewsEntity;
-import com.example.batch.service.news.database.rep.jpa.oldnews.OldNewsREP;
-import com.example.batch.service.news.database.rep.jpa.oldnews.OldNewsSpec;
+import com.example.batch.common.database.rep.jpa.news.NewsEntity;
+import com.example.batch.common.database.rep.jpa.news.NewsREP;
+import com.example.batch.common.database.rep.jpa.news.NewsSpec;
+import com.example.batch.common.database.rep.jpa.newsSubscribe.NewsSubscribeEntity;
+import com.example.batch.common.database.rep.jpa.newsSubscribe.NewsSubscribeEntityREP;
+import com.example.batch.common.database.rep.jpa.oldnews.OldNewsEntity;
+import com.example.batch.common.database.rep.jpa.oldnews.OldNewsREP;
+import com.example.batch.common.database.rep.jpa.oldnews.OldNewsSpec;
 import com.example.batch.service.webhook.api.dto.WebhookVO;
 import com.example.batch.service.webhook.api.vo.WebhookEnum;
 import com.example.batch.utils.BugsApiUtil;
@@ -38,6 +40,7 @@ public class WebhookSVCImpl implements WebhookCMD, WebhookSVC {
 
     private final NewsREP newsREP;
     private final OldNewsREP oldNewsREP;
+    private final NewsSubscribeEntityREP newsSubscribeEntityREP;
 
     @Override
     public void notRun(WebhookVO webhookVO){
@@ -55,6 +58,9 @@ public class WebhookSVCImpl implements WebhookCMD, WebhookSVC {
         commandMap.put(WebhookEnum.COMMAND_101.getKey(), () -> this.uptime(webhookVO));
         commandMap.put(WebhookEnum.COMMAND_200.getKey(), () -> this.news(webhookVO));
         commandMap.put(WebhookEnum.COMMAND_201.getKey(), () -> this.oldNews(webhookVO));
+        commandMap.put(WebhookEnum.COMMAND_202.getKey(), () -> this.selNewsSubscribe(webhookVO));
+        commandMap.put(WebhookEnum.COMMAND_203.getKey(), () -> this.selNewsSubscribe(webhookVO));
+        commandMap.put(WebhookEnum.COMMAND_204.getKey(), () -> this.selNewsSubscribe(webhookVO));
         commandMap.put(WebhookEnum.COMMAND_300.getKey(), () -> musicSVC.music(webhookVO));
         commandMap.put(WebhookEnum.COMMAND_301.getKey(), () -> musicSVC.musicSearch(webhookVO));
         commandMap.put(WebhookEnum.COMMAND_302.getKey(), () -> musicSVC.musicPlay(webhookVO));
@@ -82,15 +88,17 @@ public class WebhookSVCImpl implements WebhookCMD, WebhookSVC {
     @Transactional(readOnly = true)
     @Override
     public void news(WebhookVO webhookVO) {
-        String[] args = webhookVO.getText().split(" ");
-        if (!isValidInput(args)) {
+        String[] webhookText = WebhookUtils.parseSplitText(webhookVO.getText());
+        int[] pagingInfo = WebhookUtils.getPagingInfo(webhookText);
+
+        if ((webhookText.length != 2 && webhookText.length != 4) || pagingInfo[1] > 10) {
             this.notRun(webhookVO);
             return;
         }
 
-        String searchText = args[1];
-        int pageNo = Integer.parseInt(args[2]);
-        int pagePerCnt = Integer.parseInt(args[3]);
+        String searchText = webhookText[1];
+        int pageNo = pagingInfo[0];
+        int pagePerCnt = pagingInfo[1];
 
         List<NewsEntity> newsEntities = searchNews(searchText, pageNo, pagePerCnt);
         if (!newsEntities.isEmpty()) {
@@ -113,15 +121,17 @@ public class WebhookSVCImpl implements WebhookCMD, WebhookSVC {
     @Transactional(readOnly = true)
     @Override
     public void oldNews(WebhookVO webhookVO) {
-        String[] args = webhookVO.getText().split(" ");
-        if (!isValidInput(args)) {
+        String[] webhookText = WebhookUtils.parseSplitText(webhookVO.getText());
+        int[] pagingInfo = WebhookUtils.getPagingInfo(webhookText);
+
+        if ((webhookText.length != 2 && webhookText.length != 4) || pagingInfo[1] > 10) {
             this.notRun(webhookVO);
             return;
         }
 
-        String searchText = args[1];
-        int pageNo = Integer.parseInt(args[2]);
-        int pagePerCnt = Integer.parseInt(args[3]);
+        String searchText = webhookText[1];
+        int pageNo = pagingInfo[0];
+        int pagePerCnt = pagingInfo[1];
 
         List<OldNewsEntity> oldNewsEntities = searchOldNews(searchText, pageNo, pagePerCnt);
         if (!oldNewsEntities.isEmpty()) {
@@ -310,5 +320,83 @@ public class WebhookSVCImpl implements WebhookCMD, WebhookSVC {
         } else {
             mattermostUtil.sendWebhookChannel("출근하세요", webhookVO);
         }
+    }
+
+    @Override
+    @Transactional
+    public void selNewsSubscribe(WebhookVO webhookVO) {
+        for (NewsSubscribeEntity entity : newsSubscribeEntityREP.findAll()) {
+
+        }
+    }
+
+    @Override
+    @Transactional
+    public void insNewsSubscribe(WebhookVO webhookVO) {
+        String[] webhookText = WebhookUtils.parseSplitTextTwoWord(webhookVO.getText());
+
+        if (webhookText.length != 2) {
+            this.notRun(webhookVO);
+            return;
+        }
+
+        String searchText = webhookText[1];
+
+        NewsSubscribeEntity newsSubscribeEntity = NewsSubscribeEntity.builder()
+                .keyword(searchText)
+                .build();
+
+        newsSubscribeEntityREP.save(newsSubscribeEntity);
+    }
+
+    @Override
+    @Transactional
+    public void delNewsSubscribe(WebhookVO webhookVO) {
+        String[] webhookText = WebhookUtils.parseSplitTextTwoWord(webhookVO.getText());
+
+        if (webhookText.length != 2) {
+            this.notRun(webhookVO);
+            return;
+        }
+
+        String searchText = webhookText[1];
+
+        NewsSubscribeEntity newsSubscribeEntity = NewsSubscribeEntity.builder()
+                .keyword(searchText)
+                .build();
+
+        newsSubscribeEntityREP.save(newsSubscribeEntity);
+    }
+
+    private String convertMattermostMessage(List<NewsSubscribeEntity> entityList) {
+        StringBuilder result = new StringBuilder();
+        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+        String regexEmojis = "[\uD83C-\uDBFF\uDC00-\uDFFF]+";
+
+        String header = "| id | 키워드 |\n";
+        String line = "| :-:|:--: |\n";
+//        String header = "| 시각 | 제목 | 시각 | 제목 |\n";
+//        String line = "| :-:|:--:|:-:|:--: |\n";
+        result.append(header)
+                .append(line);
+
+
+        Queue<NewsSubscribeEntity> q = new LinkedList<>(entityList);
+        while (!q.isEmpty()) {
+            String content = "";
+            for (int i = 0; i < 1; i++) {
+                if (q.isEmpty()) {
+                    break;
+                }
+                NewsSubscribeEntity remove = q.remove();
+
+                content += "| " + remove.getId()
+                        + " | " + remove.getKeyword();
+            }
+            content += " |\n";
+            result.append(content);
+        }
+
+        return result.toString();
     }
 }

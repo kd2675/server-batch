@@ -1,7 +1,7 @@
 package com.example.batch.service.health.api;
 
-import com.example.batch.service.batch.job.CoinJob;
-import com.example.batch.service.batch.job.NewsJob;
+import com.example.batch.cron.job.CoinJob;
+import com.example.batch.cron.job.NewsJob;
 import com.example.batch.service.lotto.api.biz.LottoService;
 import com.example.batch.utils.MattermostUtil;
 import com.example.batch.utils.vo.MattermostChannelVO;

@@ -1,6 +1,11 @@
 package com.example.batch.service.webhook.api.biz;
 
-import com.example.batch.service.hotdeal.database.rep.jpa.*;
+import com.example.batch.common.database.rep.jpa.hotdeal.HotdealDTO;
+import com.example.batch.common.database.rep.jpa.hotdeal.HotdealEntity;
+import com.example.batch.common.database.rep.jpa.hotdeal.HotdealEntityREP;
+import com.example.batch.common.database.rep.jpa.hotdeal.HotdealSpec;
+import com.example.batch.common.database.rep.jpa.hotdealAlim.HotdealAlimEntity;
+import com.example.batch.common.database.rep.jpa.hotdealAlim.HotdealAlimEntityREP;
 import com.example.batch.service.webhook.api.dto.WebhookVO;
 import com.example.batch.service.webhook.api.vo.MemberEnum;
 import com.example.batch.utils.MattermostUtil;
@@ -42,16 +47,18 @@ public class HotdealSVCImpl implements HotdealSVC {
     @Override
     @Transactional(readOnly = true)
     public void hotdealSearch(WebhookVO webhookVO) {
-        String[] args = webhookVO.getText().split(" ");
-        if (!isValidInput(args)) {
+        String[] webhookText = WebhookUtils.parseSplitText(webhookVO.getText());
+        int[] pagingInfo = WebhookUtils.getPagingInfo(webhookText);
+
+        if ((webhookText.length != 2 && webhookText.length != 4) || pagingInfo[1] > 10) {
             this.notRun(webhookVO);
             return;
         }
 
         try {
-            String searchText = args[1];
-            int pageNo = args.length == 4 ? Integer.parseInt(args[2]) : 0;
-            int pagePerCnt = args.length == 4 ? Integer.parseInt(args[3]) : 3;
+            String searchText = webhookText[1];
+            int pageNo = pagingInfo[0];
+            int pagePerCnt = pagingInfo[1];
 
             List<HotdealEntity> hotdealEntities = searchHotdeal(searchText, pageNo, pagePerCnt);
             if (!hotdealEntities.isEmpty()) {
@@ -224,7 +231,7 @@ public class HotdealSVCImpl implements HotdealSVC {
         DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
         String regexEmojis = "[\uD83C-\uDBFF\uDC00-\uDFFF]+";
 
-        String header = "| img | 제목 | 가격 |\n";
+        String header = "| img | 제목 | 가격 | 날짜 |\n";
         String line = "| :--:|:----:|:--: |\n";
 //        String header = "| 시각 | 제목 | 시각 | 제목 |\n";
 //        String line = "| :-:|:--:|:-:|:--: |\n";
@@ -255,6 +262,9 @@ public class HotdealSVCImpl implements HotdealSVC {
                         .append("(")
                         .append(remove.getLink())
                         .append(")")
+                        .append(" | ")
+
+                        .append(remove.getCreateDate().format(dtf))
                         .append(" | ")
 
                         .append(remove.getPriceStr());

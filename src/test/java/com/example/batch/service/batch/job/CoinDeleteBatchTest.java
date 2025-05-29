@@ -2,16 +2,10 @@ package com.example.batch.service.batch.job;
 
 import com.example.batch.common.config.JpaConfig;
 import com.example.batch.common.config.ScheduleBatchConfig;
-import com.example.batch.service.batch.common.CustomJobParametersIncrementer;
-import com.example.batch.service.batch.database.BatchDataConfig;
-import com.example.batch.service.coin.database.CoinDataConfig;
+import com.example.batch.cron.database.BatchDataConfig;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.springframework.batch.core.BatchStatus;
-import org.springframework.batch.core.ExitStatus;
-import org.springframework.batch.core.JobExecution;
-import org.springframework.batch.core.JobParameters;
 import org.springframework.batch.test.JobLauncherTestUtils;
 import org.springframework.batch.test.JobRepositoryTestUtils;
 import org.springframework.batch.test.context.SpringBatchTest;
@@ -24,7 +18,7 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 @ExtendWith(SpringExtension.class)
 @EnableAutoConfiguration
-@SpringBootTest(classes={ScheduleBatchConfig.class, BatchDataConfig.class, CoinDataConfig.class, JpaConfig.class})
+@SpringBootTest(classes={ScheduleBatchConfig.class, BatchDataConfig.class, JpaConfig.class})
 @SpringBatchTest
 @ActiveProfiles("test")
 class CoinDeleteBatchTest {
