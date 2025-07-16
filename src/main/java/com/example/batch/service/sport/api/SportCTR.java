@@ -15,7 +15,7 @@ public class SportCTR {
 
     @RequestMapping("/ins")
     public String sport(){
-        insSportSVC.saveSport();
+//        insSportSVC.saveSport();
         return "ok";
     }
 
