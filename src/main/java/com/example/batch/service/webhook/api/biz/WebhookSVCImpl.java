@@ -59,8 +59,8 @@ public class WebhookSVCImpl implements WebhookCMD, WebhookSVC {
         commandMap.put(WebhookEnum.COMMAND_200.getKey(), () -> this.news(webhookVO));
         commandMap.put(WebhookEnum.COMMAND_201.getKey(), () -> this.oldNews(webhookVO));
         commandMap.put(WebhookEnum.COMMAND_202.getKey(), () -> this.selNewsSubscribe(webhookVO));
-        commandMap.put(WebhookEnum.COMMAND_203.getKey(), () -> this.selNewsSubscribe(webhookVO));
-        commandMap.put(WebhookEnum.COMMAND_204.getKey(), () -> this.selNewsSubscribe(webhookVO));
+        commandMap.put(WebhookEnum.COMMAND_203.getKey(), () -> this.insNewsSubscribe(webhookVO));
+        commandMap.put(WebhookEnum.COMMAND_204.getKey(), () -> this.delNewsSubscribe(webhookVO));
         commandMap.put(WebhookEnum.COMMAND_300.getKey(), () -> musicSVC.music(webhookVO));
         commandMap.put(WebhookEnum.COMMAND_301.getKey(), () -> musicSVC.musicSearch(webhookVO));
         commandMap.put(WebhookEnum.COMMAND_302.getKey(), () -> musicSVC.musicPlay(webhookVO));
