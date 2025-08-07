@@ -9,7 +9,11 @@ import com.example.batch.service.coin.api.biz.ins.InsCoinService;
 import com.example.batch.service.lotto.api.biz.LottoService;
 import com.example.batch.service.reset.api.biz.Reset;
 import com.example.batch.service.sport.biz.InsSportSVC;
+import com.example.batch.service.sport.biz.ReserveSportImpl;
 import com.example.batch.service.sport.biz.ReserveSportSVC;
+import com.example.batch.service.stock.biz.StockService;
+import com.example.batch.service.stock.vo.StockPriceDTO;
+import com.example.batch.service.stock.vo.StockSearchDTO;
 import lombok.RequiredArgsConstructor;
 import org.example.core.utils.ServerTypeUtils;
 import org.springframework.batch.core.*;
@@ -20,6 +24,7 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalTime;
+import java.util.List;
 
 @RequiredArgsConstructor
 @Component
@@ -33,6 +38,8 @@ public class Scheduler {
 
     private final LottoService lottoService;
     private final ReserveSportSVC reserveSportSVC;
+    private final ReserveSportImpl reserveSportImpl;
+    private final StockService stockService;
 
 
 //    @Scheduled(cron = "0 55 14 * * *")
@@ -79,10 +86,37 @@ public class Scheduler {
     public void sport() throws Exception {
         // add parameters as needed
         if (ServerTypeUtils.isLocal()) {
-            insSportSVC.saveSport();
-            insSportSVC.saveSport2();
-            insSportSVC.saveSportJangSung();
-            insSportSVC.saveSportJangSung2();
+
+//            insSportSVC.saveSport();
+//            insSportSVC.saveSport2();
+//            insSportSVC.saveSportJangSung();
+//            insSportSVC.saveSportJangSung2();
+        }
+    }
+
+    @Scheduled(cron = "2,5,10 0 0 9 8 *")
+    public void reserveSport() throws Exception {
+        // add parameters as needed
+        if (ServerTypeUtils.isProd()) {
+            reserveSportImpl.test1("2025", "08", "9", "09");
+        }
+    }
+
+    @Scheduled(cron = "2,5,10 52 17 4 8 *")
+    public void reserveSportTest() throws Exception {
+        // add parameters as needed
+        if (ServerTypeUtils.isLocal()) {
+            reserveSportImpl.test1("2025", "08", "11", "14");
+        }
+    }
+
+    @Scheduled(fixedRate = 1000 * 60, initialDelay = 1000 * 10)
+    public void teszt() throws Exception {
+        // add parameters as needed
+        if (ServerTypeUtils.isLocal()) {
+//            StockPriceDTO aapl = stockService.getStockPrice("AAPL");
+            stockService.logCacheStats();
+//            System.out.println(aapl);
         }
     }
 

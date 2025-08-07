@@ -26,7 +26,7 @@ public class InsSportImpl implements InsSportSVC {
 
     @Override
     public void saveSportJangSung() {
-        String url = URLJangSung + "&year=2025&month=07&day=5&start_time=9";
+        String url = URLJangSung + "&year=2025&month=08&day=2&start_time=9";
 
         Document doc = chromeDriverConnUtil.conn(url);
 
@@ -38,19 +38,19 @@ public class InsSportImpl implements InsSportSVC {
             ) {
                 log.warn("element : {}", element);
                 if (!element.getElementsByTag("input").isEmpty()) {
-                    mattermostUtil.send("@kimd0 워라벨 돔 테니스장 예약 확인 요망", "5zqu88zsef83x8kj86igsqe1wa");
+                    mattermostUtil.send("@kimd0 워라벨 돔 테니스장 예약 확인 요망 9-11", "5zqu88zsef83x8kj86igsqe1wa");
                 }
 
             }
         } catch (Exception e) {
             log.error("saveSportJangSung", e);
-            mattermostUtil.send("@kimd0 워라벨 돔 테니스장 예약 확인 요망", "5zqu88zsef83x8kj86igsqe1wa");
+            mattermostUtil.send("@kimd0 워라벨 돔 테니스장 예약 확인 요망 9-11 에러", "5zqu88zsef83x8kj86igsqe1wa");
         }
     }
 
     @Override
     public void saveSportJangSung2() {
-        String url = URLJangSung + "&year=2025&month=07&day=5&start_time=11";
+        String url = URLJangSung + "&year=2025&month=08&day=2&start_time=11";
 
         Document doc = chromeDriverConnUtil.conn(url);
 
@@ -62,13 +62,13 @@ public class InsSportImpl implements InsSportSVC {
             ) {
                 log.warn("element : {}", element);
                 if (!element.getElementsByTag("input").isEmpty()) {
-                    mattermostUtil.send("@kimd0 워라벨 돔 테니스장 예약 확인 요망", "5zqu88zsef83x8kj86igsqe1wa");
+                    mattermostUtil.send("@kimd0 워라벨 돔 테니스장 예약 확인 요망 11-13", "5zqu88zsef83x8kj86igsqe1wa");
                 }
 
             }
         } catch (Exception e) {
             log.error("saveSportJangSung2", e);
-            mattermostUtil.send("@kimd0 워라벨 돔 테니스장 예약 확인 요망", "5zqu88zsef83x8kj86igsqe1wa");
+            mattermostUtil.send("@kimd0 워라벨 돔 테니스장 예약 확인 요망 11-13 에러", "5zqu88zsef83x8kj86igsqe1wa");
         }
     }
 
@@ -89,22 +89,24 @@ public class InsSportImpl implements InsSportSVC {
 
 
     public void tst(int num) {
-        String url = URL+num+"?year=2025&month=7&agree=1";
+        String url = URL+num+"?year=2025&month=8&agree=1";
 
         Document doc = chromeDriverConnUtil.conn(url);
 
-        Element element = doc.getElementById("2025-07-05");
+        Element element = doc.getElementById("2025-08-09");
 
         String s2 = null;
 
         try {
-            s2 = element.getElementsByTag("li").get(0).className();
-            String s2Str = element.getElementsByTag("li").get(0).getElementsByTag("b").get(0).ownText();
+            Element li = element.getElementsByTag("li").get(0);
+
+            s2 = li.className();
+            String s2Str = li.getElementsByTag("b").get(0).ownText();
 
             log.warn("{}", s2);
             log.warn("{}", s2Str);
         } catch (Exception e) {
-            mattermostUtil.send("@kimd0 전천후 테니스장 예약 확인 요망 " + num + "코트 " + "7-9", "5zqu88zsef83x8kj86igsqe1wa");
+            mattermostUtil.send("@kimd0 전천후 테니스장 예약 확인 요망 " + num + "코트 " + "7-9 에러", "5zqu88zsef83x8kj86igsqe1wa");
         }
 
         if (s2 != null && s2.equals("child")) {
@@ -115,27 +117,28 @@ public class InsSportImpl implements InsSportSVC {
 
 
     public void tst2(int num) {
-        String url = URL+num+"?year=2025&month=7&agree=1";
+        String url = URL+num+"?year=2025&month=8&agree=1";
 
         Document doc = chromeDriverConnUtil.conn(url);
 
-        Element element = doc.getElementById("2025-07-05");
+        Element element = doc.getElementById("2025-08-09");
 
         String s2 = null;
 
         try {
-            s2 = element.getElementsByTag("li").get(2).className();
-            String s2Str = element.getElementsByTag("li").get(2).getElementsByTag("b").get(0).ownText();
+            Element li = element.getElementsByTag("li").get(1);
+
+            s2 = li.className();
+            String s2Str = li.getElementsByTag("b").get(0).ownText();
 
             log.warn("{}", s2);
             log.warn("{}", s2Str);
         } catch (Exception e) {
-            mattermostUtil.send("@kimd0 전천후 테니스장 예약 확인 요망 " + num + "코트 " + "11-13", "5zqu88zsef83x8kj86igsqe1wa");
-
+            mattermostUtil.send("@kimd0 전천후 테니스장 예약 확인 요망 " + num + "코트 " + "9-11 에러", "5zqu88zsef83x8kj86igsqe1wa");
         }
 
         if (s2 != null && s2.equals("child")) {
-            mattermostUtil.send("@kimd0 전천후 테니스장 예약 확인 요망 " + num + "코트 " + "11-13", "5zqu88zsef83x8kj86igsqe1wa");
+            mattermostUtil.send("@kimd0 전천후 테니스장 예약 확인 요망 " + num + "코트 " + "9-11", "5zqu88zsef83x8kj86igsqe1wa");
         }
     }
 

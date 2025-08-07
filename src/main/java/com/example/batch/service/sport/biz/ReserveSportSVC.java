@@ -1,5 +1,5 @@
 package com.example.batch.service.sport.biz;
 
 public interface ReserveSportSVC {
-    void test1();
+    void test1(String year, String month, String day, String st);
 }
