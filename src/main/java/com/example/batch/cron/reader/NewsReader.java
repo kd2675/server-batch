@@ -1,14 +1,13 @@
 package com.example.batch.cron.reader;
 
-import com.example.batch.common.database.rep.jpa.hotdeal.HotdealDTO;
-import com.example.batch.common.database.rep.jpa.newsSubscribe.NewsSubscribeEntity;
-import com.example.batch.common.database.rep.jpa.newsSubscribe.NewsSubscribeEntityREP;
+import com.example.batch.database.crawling.entity.NewsSubscribeEntity;
+import com.example.batch.database.crawling.repository.NewsSubscribeEntityREP;
 import com.example.batch.cron.common.DelJpaPagingItemReader;
 import com.example.batch.cron.enums.NewsKeywordEnum;
 import com.example.batch.service.news.api.vo.NaverNewsApiItemVO;
 import com.example.batch.service.news.api.vo.NaverNewsApiVO;
-import com.example.batch.common.database.rep.jpa.news.NewsEntity;
-import com.example.batch.common.database.rep.jpa.news.NewsREP;
+import com.example.batch.database.crawling.entity.NewsEntity;
+import com.example.batch.database.crawling.repository.NewsREP;
 import com.example.batch.utils.MattermostUtil;
 import com.example.batch.utils.NaverApiUtil;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -18,7 +17,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.batch.core.configuration.annotation.StepScope;
-import org.springframework.batch.item.Chunk;
 import org.springframework.batch.item.database.JpaPagingItemReader;
 import org.springframework.batch.item.support.ListItemReader;
 import org.springframework.beans.factory.annotation.Qualifier;

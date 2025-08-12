@@ -1,11 +1,11 @@
 package com.example.batch.cron.reader;
 
 import com.example.batch.cron.common.DelJpaPagingItemReader;
-import com.example.batch.common.database.rep.jpa.hotdeal.HotdealDTO;
-import com.example.batch.common.database.rep.jpa.hotdeal.HotdealEntity;
-import com.example.batch.common.database.rep.jpa.hotdeal.HotdealEntityREP;
-import com.example.batch.common.database.rep.jpa.hotdealAlim.HotdealAlimEntity;
-import com.example.batch.common.database.rep.jpa.hotdealAlim.HotdealAlimEntityREP;
+import com.example.batch.database.crawling.dto.HotdealDTO;
+import com.example.batch.database.crawling.entity.HotdealEntity;
+import com.example.batch.database.crawling.repository.HotdealEntityREP;
+import com.example.batch.database.crawling.entity.HotdealAlimEntity;
+import com.example.batch.database.crawling.repository.HotdealAlimEntityREP;
 import com.example.batch.service.webhook.api.vo.MemberEnum;
 import com.example.batch.utils.MattermostUtil;
 import jakarta.persistence.EntityManagerFactory;

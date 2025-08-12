@@ -1,8 +1,8 @@
 package com.example.batch.cron.writer;
 
 import com.example.batch.cron.common.BasicWriter;
-import com.example.batch.common.database.rep.jpa.hotdeal.HotdealEntity;
-import com.example.batch.common.database.rep.jpa.hotdeal.HotdealEntityREP;
+import com.example.batch.database.crawling.entity.HotdealEntity;
+import com.example.batch.database.crawling.repository.HotdealEntityREP;
 import jakarta.persistence.EntityManagerFactory;
 import lombok.RequiredArgsConstructor;
 import org.springframework.batch.core.configuration.annotation.StepScope;

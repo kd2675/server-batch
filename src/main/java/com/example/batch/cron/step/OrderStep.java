@@ -4,7 +4,7 @@ import com.example.batch.cron.common.BasicProcessor;
 import com.example.batch.cron.processor.OrderProcessor;
 import com.example.batch.cron.reader.OrderReader;
 import com.example.batch.cron.writer.OrderComposeWriter;
-import com.example.batch.pub.database.rep.jpa.order.OrderEntity;
+import com.example.batch.database.pub.entity.OrderEntity;
 import org.springframework.batch.core.Step;
 import org.springframework.batch.core.configuration.annotation.JobScope;
 import org.springframework.batch.core.repository.JobRepository;

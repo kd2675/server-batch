@@ -1,7 +1,7 @@
 package com.example.batch.cron.writer;
 
 import com.example.batch.cron.common.BasicWriter;
-import com.example.batch.common.database.rep.jpa.news.NewsEntity;
+import com.example.batch.database.crawling.entity.NewsEntity;
 import org.springframework.batch.core.configuration.annotation.StepScope;
 import org.springframework.batch.item.database.JpaItemWriter;
 import org.springframework.batch.item.support.CompositeItemWriter;

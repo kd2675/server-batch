@@ -1,11 +1,11 @@
 package com.example.batch.cron.writer;
 
 import com.example.batch.cron.common.BasicWriter;
-import com.example.batch.common.database.rep.jpa.coin.CoinEntity;
-import com.example.batch.common.database.rep.jpa.hotdeal.HotdealEntity;
-import com.example.batch.common.database.rep.jpa.mattermost.sent.MattermostSentEntity;
-import com.example.batch.common.database.rep.jpa.mattermost.sent.MattermostSentREP;
-import com.example.batch.common.database.rep.jpa.news.NewsEntity;
+import com.example.batch.database.crawling.entity.CoinEntity;
+import com.example.batch.database.crawling.entity.HotdealEntity;
+import com.example.batch.database.crawling.entity.MattermostSentEntity;
+import com.example.batch.database.crawling.repository.MattermostSentREP;
+import com.example.batch.database.crawling.entity.NewsEntity;
 import com.example.batch.utils.MattermostUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

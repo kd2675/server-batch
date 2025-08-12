@@ -1,13 +1,13 @@
 package com.example.batch.service.webhook.api.biz;
 
-import com.example.batch.common.database.rep.jpa.news.NewsEntity;
-import com.example.batch.common.database.rep.jpa.news.NewsREP;
-import com.example.batch.common.database.rep.jpa.news.NewsSpec;
-import com.example.batch.common.database.rep.jpa.newsSubscribe.NewsSubscribeEntity;
-import com.example.batch.common.database.rep.jpa.newsSubscribe.NewsSubscribeEntityREP;
-import com.example.batch.common.database.rep.jpa.oldnews.OldNewsEntity;
-import com.example.batch.common.database.rep.jpa.oldnews.OldNewsREP;
-import com.example.batch.common.database.rep.jpa.oldnews.OldNewsSpec;
+import com.example.batch.database.crawling.entity.NewsEntity;
+import com.example.batch.database.crawling.repository.NewsREP;
+import com.example.batch.database.crawling.specification.NewsSpec;
+import com.example.batch.database.crawling.entity.NewsSubscribeEntity;
+import com.example.batch.database.crawling.repository.NewsSubscribeEntityREP;
+import com.example.batch.database.crawling.entity.OldNewsEntity;
+import com.example.batch.database.crawling.repository.OldNewsREP;
+import com.example.batch.database.crawling.specification.OldNewsSpec;
 import com.example.batch.service.webhook.api.dto.WebhookVO;
 import com.example.batch.service.webhook.api.vo.WebhookEnum;
 import com.example.batch.utils.BugsApiUtil;

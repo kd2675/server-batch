@@ -1,16 +1,14 @@
 package com.example.batch.service.webhook.api.biz;
 
-import com.example.batch.common.database.rep.jpa.music.MusicEntity;
-import com.example.batch.common.database.rep.jpa.music.MusicREP;
-import com.example.batch.common.database.rep.jpa.music.PlaylistEntity;
-import com.example.batch.common.database.rep.jpa.music.PlaylistREP;
+import com.example.batch.database.crawling.entity.MusicEntity;
+import com.example.batch.database.crawling.repository.MusicREP;
+import com.example.batch.database.crawling.entity.PlaylistEntity;
+import com.example.batch.database.crawling.repository.PlaylistREP;
 import com.example.batch.service.webhook.api.dto.WebhookVO;
 import com.example.batch.utils.BugsApiUtil;
 import com.example.batch.utils.ChromeDriverConnUtil;
 import com.example.batch.utils.MattermostUtil;
 import com.example.batch.utils.YoutubeApiUtil;
-import com.example.batch.utils.vo.BugsApiListVO;
-import com.example.batch.utils.vo.BugsApiVO;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -28,7 +26,6 @@ import org.springframework.http.ResponseEntity;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Optional;
 

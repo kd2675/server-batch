@@ -1,7 +1,7 @@
 package com.example.batch.utils;
 
-import com.example.batch.cron.database.rep.jpa.ResetPointEntity;
-import com.example.batch.cron.database.rep.jpa.ResetPointREP;
+import com.example.batch.database.batch.entity.ResetPointEntity;
+import com.example.batch.database.batch.repository.ResetPointREP;
 import com.example.batch.service.webhook.api.dto.WebhookVO;
 import com.example.batch.utils.enums.ChannelEnum;
 import com.example.batch.utils.vo.MattermostChannelVO;

@@ -1,7 +1,7 @@
 package com.example.batch.cron.reader;
 
 import com.example.batch.cron.common.DelJpaPagingItemReader;
-import com.example.batch.common.database.rep.jpa.mattermost.sent.MattermostSentEntity;
+import com.example.batch.database.crawling.entity.MattermostSentEntity;
 import jakarta.persistence.EntityManagerFactory;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

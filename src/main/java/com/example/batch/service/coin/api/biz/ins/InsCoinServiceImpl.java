@@ -2,8 +2,8 @@ package com.example.batch.service.coin.api.biz.ins;
 
 import com.example.batch.service.coin.api.vo.BitHumbDataVO;
 import com.example.batch.service.coin.api.vo.BitHumbResultVO;
-import com.example.batch.common.database.rep.jpa.coin.CoinEntity;
-import com.example.batch.common.database.rep.jpa.coin.CoinREP;
+import com.example.batch.database.crawling.entity.CoinEntity;
+import com.example.batch.database.crawling.repository.CoinREP;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

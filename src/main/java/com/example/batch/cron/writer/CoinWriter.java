@@ -1,7 +1,7 @@
 package com.example.batch.cron.writer;
 
 import com.example.batch.cron.common.BasicWriter;
-import com.example.batch.common.database.rep.jpa.coin.CoinREP;
+import com.example.batch.database.crawling.repository.CoinREP;
 import lombok.RequiredArgsConstructor;
 import org.springframework.batch.core.configuration.annotation.StepScope;
 import org.springframework.batch.item.Chunk;

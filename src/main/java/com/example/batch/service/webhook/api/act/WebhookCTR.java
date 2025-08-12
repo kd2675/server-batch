@@ -21,9 +21,6 @@ public class WebhookCTR {
     private final WebhookCMD webhookCMD;
     private final MattermostUtil mattermostUtil;
 
-    private final JobLauncher jobLauncher;
-    private final JobRegistry jobRegistry;
-
     @PostMapping("test")
     public String test(@RequestBody final WebhookVO webhookVO){
         String text = webhookVO.getText().replace(webhookVO.getTriggerWord() + " ", "");

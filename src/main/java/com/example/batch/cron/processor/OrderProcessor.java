@@ -1,9 +1,9 @@
 package com.example.batch.cron.processor;
 
 import com.example.batch.cron.common.BasicProcessor;
-import com.example.batch.pub.database.rep.jpa.order.OrderEntity;
-import com.example.batch.common.database.rep.jpa.coin.CoinEntity;
-import com.example.batch.common.database.rep.jpa.coin.CoinREP;
+import com.example.batch.database.pub.entity.OrderEntity;
+import com.example.batch.database.crawling.entity.CoinEntity;
+import com.example.batch.database.crawling.repository.CoinREP;
 import lombok.RequiredArgsConstructor;
 import org.springframework.batch.core.configuration.annotation.StepScope;
 import org.springframework.context.annotation.Bean;

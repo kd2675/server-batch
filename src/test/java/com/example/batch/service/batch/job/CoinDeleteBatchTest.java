@@ -1,8 +1,8 @@
 package com.example.batch.service.batch.job;
 
-import com.example.batch.common.config.JpaConfig;
-import com.example.batch.common.config.ScheduleBatchConfig;
-import com.example.batch.cron.database.BatchDataConfig;
+import com.example.batch.config.JpaConfig;
+import com.example.batch.config.ScheduleBatchConfig;
+import com.example.batch.database.batch.BatchDataConfig;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;

@@ -2,10 +2,10 @@ package com.example.batch.service.webhook.api.biz;
 
 import com.example.batch.utils.vo.BugsApiListVO;
 import com.example.batch.utils.vo.BugsApiVO;
-import com.example.batch.common.database.rep.jpa.music.MusicEntity;
-import com.example.batch.common.database.rep.jpa.music.MusicREP;
-import com.example.batch.common.database.rep.jpa.music.PlaylistEntity;
-import com.example.batch.common.database.rep.jpa.music.PlaylistREP;
+import com.example.batch.database.crawling.entity.MusicEntity;
+import com.example.batch.database.crawling.repository.MusicREP;
+import com.example.batch.database.crawling.entity.PlaylistEntity;
+import com.example.batch.database.crawling.repository.PlaylistREP;
 import com.example.batch.service.webhook.api.dto.WebhookVO;
 import com.example.batch.utils.BugsApiUtil;
 import com.example.batch.utils.ChromeDriverConnUtil;

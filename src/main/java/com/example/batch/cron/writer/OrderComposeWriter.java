@@ -1,7 +1,7 @@
 package com.example.batch.cron.writer;
 
 import com.example.batch.cron.common.BasicWriter;
-import com.example.batch.pub.database.rep.jpa.order.OrderEntity;
+import com.example.batch.database.pub.entity.OrderEntity;
 import org.springframework.batch.core.configuration.annotation.StepScope;
 import org.springframework.batch.item.support.CompositeItemWriter;
 import org.springframework.beans.factory.annotation.Qualifier;

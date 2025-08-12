@@ -1,10 +1,10 @@
 package com.example.batch.cron.writer;
 
 import com.example.batch.cron.common.BasicWriter;
-import com.example.batch.common.database.rep.jpa.news.NewsEntity;
-import com.example.batch.common.database.rep.jpa.news.NewsREP;
-import com.example.batch.common.database.rep.jpa.oldnews.OldNewsEntity;
-import com.example.batch.common.database.rep.jpa.oldnews.OldNewsREP;
+import com.example.batch.database.crawling.entity.NewsEntity;
+import com.example.batch.database.crawling.repository.NewsREP;
+import com.example.batch.database.crawling.entity.OldNewsEntity;
+import com.example.batch.database.crawling.repository.OldNewsREP;
 import jakarta.persistence.EntityManagerFactory;
 import lombok.RequiredArgsConstructor;
 import org.springframework.batch.core.configuration.annotation.StepScope;

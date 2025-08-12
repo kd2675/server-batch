@@ -1,6 +1,6 @@
 package com.example.batch.cron.reader;
 
-import com.example.batch.pub.database.rep.jpa.order.OrderEntity;
+import com.example.batch.database.pub.entity.OrderEntity;
 import jakarta.persistence.EntityManagerFactory;
 import lombok.RequiredArgsConstructor;
 import org.springframework.batch.core.configuration.annotation.StepScope;

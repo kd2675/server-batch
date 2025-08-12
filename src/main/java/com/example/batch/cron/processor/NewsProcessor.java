@@ -2,7 +2,7 @@ package com.example.batch.cron.processor;
 
 import com.example.batch.cron.common.BasicProcessor;
 import com.example.batch.service.news.api.vo.NaverNewsApiItemVO;
-import com.example.batch.common.database.rep.jpa.news.NewsEntity;
+import com.example.batch.database.crawling.entity.NewsEntity;
 import org.springframework.batch.core.configuration.annotation.StepScope;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

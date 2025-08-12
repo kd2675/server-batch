@@ -1,7 +1,7 @@
 package com.example.batch.service.webhook.api.biz;
 
-import com.example.batch.common.database.rep.jpa.watch.WatchEntity;
-import com.example.batch.common.database.rep.jpa.watch.WatchREP;
+import com.example.batch.database.crawling.entity.WatchEntity;
+import com.example.batch.database.crawling.repository.WatchREP;
 import com.example.batch.service.webhook.api.dto.WebhookVO;
 import com.example.batch.utils.MattermostUtil;
 import lombok.RequiredArgsConstructor;

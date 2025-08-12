@@ -2,8 +2,8 @@ package com.example.batch.cron.reader;
 
 import com.example.batch.cron.common.DelJpaPagingItemReader;
 import com.example.batch.cron.step.CoinStep;
-import com.example.batch.common.database.rep.jpa.coin.CoinEntity;
-import com.example.batch.common.database.rep.jpa.coin.CoinREP;
+import com.example.batch.database.crawling.entity.CoinEntity;
+import com.example.batch.database.crawling.repository.CoinREP;
 import jakarta.persistence.EntityManagerFactory;
 import lombok.RequiredArgsConstructor;
 import org.springframework.batch.core.configuration.annotation.StepScope;

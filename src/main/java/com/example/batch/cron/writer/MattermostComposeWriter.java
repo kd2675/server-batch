@@ -1,6 +1,6 @@
 package com.example.batch.cron.writer;
 
-import com.example.batch.common.database.rep.jpa.mattermost.sent.MattermostSentEntity;
+import com.example.batch.database.crawling.entity.MattermostSentEntity;
 import org.springframework.batch.core.configuration.annotation.StepScope;
 import org.springframework.batch.item.ItemWriter;
 import org.springframework.batch.item.support.CompositeItemWriter;

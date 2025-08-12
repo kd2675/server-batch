@@ -1,8 +1,8 @@
 package com.example.batch.cron.processor;
 
 import com.example.batch.cron.common.BasicProcessor;
-import com.example.batch.common.database.rep.jpa.hotdeal.HotdealDTO;
-import com.example.batch.common.database.rep.jpa.hotdeal.HotdealEntity;
+import com.example.batch.database.crawling.dto.HotdealDTO;
+import com.example.batch.database.crawling.entity.HotdealEntity;
 import org.springframework.batch.core.configuration.annotation.StepScope;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
