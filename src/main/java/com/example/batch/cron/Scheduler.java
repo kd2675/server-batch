@@ -5,6 +5,8 @@ import com.example.batch.cron.job.CoinJob;
 import com.example.batch.cron.job.HotdealJob;
 import com.example.batch.cron.job.NewsJob;
 import com.example.batch.cron.job.OrderJob;
+import org.example.core.request.BatchExecuteRequest;
+import com.example.batch.feign.service.ServerCloudService;
 import com.example.batch.service.coin.api.biz.ins.InsCoinService;
 import com.example.batch.service.lotto.api.biz.LottoService;
 import com.example.batch.service.reset.api.biz.Reset;
@@ -12,9 +14,8 @@ import com.example.batch.service.sport.biz.InsSportSVC;
 import com.example.batch.service.sport.biz.ReserveSportImpl;
 import com.example.batch.service.sport.biz.ReserveSportSVC;
 import com.example.batch.service.stock.biz.StockService;
-import com.example.batch.service.stock.vo.StockPriceDTO;
-import com.example.batch.service.stock.vo.StockSearchDTO;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.example.core.utils.ServerTypeUtils;
 import org.springframework.batch.core.*;
 import org.springframework.batch.core.configuration.JobRegistry;
@@ -24,8 +25,8 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalTime;
-import java.util.List;
 
+@Slf4j
 @RequiredArgsConstructor
 @Component
 public class Scheduler {
@@ -40,23 +41,20 @@ public class Scheduler {
     private final ReserveSportSVC reserveSportSVC;
     private final ReserveSportImpl reserveSportImpl;
     private final StockService stockService;
+    private final ServerCloudService serverCloudService;
 
 
-//    @Scheduled(cron = "0 55 14 * * *")
-//    public void buyTest() throws Exception {
-//        // add parameters as needed
-//        if (ServerTypeUtils.isProd()) {
-//            lottoService.check();
-//        }
-//    }
+    @Scheduled(fixedRate = 1000 * 60, initialDelay = 1000 * 10)
+    public void test() throws Exception {
+        // add parameters as needed
+        if (ServerTypeUtils.isLocal()) {
+            BatchExecuteRequest request = BatchExecuteRequest.hotdeal();
 
-//    @Scheduled(initialDelay = 1000 * 1)
-//    public void test() throws Exception {
-//        // add parameters as needed
-//        if (ServerTypeUtils.isLocal()) {
-//            reserveSportSVC.test1();
-//        }
-//    }
+            serverCloudService.executeAsyncBatch("HOTDEAL", request);
+        }
+    }
+
+
 
     @Scheduled(cron = "0 0 18 * * FRI")
     public void orderCheck() throws Exception {
