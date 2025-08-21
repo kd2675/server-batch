@@ -4,6 +4,7 @@ package com.example.batch.feign.fallback;
 import com.example.batch.feign.client.ServerCloudClient;
 import org.example.core.request.BatchExecuteRequest;
 import lombok.extern.slf4j.Slf4j;
+import org.example.core.request.BatchServiceRequest;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
@@ -18,6 +19,21 @@ public class ServerCloudFallback implements ServerCloudClient {
 
     @Override
     public ResponseEntity<Map<String, Object>> executeBatch(BatchExecuteRequest request, String source) {
+        log.warn("server-cloud 배치 실행 실패 - fallback 실행: {}", request.getJobType());
+
+        Map<String, Object> response = Map.of(
+                "success", false,
+                "message", "server-cloud가 일시적으로 사용할 수 없습니다",
+                "jobType", request.getJobType(),
+                "fallback", true,
+                "timestamp", LocalDateTime.now()
+        );
+
+        return ResponseEntity.status(503).body(response);
+    }
+
+    @Override
+    public ResponseEntity<Map<String, Object>> serviceBatch(BatchServiceRequest request, String source) {
         log.warn("server-cloud 배치 실행 실패 - fallback 실행: {}", request.getJobType());
 
         Map<String, Object> response = Map.of(

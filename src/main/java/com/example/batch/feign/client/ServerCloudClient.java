@@ -3,6 +3,7 @@ package com.example.batch.feign.client;
 import com.example.batch.config.FeignClientsConfig;
 import org.example.core.request.BatchExecuteRequest;
 import com.example.batch.feign.fallback.ServerCloudFallback;
+import org.example.core.request.BatchServiceRequest;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -26,6 +27,12 @@ public interface ServerCloudClient {
     @PostMapping("/api/gateway/execute")
     ResponseEntity<Map<String, Object>> executeBatch(
             @RequestBody BatchExecuteRequest request,
+            @RequestHeader(value = "X-Source", defaultValue = "server-batch") String source
+    );
+
+    @PostMapping("/api/gateway/service")
+    ResponseEntity<Map<String, Object>> serviceBatch(
+            @RequestBody BatchServiceRequest request,
             @RequestHeader(value = "X-Source", defaultValue = "server-batch") String source
     );
 

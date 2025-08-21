@@ -64,23 +64,23 @@ class ServerCloudErrorDecoder implements ErrorDecoder {
 
         switch (response.status()) {
             case 400:
-                log.warn("server-cloud Bad Request: {}", message);
+                log.error("server-cloud Bad Request: {}", message);
                 return new IllegalArgumentException("잘못된 요청 - " + message);
 
             case 401:
-                log.warn("server-cloud Unauthorized: {}", message);
+                log.error("server-cloud Unauthorized: {}", message);
                 return new SecurityException("인증 실패 - " + message);
 
             case 403:
-                log.warn("server-cloud Forbidden: {}", message);
+                log.error("server-cloud Forbidden: {}", message);
                 return new SecurityException("권한 없음 - " + message);
 
             case 404:
-                log.warn("server-cloud Not Found: {}", message);
+                log.error("server-cloud Not Found: {}", message);
                 return new IllegalStateException("리소스 없음 - " + message);
 
             case 429:
-                log.warn("server-cloud Rate Limited: {}", message);
+                log.error("server-cloud Rate Limited: {}", message);
                 return new RuntimeException("요청 제한 초과 - " + message);
 
             case 500:
