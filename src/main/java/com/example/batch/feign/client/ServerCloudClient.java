@@ -15,7 +15,7 @@ import java.util.Map;
 
 @FeignClient(
         name = "server-cloud",
-        url = "http://localhost:20200/service/batch", // server-cloud 주소
+        url = "${feign.client.server-cloud.url}", // server-cloud 주소
         fallback = ServerCloudFallback.class,
         configuration = FeignClientsConfig.class
 )

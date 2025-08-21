@@ -6,6 +6,11 @@ spring:
     activate:
       on-profile: prod
 
+feign:
+  client:
+    server-cloud:
+      url: "http://kimd0.iptime.org:10200/service/batch"
+
 crawl:
   naver:
     url: "https://m.stock.naver.com/domestic/index/KOSPI/total"

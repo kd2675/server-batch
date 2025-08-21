@@ -6,6 +6,11 @@ spring:
     activate:
       on-profile: local
 
+feign:
+  client:
+    server-cloud:
+      url: "http://localhost:20200/service/batch"
+
 crawl:
   naver:
     url: "https://m.stock.naver.com/domestic/index/KOSPI/total"
