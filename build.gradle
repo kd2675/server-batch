@@ -27,6 +27,8 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-validation'
     implementation "org.springframework.boot:spring-boot-starter-actuator"
 
+    implementation 'org.springframework.cloud:spring-cloud-starter-netflix-eureka-client'
+
     // https://mvnrepository.com/artifact/org.jsoup/jsoup
     implementation group: 'org.jsoup', name: 'jsoup', version: '1.15.3'
     // https://mvnrepository.com/artifact/org.seleniumhq.selenium/selenium-java
