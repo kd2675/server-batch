@@ -25,11 +25,11 @@ public class ResetPointEntity extends CommonDateEntity {
     @Column(name = "point_id", nullable = false)
     private int pointId;
 
-    @ColumnDefault("")
+    @ColumnDefault("''")
     @Column(name = "point_explain", nullable = true, length = 255, updatable = false)
     private String pointExplain;
 
-    @ColumnDefault("n")
+    @ColumnDefault("'n'")
     @Column(name = "reset_yn", nullable = false, length = 1)
     private String resetYn;
 
