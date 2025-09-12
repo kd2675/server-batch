@@ -62,7 +62,6 @@ public class NewsScheduler {
     }
 
     @Scheduled(cron = "0 0/30 * * * *")
-    @Async("asyncTaskExecutor")
     public void delNewsJob() throws Exception {
         // add parameters as needed
         if (ServerTypeUtils.isProd()) {

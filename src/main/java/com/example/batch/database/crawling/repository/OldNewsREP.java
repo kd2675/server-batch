@@ -1,5 +1,6 @@
 package com.example.batch.database.crawling.repository;
 
+import com.example.batch.database.crawling.entity.NewsEntity;
 import com.example.batch.database.crawling.entity.OldNewsEntity;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -22,5 +23,9 @@ public interface OldNewsREP extends JpaRepository<OldNewsEntity, Long>, JpaSpeci
 
     Page<OldNewsEntity> findAll(Specification<OldNewsEntity> spec, Pageable pageable);
 
-
+    @Query(value = "SELECT * FROM oldNews " +
+            "WHERE MATCH(title, content) AGAINST (?1 IN NATURAL LANGUAGE MODE) " +
+            "ORDER BY id DESC",
+            nativeQuery = true)
+    List<OldNewsEntity> searchFullText(String keyword);
 }

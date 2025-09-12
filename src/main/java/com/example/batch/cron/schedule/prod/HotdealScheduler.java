@@ -47,7 +47,7 @@ public class HotdealScheduler {
     public void delSentHotdealJob() throws Exception {
         // add parameters as needed
         if (ServerTypeUtils.isProd()) {
-            serverCloudService.executeAsyncBatch(BatchExecuteRequest.delSentHotdealHob());
+            serverCloudService.executeAsyncBatch(BatchExecuteRequest.delSentHotdealJob());
         }
     }
 
@@ -56,7 +56,7 @@ public class HotdealScheduler {
     public void delHotdealJob() throws Exception {
         // add parameters as needed
         if (ServerTypeUtils.isProd()) {
-            serverCloudService.executeAsyncBatch(BatchExecuteRequest.delHotdealHob());
+            serverCloudService.executeAsyncBatch(BatchExecuteRequest.delHotdealJob());
         }
     }
 }
