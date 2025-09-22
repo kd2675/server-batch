@@ -3,17 +3,22 @@ server:
 
 eureka:
   client:
-    service-url:
-      defaultZone: http://localhost:10210/eureka/  # 유레카 서버 주소
-    fetch-registry: true
-    register-with-eureka: true
-  instance:
-    prefer-ip-address: true
+    enabled: false
 
 spring:
   config:
     activate:
       on-profile: local
+  kafka:
+    bootstrap-servers: kimd0.iptime.org:9092
+    producer:
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
+      acks: all
+      retries: 3
+  cloud:
+    config:
+      enabled: false
 
 feign:
   client:

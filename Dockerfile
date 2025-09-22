@@ -21,6 +21,10 @@ RUN gradle :server-batch:clean :server-batch:build --no-daemon --parallel
 FROM openjdk:17-slim
 WORKDIR /app
 
+RUN apt-get update
+
+RUN apt-get install -y curl
+
 COPY --from=builder /build/server-batch/build/libs/*.jar ./app.jar
 ENV	USE_PROFILE dev
 
