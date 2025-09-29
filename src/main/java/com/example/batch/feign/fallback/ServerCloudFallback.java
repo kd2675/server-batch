@@ -16,9 +16,38 @@ import java.util.Map;
 @Component
 @Slf4j
 public class ServerCloudFallback implements ServerCloudClient {
+    @Override
+    public ResponseEntity<Map<String, Object>> executeAsync(BatchExecuteRequest request, String source) {
+        log.warn("server-cloud 배치 실행 실패 - fallback 실행: {}", request.getJobType());
+
+        Map<String, Object> response = Map.of(
+                "success", false,
+                "message", "server-cloud가 일시적으로 사용할 수 없습니다",
+                "jobType", request.getJobType(),
+                "fallback", true,
+                "timestamp", LocalDateTime.now()
+        );
+
+        return ResponseEntity.status(503).body(response);
+    }
 
     @Override
     public ResponseEntity<Map<String, Object>> execute(BatchExecuteRequest request, String source) {
+        log.warn("server-cloud 배치 실행 실패 - fallback 실행: {}", request.getJobType());
+
+        Map<String, Object> response = Map.of(
+                "success", false,
+                "message", "server-cloud가 일시적으로 사용할 수 없습니다",
+                "jobType", request.getJobType(),
+                "fallback", true,
+                "timestamp", LocalDateTime.now()
+        );
+
+        return ResponseEntity.status(503).body(response);
+    }
+
+    @Override
+    public ResponseEntity<Map<String, Object>> serviceAsync(BatchServiceRequest request, String source) {
         log.warn("server-cloud 배치 실행 실패 - fallback 실행: {}", request.getJobType());
 
         Map<String, Object> response = Map.of(
