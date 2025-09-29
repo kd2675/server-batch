@@ -20,7 +20,7 @@ public class LottoScheduler {
         if (ServerTypeUtils.isProd()) {
             BatchServiceRequest request = BatchServiceRequest.account();
 
-            serverCloudService.serviceAsyncBatch(request);
+            serverCloudService.serviceAsync(request);
         }
     }
 
@@ -30,7 +30,7 @@ public class LottoScheduler {
         if (ServerTypeUtils.isProd()) {
             BatchServiceRequest request = BatchServiceRequest.buy();
 
-            serverCloudService.serviceAsyncBatch(request);
+            serverCloudService.serviceAsync(request);
         }
     }
 
@@ -40,7 +40,7 @@ public class LottoScheduler {
         if (ServerTypeUtils.isProd()) {
             BatchServiceRequest request = BatchServiceRequest.check();
 
-            serverCloudService.serviceAsyncBatch(request);
+            serverCloudService.serviceAsync(request);
         }
     }
 }

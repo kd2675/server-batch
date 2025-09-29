@@ -5,7 +5,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.example.core.request.BatchExecuteRequest;
 import org.example.core.utils.ServerTypeUtils;
-import org.springframework.scheduling.annotation.Async;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
@@ -28,35 +27,32 @@ public class HotdealScheduler {
         if (!now.isBefore(start) && !now.isAfter(end)) {
             // add parameters as needed
             if (ServerTypeUtils.isProd()) {
-                serverCloudService.executeAsyncBatch(BatchExecuteRequest.insHotdealJob());
+                serverCloudService.executeAsync(BatchExecuteRequest.insHotdealJob());
             }
         }
     }
 
     @Scheduled(cron = "0 0/5 8-23 * * *")
-    @Async("asyncTaskExecutor")
     public void sendHotdeal() throws Exception {
         // add parameters as needed
         if (ServerTypeUtils.isProd()) {
-            serverCloudService.executeAsyncBatch(BatchExecuteRequest.sendHotdealJob());
+            serverCloudService.execute(BatchExecuteRequest.sendHotdealJob());
         }
     }
 
     @Scheduled(cron = "0 0/30 * * * *")
-    @Async("asyncTaskExecutor")
     public void delSentHotdealJob() throws Exception {
         // add parameters as needed
         if (ServerTypeUtils.isProd()) {
-            serverCloudService.executeAsyncBatch(BatchExecuteRequest.delSentHotdealJob());
+            serverCloudService.executeAsync(BatchExecuteRequest.delSentHotdealJob());
         }
     }
 
     @Scheduled(cron = "0 0 4 20 * *")
-    @Async("asyncTaskExecutor")
     public void delHotdealJob() throws Exception {
         // add parameters as needed
         if (ServerTypeUtils.isProd()) {
-            serverCloudService.executeAsyncBatch(BatchExecuteRequest.delHotdealJob());
+            serverCloudService.executeAsync(BatchExecuteRequest.delHotdealJob());
         }
     }
 }

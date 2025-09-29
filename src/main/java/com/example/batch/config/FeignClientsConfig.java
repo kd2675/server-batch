@@ -40,7 +40,7 @@ public class FeignClientsConfig {
     @Bean
     public Request.Options serverCloudRequestOptions() {
         // Gateway 특성상 빠른 응답 기대
-        return new Request.Options(5000, TimeUnit.MILLISECONDS, 15000, TimeUnit.MILLISECONDS, true);
+        return new Request.Options(1000 * 10, TimeUnit.MILLISECONDS, 1000 * 15, TimeUnit.MILLISECONDS, true);
     }
 
     @Bean

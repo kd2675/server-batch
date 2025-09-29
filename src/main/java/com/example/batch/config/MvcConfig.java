@@ -17,6 +17,7 @@ import org.springframework.http.converter.ByteArrayHttpMessageConverter;
 import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.http.converter.json.Jackson2ObjectMapperBuilder;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
+import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
@@ -30,6 +31,7 @@ import java.util.List;
 @EnableWebMvc
 @Configuration
 @RequiredArgsConstructor
+@EnableScheduling
 @ComponentScan(basePackages = {"org.example.core", "com.example.batch", "org.example.log"})
 public class MvcConfig implements WebMvcConfigurer {
     @Override

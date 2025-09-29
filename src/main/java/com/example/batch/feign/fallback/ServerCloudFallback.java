@@ -18,7 +18,7 @@ import java.util.Map;
 public class ServerCloudFallback implements ServerCloudClient {
 
     @Override
-    public ResponseEntity<Map<String, Object>> executeBatch(BatchExecuteRequest request, String source) {
+    public ResponseEntity<Map<String, Object>> execute(BatchExecuteRequest request, String source) {
         log.warn("server-cloud 배치 실행 실패 - fallback 실행: {}", request.getJobType());
 
         Map<String, Object> response = Map.of(
@@ -33,7 +33,7 @@ public class ServerCloudFallback implements ServerCloudClient {
     }
 
     @Override
-    public ResponseEntity<Map<String, Object>> serviceBatch(BatchServiceRequest request, String source) {
+    public ResponseEntity<Map<String, Object>> service(BatchServiceRequest request, String source) {
         log.warn("server-cloud 배치 실행 실패 - fallback 실행: {}", request.getJobType());
 
         Map<String, Object> response = Map.of(

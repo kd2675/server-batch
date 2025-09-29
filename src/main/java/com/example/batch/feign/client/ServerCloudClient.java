@@ -24,14 +24,26 @@ public interface ServerCloudClient {
     /**
      * Gateway를 통한 배치 실행
      */
-    @PostMapping("/api/gateway/execute")
-    ResponseEntity<Map<String, Object>> executeBatch(
+    @PostMapping("/api/gateway/executeAsync")
+    ResponseEntity<Map<String, Object>> executeAsync(
             @RequestBody BatchExecuteRequest request,
             @RequestHeader(value = "X-Source", defaultValue = "server-batch") String source
     );
 
+    @PostMapping("/api/gateway/execute")
+    ResponseEntity<Map<String, Object>> execute(
+            @RequestBody BatchExecuteRequest request,
+            @RequestHeader(value = "X-Source", defaultValue = "server-batch") String source
+    );
+
+    @PostMapping("/api/gateway/serviceAsync")
+    ResponseEntity<Map<String, Object>> serviceAsync(
+            @RequestBody BatchServiceRequest request,
+            @RequestHeader(value = "X-Source", defaultValue = "server-batch") String source
+    );
+
     @PostMapping("/api/gateway/service")
-    ResponseEntity<Map<String, Object>> serviceBatch(
+    ResponseEntity<Map<String, Object>> service(
             @RequestBody BatchServiceRequest request,
             @RequestHeader(value = "X-Source", defaultValue = "server-batch") String source
     );

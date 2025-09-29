@@ -22,8 +22,8 @@ public class StockScheduler {
         if (ServerTypeUtils.isLocal()) {
             BatchServiceRequest request = BatchServiceRequest.logCacheStats();
 
-//            serverCloudService.serviceAsyncBatch(request);
-            testProducer.send();
+            serverCloudService.service(request);
+//            testProducer.send();
         }
     }
 }

@@ -18,7 +18,7 @@ public class OrderScheduler {
     public void orderJob() throws Exception {
         // add parameters as needed
         if (ServerTypeUtils.isProd()) {
-            serverCloudService.executeAsyncBatch(BatchExecuteRequest.updOrderJob());
+            serverCloudService.execute(BatchExecuteRequest.updOrderJob());
         }
     }
 }
