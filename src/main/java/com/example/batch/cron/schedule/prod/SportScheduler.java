@@ -21,7 +21,7 @@ import java.util.Map;
 public class SportScheduler {
     private final ServerCloudService serverCloudService;
 
-    @Scheduled(cron = "0,2,4,7 0 0 10,11 10 *")
+    @Scheduled(cron = "1,3 0 0 10,11 10 *")
     public void sportService() throws Exception {
         // add parameters as needed
         Map<String, Object> parameters = new HashMap<>();
