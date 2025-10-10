@@ -21,14 +21,14 @@ import java.util.Map;
 public class SportScheduler {
     private final ServerCloudService serverCloudService;
 
-    @Scheduled(cron = "0 50 16 29 9 *")
+    @Scheduled(cron = "0,2,4,7 0 0 10,11 10 *")
     public void sportService() throws Exception {
         // add parameters as needed
         Map<String, Object> parameters = new HashMap<>();
         parameters.put("year", "2025");
         parameters.put("month", "10");
-        parameters.put("day", "1");
-        parameters.put("st", "14");
+        parameters.put("day", "18");
+        parameters.put("st", "9");
 
         BatchServiceRequest batchServiceRequest = BatchServiceRequest.builder()
                 .jobType("beforeCheckJangsung")
