@@ -27,7 +27,7 @@ public class HotdealScheduler {
         if (!now.isBefore(start) && !now.isAfter(end)) {
             // add parameters as needed
             if (ServerTypeUtils.isProd()) {
-                serverCloudService.executeAsync(BatchExecuteRequest.insHotdealJob());
+//                serverCloudService.executeAsync(BatchExecuteRequest.insHotdealJob());
             }
         }
     }
