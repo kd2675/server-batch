@@ -16,13 +16,24 @@ public class StockScheduler {
     private final ServerCloudService serverCloudService;
     private final TestProducer testProducer;
 
+//    @Scheduled(fixedRate = 1000 * 60, initialDelay = 1000)
+//    public void logCacheStats() throws Exception {
+//        // add parameters as needed
+//        if (ServerTypeUtils.isLocal()) {
+//            BatchServiceRequest request = BatchServiceRequest.logCacheStats();
+//
+//            serverCloudService.service(request);
+////            testProducer.send();
+//        }
+//    }
+//
     @Scheduled(fixedRate = 1000 * 60, initialDelay = 1000)
-    public void logCacheStats() throws Exception {
+    public void test1() throws Exception {
         // add parameters as needed
         if (ServerTypeUtils.isLocal()) {
-            BatchServiceRequest request = BatchServiceRequest.logCacheStats();
+            BatchServiceRequest request = BatchServiceRequest.account();
 
-            serverCloudService.service(request);
+            serverCloudService.serviceAsync(request);
 //            testProducer.send();
         }
     }

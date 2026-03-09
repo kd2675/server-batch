@@ -18,7 +18,7 @@ COPY server-batch/ /build/server-batch/
 # 빌드 (기존과 동일)
 RUN gradle :server-batch:clean :server-batch:build --no-daemon --parallel
 
-FROM openjdk:17-slim
+FROM eclipse-temurin:17-jdk-jammy
 WORKDIR /app
 
 RUN apt-get update
