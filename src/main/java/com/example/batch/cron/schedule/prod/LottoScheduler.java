@@ -24,15 +24,15 @@ public class LottoScheduler {
         }
     }
 
-    @Scheduled(cron = "0 0 10 * * SAT")
-    public void buy() throws Exception {
-        // add parameters as needed
-        if (ServerTypeUtils.isProd()) {
-            BatchServiceRequest request = BatchServiceRequest.buy();
-
-            serverCloudService.serviceAsync(request);
-        }
-    }
+//    @Scheduled(cron = "0 0 10 * * SAT")
+//    public void buy() throws Exception {
+//        // add parameters as needed
+//        if (ServerTypeUtils.isProd()) {
+//            BatchServiceRequest request = BatchServiceRequest.buy();
+//
+//            serverCloudService.serviceAsync(request);
+//        }
+//    }
 
     @Scheduled(cron = "0 0 22 * * SAT")
     public void check() throws Exception {
