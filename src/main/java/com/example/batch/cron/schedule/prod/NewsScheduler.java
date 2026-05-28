@@ -47,10 +47,11 @@ public class NewsScheduler {
         }
     }
 
-    @Scheduled(cron = "40 30-59 8 * * *", zone = "Asia/Seoul")
-    @Scheduled(cron = "40 0-30 9 * * *", zone = "Asia/Seoul")
+    @Scheduled(cron = "40 * 8,9 * * *", zone = "Asia/Seoul")
+    @Scheduled(cron = "40 0 10 * * *", zone = "Asia/Seoul")
+    @Scheduled(cron = "40 30-59 14 * * *", zone = "Asia/Seoul")
     @Scheduled(cron = "40 * 15 * * *", zone = "Asia/Seoul")
-    @Scheduled(cron = "40 0 16 * * *", zone = "Asia/Seoul")
+    @Scheduled(cron = "40 0-30 16 * * *", zone = "Asia/Seoul")
     public void sendNewsStockJob() throws Exception {
         // add parameters as needed
         if (ServerTypeUtils.isProd()) {
