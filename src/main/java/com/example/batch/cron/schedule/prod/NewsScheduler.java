@@ -19,7 +19,7 @@ public class NewsScheduler {
     public void insNewsJob() throws Exception {
         // add parameters as needed
         if (ServerTypeUtils.isProd()) {
-            serverCloudService.execute(BatchExecuteRequest.insNewsJob());
+            serverCloudService.executeAsync(BatchExecuteRequest.insNewsJob());
         }
     }
 
