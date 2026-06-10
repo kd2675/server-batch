@@ -27,7 +27,7 @@ public class NewsScheduler {
     public void sendNewsJob() throws Exception {
         // add parameters as needed
         if (ServerTypeUtils.isProd()) {
-            serverCloudService.execute(BatchExecuteRequest.sendNewsJob());
+//            serverCloudService.execute(BatchExecuteRequest.sendNewsJob());
         }
     }
 
@@ -43,7 +43,7 @@ public class NewsScheduler {
     public void sendNewsMarketingJob() throws Exception {
         // add parameters as needed
         if (ServerTypeUtils.isProd()) {
-            serverCloudService.execute(BatchExecuteRequest.sendNewsMarketingJob());
+//            serverCloudService.execute(BatchExecuteRequest.sendNewsMarketingJob());
         }
     }
 
@@ -55,7 +55,7 @@ public class NewsScheduler {
     public void sendNewsStockJob() throws Exception {
         // add parameters as needed
         if (ServerTypeUtils.isProd()) {
-            serverCloudService.execute(BatchExecuteRequest.sendNewsStockJob());
+//            serverCloudService.execute(BatchExecuteRequest.sendNewsStockJob());
         }
     }
 
