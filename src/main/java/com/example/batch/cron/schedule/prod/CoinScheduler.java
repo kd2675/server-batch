@@ -15,7 +15,8 @@ import org.springframework.stereotype.Component;
 public class CoinScheduler {
     private final ServerCloudService serverCloudService;
 
-    @Scheduled(fixedRate = 10000)
+//    @Scheduled(fixedRate = 10000)
+    @Scheduled(cron = "0 0/10 * * * *")
 //    @Scheduled(cron = "0/1 * 8-17 * * *")
     public void coinSaveJob() throws Exception {
         if (ServerTypeUtils.isProd()) {
