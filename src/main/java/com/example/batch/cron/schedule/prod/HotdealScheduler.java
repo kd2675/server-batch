@@ -16,7 +16,7 @@ import java.time.LocalTime;
 public class HotdealScheduler {
     private final ServerCloudService serverCloudService;
 
-    @Scheduled(fixedRateString = "#{ T(java.util.concurrent.ThreadLocalRandom).current().nextInt(600000)+300000 }")
+//    @Scheduled(fixedRateString = "#{ T(java.util.concurrent.ThreadLocalRandom).current().nextInt(600000)+300000 }")
     public void insHotdeal() throws Exception {
         // 현재 시간 가져오기
         LocalTime now = LocalTime.now();
@@ -32,15 +32,15 @@ public class HotdealScheduler {
         }
     }
 
-    @Scheduled(cron = "0 0/5 8-23 * * *")
+//    @Scheduled(cron = "0 0/5 8-23 * * *")
     public void sendHotdeal() throws Exception {
         // add parameters as needed
         if (ServerTypeUtils.isProd()) {
-            serverCloudService.execute(BatchExecuteRequest.sendHotdealJob());
+            serverCloudService.executeAsync(BatchExecuteRequest.sendHotdealJob());
         }
     }
 
-    @Scheduled(cron = "0 0/30 * * * *")
+//    @Scheduled(cron = "0 0/30 * * * *")
     public void delSentHotdealJob() throws Exception {
         // add parameters as needed
         if (ServerTypeUtils.isProd()) {
@@ -48,7 +48,7 @@ public class HotdealScheduler {
         }
     }
 
-    @Scheduled(cron = "0 0 4 20 * *")
+//    @Scheduled(cron = "0 0 4 20 * *")
     public void delHotdealJob() throws Exception {
         // add parameters as needed
         if (ServerTypeUtils.isProd()) {
