@@ -2,21 +2,28 @@ package com.example.batch.feign.service;
 
 import com.example.batch.feign.client.ServerCloudClient;
 import org.example.core.request.BatchExecuteRequest;
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.example.core.request.BatchServiceRequest;
 import org.example.core.request.Priority;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.Executor;
 
 @Service
 @Slf4j
-@RequiredArgsConstructor
 public class ServerCloudService {
     private final ServerCloudClient serverCloudClient;
+    private final Executor serverCloudTaskExecutor;
+
+    public ServerCloudService(ServerCloudClient serverCloudClient,
+                              @Qualifier("serverCloudTaskExecutor") Executor serverCloudTaskExecutor) {
+        this.serverCloudClient = serverCloudClient;
+        this.serverCloudTaskExecutor = serverCloudTaskExecutor;
+    }
 
     /**
      * 비동기 배치 실행
@@ -43,7 +50,7 @@ public class ServerCloudService {
             } catch (Exception e) {
                 log.error("Gateway를 통한 {} 배치 실행 중 오류 발생", request.getJobType(), e);
             }
-        });
+        }, serverCloudTaskExecutor);
     }
 
     public void execute(BatchExecuteRequest request) {
@@ -68,7 +75,7 @@ public class ServerCloudService {
             } catch (Exception e) {
                 log.error("Gateway를 통한 {} 배치 실행 중 오류 발생", request.getJobType(), e);
             }
-        });
+        }, serverCloudTaskExecutor);
     }
 
     public void serviceAsync(BatchServiceRequest request) {
@@ -93,7 +100,7 @@ public class ServerCloudService {
             } catch (Exception e) {
                 log.error("Gateway를 통한 {} 배치 실행 중 오류 발생", request.getJobType(), e);
             }
-        });
+        }, serverCloudTaskExecutor);
     }
 
     public void service(BatchServiceRequest request) {
@@ -118,7 +125,7 @@ public class ServerCloudService {
             } catch (Exception e) {
                 log.error("Gateway를 통한 {} 배치 실행 중 오류 발생", request.getJobType(), e);
             }
-        });
+        }, serverCloudTaskExecutor);
     }
 
     /**
@@ -154,7 +161,7 @@ public class ServerCloudService {
                     break;
                 }
             }
-        });
+        }, serverCloudTaskExecutor);
     }
 
     /**

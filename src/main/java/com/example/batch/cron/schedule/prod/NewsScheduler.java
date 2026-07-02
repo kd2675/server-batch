@@ -35,7 +35,7 @@ public class NewsScheduler {
     public void sendNewsFlashJob() throws Exception {
         // add parameters as needed
         if (ServerTypeUtils.isProd()) {
-            serverCloudService.execute(BatchExecuteRequest.sendNewsFlashJob());
+            serverCloudService.executeAsync(BatchExecuteRequest.sendNewsFlashJob());
         }
     }
 

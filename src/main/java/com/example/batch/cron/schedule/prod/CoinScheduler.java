@@ -20,7 +20,7 @@ public class CoinScheduler {
 //    @Scheduled(cron = "0/1 * 8-17 * * *")
     public void coinSaveJob() throws Exception {
         if (ServerTypeUtils.isProd()) {
-            serverCloudService.service(BatchServiceRequest.saveCoinDataBTC());
+            serverCloudService.serviceAsync(BatchServiceRequest.saveCoinDataBTC());
         }
     }
 
@@ -36,7 +36,7 @@ public class CoinScheduler {
     public void sendCoinJob() throws Exception {
         // add parameters as needed
         if (ServerTypeUtils.isProd()) {
-            serverCloudService.execute(BatchExecuteRequest.sendCoinJob());
+            serverCloudService.executeAsync(BatchExecuteRequest.sendCoinJob());
         }
     }
 
@@ -44,7 +44,7 @@ public class CoinScheduler {
     public void sendCoinOtherJob() throws Exception {
         // add parameters as needed
         if (ServerTypeUtils.isProd()) {
-            serverCloudService.execute(BatchExecuteRequest.sendCoinJob());
+            serverCloudService.executeAsync(BatchExecuteRequest.sendCoinJob());
         }
     }
 }
