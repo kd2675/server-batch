@@ -104,28 +104,14 @@ public class ServerCloudService {
     }
 
     public void service(BatchServiceRequest request) {
-        CompletableFuture.runAsync(() -> {
-            try {
-                var response = serverCloudClient.service(request, "server-batch");
+        var response = serverCloudClient.service(request, "server-batch");
+        if (!response.getStatusCode().is2xxSuccessful()) {
+            throw new IllegalStateException(
+                    "Gateway를 통한 " + request.getJobType() + " 배치 실행 실패: " + response.getStatusCode());
+        }
 
-                if (response.getStatusCode().is2xxSuccessful()) {
-                    Map<String, Object> result = response.getBody();
-                    log.info("Gateway를 통한 {} 배치 실행 성공: {}", request.getJobType(), result);
-
-//                    // 요청 ID가 있으면 상태 추적 시작
-//                    if (result != null && result.containsKey("requestId")) {
-//                        String requestId = (String) result.get("requestId");
-//                        trackBatchStatus(requestId, request.getJobType());
-//                    }
-
-                } else {
-                    log.error("Gateway를 통한 {} 배치 실행 실패: {}", request.getJobType(), response.getStatusCode());
-                }
-
-            } catch (Exception e) {
-                log.error("Gateway를 통한 {} 배치 실행 중 오류 발생", request.getJobType(), e);
-            }
-        }, serverCloudTaskExecutor);
+        Map<String, Object> result = response.getBody();
+        log.info("Gateway를 통한 {} 배치 실행 성공: {}", request.getJobType(), result);
     }
 
     /**

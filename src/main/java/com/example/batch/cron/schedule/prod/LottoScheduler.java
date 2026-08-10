@@ -14,33 +14,33 @@ import org.springframework.stereotype.Component;
 public class LottoScheduler {
     private final ServerCloudService serverCloudService;
 
-    @Scheduled(cron = "0 0 18 * * FRI")
+    @Scheduled(cron = "0 0 18 * * FRI", zone = "Asia/Seoul")
     public void orderCheck() throws Exception {
         // add parameters as needed
         if (ServerTypeUtils.isProd()) {
             BatchServiceRequest request = BatchServiceRequest.account();
 
-            serverCloudService.serviceAsync(request);
+            serverCloudService.service(request);
         }
     }
 
-//    @Scheduled(cron = "0 0 10 * * SAT")
-//    public void buy() throws Exception {
-//        // add parameters as needed
-//        if (ServerTypeUtils.isProd()) {
-//            BatchServiceRequest request = BatchServiceRequest.buy();
-//
-//            serverCloudService.serviceAsync(request);
-//        }
-//    }
+    @Scheduled(cron = "0 0 10 * * SAT", zone = "Asia/Seoul")
+    public void buy() throws Exception {
+        // add parameters as needed
+        if (ServerTypeUtils.isProd()) {
+            BatchServiceRequest request = BatchServiceRequest.buy();
 
-    @Scheduled(cron = "0 0 22 * * SAT")
+            serverCloudService.service(request);
+        }
+    }
+
+    @Scheduled(cron = "0 0 22 * * SAT", zone = "Asia/Seoul")
     public void check() throws Exception {
         // add parameters as needed
         if (ServerTypeUtils.isProd()) {
             BatchServiceRequest request = BatchServiceRequest.check();
 
-            serverCloudService.serviceAsync(request);
+            serverCloudService.service(request);
         }
     }
 }

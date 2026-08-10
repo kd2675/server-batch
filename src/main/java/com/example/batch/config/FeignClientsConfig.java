@@ -33,8 +33,8 @@ public class FeignClientsConfig {
 
     @Bean
     public Retryer serverCloudRetryer() {
-        // server-cloud는 Gateway이므로 빠른 재시도
-        return new Retryer.Default(500, 2000, 3);
+        // 구매처럼 비멱등 POST가 있으므로 네트워크 계층 자동 재시도를 금지한다.
+        return Retryer.NEVER_RETRY;
     }
 
     @Bean
@@ -104,4 +104,3 @@ class ServerCloudErrorDecoder implements ErrorDecoder {
         }
     }
 }
-
