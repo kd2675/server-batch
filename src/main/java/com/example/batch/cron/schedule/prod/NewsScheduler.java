@@ -31,7 +31,7 @@ public class NewsScheduler {
         }
     }
 
-    @Scheduled(cron = "20 * * * * *")
+    @Scheduled(cron = "20 */5 * * * *")
     public void sendNewsFlashJob() throws Exception {
         // add parameters as needed
         if (ServerTypeUtils.isProd()) {
