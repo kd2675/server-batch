@@ -14,7 +14,7 @@ import org.springframework.stereotype.Component;
 public class OrderScheduler {
     private final ServerCloudService serverCloudService;
 
-    @Scheduled(fixedRate = 10000, initialDelay = 10000)
+//    @Scheduled(fixedRate = 10000, initialDelay = 10000)
     public void orderJob() throws Exception {
         // add parameters as needed
         if (ServerTypeUtils.isProd()) {
