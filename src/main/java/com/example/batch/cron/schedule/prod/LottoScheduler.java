@@ -14,7 +14,7 @@ import org.springframework.stereotype.Component;
 public class LottoScheduler {
     private final ServerCloudService serverCloudService;
 
-    @Scheduled(cron = "0 55 17 * * FRI", zone = "Asia/Seoul")
+    @Scheduled(cron = "0 25 11 * * FRI", zone = "Asia/Seoul")
     public void orderCheck() throws Exception {
         // add parameters as needed
         if (ServerTypeUtils.isProd()) {
@@ -24,7 +24,7 @@ public class LottoScheduler {
         }
     }
 
-    @Scheduled(cron = "0 0 10 * * WED", zone = "Asia/Seoul")
+    @Scheduled(cron = "0 55 17 * * FRI", zone = "Asia/Seoul")
     public void buy() throws Exception {
         // add parameters as needed
         if (ServerTypeUtils.isProd()) {
